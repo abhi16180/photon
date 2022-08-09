@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:glass/glass.dart';
+import 'package:photon/services/photon_server/photon_server.dart';
 
 class MobileHome extends StatefulWidget {
   const MobileHome({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class MobileHome extends StatefulWidget {
 }
 
 class _MobileHomeState extends State<MobileHome> {
+  PhotonServer photonServer = PhotonServer();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -24,7 +26,9 @@ class _MobileHomeState extends State<MobileHome> {
           height: size.height / 5,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          onPressed: () {},
+          onPressed: () async {
+            await PhotonServer.share();
+          },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -64,7 +68,7 @@ class _MobileHomeState extends State<MobileHome> {
           height: size.height / 5,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          onPressed: () {},
+          onPressed: () async {},
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
