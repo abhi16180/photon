@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:photon/mobile_view/mobile_home.dart';
+import 'package:photon/wide_screen_view/widescreen_home.dart';
+
 void main() {
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true),
       home: const App(),
     ),
@@ -19,32 +23,14 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: const Text('Photon'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          MaterialButton(
-            color: Colors.blue,
-            minWidth: 100,
-            
-            onPressed: () {},
-            child: const Center(child: Text('Server')),
-          ),
-          const SizedBox(
-            height: 100,
-          ),
-          MaterialButton(
-            minWidth: 100,
-            color: Colors.blue,
-            onPressed: () {},
-            child: const Center(child: Text('Client')),
-          )
-        ],
-      ),
+      body: Center(
+          child: size.width > 720 ? const WidescreenHome() : MobileHome()),
     );
   }
 }
