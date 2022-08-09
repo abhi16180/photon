@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:photon/mobile_view/mobile_home.dart';
+import 'package:photon/services/photon_server/photon_server.dart';
 import 'package:photon/widescreen_view/widescreen_home.dart';
 
 void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true, fontFamily: 'ytf'),
+      theme: ThemeData(
+        useMaterial3: true,
+        fontFamily: 'ytf',
+      ),
       home: const App(),
     ),
   );
@@ -23,14 +27,26 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    PhotonServer photonServer = PhotonServer();
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text('Photon'),
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Photon',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
       ),
       body: Center(
-          child:
-              size.width > 720 ? const WidescreenHome() : const MobileHome()),
+        child: size.width > 720 ? const WidescreenHome() : const MobileHome(),
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.close),
+          onPressed: () async {
+            await PhotonServer.closeServer();
+          }),
     );
   }
 }
