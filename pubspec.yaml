@@ -35,6 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_svg: ^1.1.3
+  glass: ^1.0.1+1
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +87,12 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
+  fonts: 
+    - family: logirent 
+      fonts: 
+        - asset: assets/fonts/Logirent-Regular.otf
+    - family: ytf 
+      fonts: 
+        - asset: assets/fonts/Yftoow-R.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

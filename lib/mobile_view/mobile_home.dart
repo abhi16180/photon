@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math' as math;
+
+import 'package:glass/glass.dart';
 
 class MobileHome extends StatefulWidget {
   const MobileHome({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class _MobileHomeState extends State<MobileHome> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         MaterialButton(
-          color: Colors.blue,
+          color: Colors.lightGreenAccent.shade700,
           minWidth: size.width / 2,
           height: size.height / 5,
           shape:
@@ -37,7 +38,9 @@ class _MobileHomeState extends State<MobileHome> {
                   color: Colors.white,
                   width: 60,
                 ),
-              ),
+              ).asGlass(
+                  clipBorderRadius: BorderRadius.circular(10),
+                  tintColor: Colors.grey),
               Card(
                 clipBehavior: Clip.antiAlias,
                 elevation: 1,
@@ -58,7 +61,7 @@ class _MobileHomeState extends State<MobileHome> {
         MaterialButton(
           color: Colors.blue,
           minWidth: size.width / 2,
-          height: size.height / 6,
+          height: size.height / 5,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           onPressed: () {},
@@ -69,12 +72,15 @@ class _MobileHomeState extends State<MobileHome> {
                 height: 10,
               ),
               Transform.rotate(
-                angle: math.pi / 1.34,
+                angle: 0,
                 child: SvgPicture.asset(
-                  'assets/icons/arrow-blue.svg',
+                  'assets/icons/save.svg',
                   color: Colors.white,
                   width: 60,
                 ),
+              ).asGlass(
+                clipBorderRadius: BorderRadius.circular(10),
+                tileMode: TileMode.mirror,
               ),
               Card(
                 clipBehavior: Clip.antiAlias,
@@ -86,7 +92,7 @@ class _MobileHomeState extends State<MobileHome> {
                   height: 30,
                   child: Center(child: Text('Receive')),
                 ),
-              ),
+              )
             ],
           ),
         ),

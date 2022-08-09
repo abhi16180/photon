@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math' as math;
+import 'package:glass/glass.dart';
 
 class WidescreenHome extends StatefulWidget {
   const WidescreenHome({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class _WidescreenHomeState extends State<WidescreenHome> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         MaterialButton(
-          color: Colors.blue,
+          color: Colors.lightGreenAccent.shade700,
           minWidth: size.width / 4,
           height: size.height / 4,
           shape:
@@ -38,9 +38,11 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                   child: SvgPicture.asset(
                     'assets/icons/rocket-blue.svg',
                     color: Colors.white,
-                    width: 60,
+                    width: 80,
                   ),
-                ),
+                ).asGlass(
+                    clipBorderRadius: BorderRadius.circular(10),
+                    tintColor: Colors.grey),
                 Card(
                   clipBehavior: Clip.antiAlias,
                   elevation: 1,
@@ -76,12 +78,14 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                   height: 10,
                 ),
                 Transform.rotate(
-                  angle: math.pi / 1.34,
+                  angle: 0,
                   child: SvgPicture.asset(
-                    'assets/icons/arrow-blue.svg',
+                    'assets/icons/save.svg',
                     color: Colors.white,
-                    width: 60,
+                    width: 80,
                   ),
+                ).asGlass(
+                  clipBorderRadius: BorderRadius.circular(10),
                 ),
                 Card(
                   clipBehavior: Clip.antiAlias,
