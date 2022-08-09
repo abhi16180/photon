@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'package:photon/mobile_view/mobile_home.dart';
-import 'package:photon/wide_screen_view/widescreen_home.dart';
+import 'package:photon/widescreen_view/widescreen_home.dart';
 
 void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(useMaterial3: true, fontFamily: 'ytf'),
       home: const App(),
     ),
   );
@@ -30,7 +29,8 @@ class _AppState extends State<App> {
         title: const Text('Photon'),
       ),
       body: Center(
-          child: size.width > 720 ? const WidescreenHome() : MobileHome()),
+          child:
+              size.width > 720 ? const WidescreenHome() : const MobileHome()),
     );
   }
 }
