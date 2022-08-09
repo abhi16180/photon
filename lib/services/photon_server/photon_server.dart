@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import '../file_methods.dart';
 import 'package:network_info_plus/network_info_plus.dart';
@@ -5,9 +6,10 @@ import 'package:network_info_plus/network_info_plus.dart';
 class PhotonServer {
   static late HttpServer _server;
   static late String _address;
-  static late String _ipVersion;
   static late List<String?> _fileList;
+
   static getFilesPath() async {
+    //flutter specific package
     _fileList = await FileMethods.pickFiles();
     if (_fileList.isEmpty) {
       return false;
@@ -17,6 +19,7 @@ class PhotonServer {
   }
 
   static assignIP() async {
+    //todo handle exception when no ip available
     var wifiIP = await NetworkInfo().getWifiIP();
     if (wifiIP != null) {
       _address = wifiIP.toString();
@@ -29,7 +32,7 @@ class PhotonServer {
         for (InternetAddress internetAddress in netInt.addresses) {
           if (internetAddress.address.toString().startsWith('192.168')) {
             _address = internetAddress.address;
-            _ipVersion = internetAddress.type.name;
+    
           }
         }
       }
@@ -37,16 +40,26 @@ class PhotonServer {
   }
 
   static _startServer(List<String?> fileList) async {
+    //todo remove print statements
+    late Map<String, Object> serverInf;
     try {
       _server = await HttpServer.bind(_address, 4040);
+      serverInf = {
+        'os': {
+          'name': Platform.operatingSystem,
+          'version': Platform.operatingSystemVersion
+        },
+        'host': Platform.localHostname,
+      
+      };
     } catch (e) {
-      print('not working ');
+      print('$e ');
     }
     print('server at ${_server.address}');
     _server.listen((HttpRequest request) {
       if (request.requestedUri.toString() ==
           'http://$_address:4040/photon-server') {
-        request.response.write('Hello world');
+        request.response.write(jsonEncode(serverInf));
         request.response.close();
       }
     });
