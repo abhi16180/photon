@@ -71,7 +71,9 @@ class _WidescreenHomeState extends State<WidescreenHome> {
           height: size.height / 4,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed('/receivepage');
+          },
           child: SizedBox(
             width: size.width / 4,
             height: size.height / 4,

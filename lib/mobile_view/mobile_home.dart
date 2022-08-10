@@ -71,7 +71,7 @@ class _MobileHomeState extends State<MobileHome> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           onPressed: () async {
-            print('receive');
+            Navigator.of(context).pushNamed('/receivepage');
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
