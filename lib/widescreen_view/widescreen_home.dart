@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:glass/glass.dart';
-import 'package:photon/services/photon_server/photon_server.dart';
+
+import '../methods/methods.dart';
 
 class WidescreenHome extends StatefulWidget {
   const WidescreenHome({Key? key}) : super(key: key);
@@ -11,7 +12,6 @@ class WidescreenHome extends StatefulWidget {
 }
 
 class _WidescreenHomeState extends State<WidescreenHome> {
-  
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -26,8 +26,7 @@ class _WidescreenHomeState extends State<WidescreenHome> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           onPressed: () async {
-         
-            await PhotonServer.share();
+            await handleSharing(context);
           },
           child: SizedBox(
             width: size.width / 4,

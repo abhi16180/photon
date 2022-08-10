@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:photon/mobile_view/mobile_home.dart';
-import 'package:photon/services/photon_server/photon_server.dart';
-import 'package:photon/widescreen_view/widescreen_home.dart';
+import 'package:photon/receive_page.dart';
+import 'package:photon/share_page.dart';
+
+import 'app.dart';
 
 void main() {
   runApp(
@@ -11,42 +12,12 @@ void main() {
         useMaterial3: true,
         fontFamily: 'ytf',
       ),
-      home: const App(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const App(),
+        '/sharepage': (context) => const SharePage(),
+        '/receivepage': (context) => const ReceivePage()
+      },
     ),
   );
-}
-
-class App extends StatefulWidget {
-  const App({Key? key}) : super(key: key);
-
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    PhotonServer photonServer = PhotonServer();
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
-          'Photon',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-      ),
-      body: Center(
-        child: size.width > 720 ? const WidescreenHome() : const MobileHome(),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.close),
-          onPressed: () async {
-            await PhotonServer.closeServer();
-          }),
-    );
-  }
 }
