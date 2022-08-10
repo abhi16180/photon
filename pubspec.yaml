@@ -38,6 +38,9 @@ dependencies:
   glass: ^1.0.1+1
   file_picker: ^5.0.1
   network_info_plus: ^2.1.4
+  lottie:
+  unicons: 
+
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +70,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
       - assets/icons/
+      - assets/lottie/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

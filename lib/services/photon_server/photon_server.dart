@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:photon/models/Server_model.dart';
+
 import '../file_methods.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
@@ -55,11 +57,49 @@ class PhotonServer {
     }
     print('server at ${_server.address}');
     _server.listen(
-      (HttpRequest request) {
+      (HttpRequest request) async {
         if (request.requestedUri.toString() ==
             'http://$_address:4040/photon-server') {
           request.response.write(jsonEncode(serverInf));
           request.response.close();
+        } else if (request.requestedUri.toString() ==
+            'http://$_address:4040/getpaths') {
+          request.response.write(jsonEncode({'paths': fileList}));
+          request.response.close();
+        } else if (request.requestedUri.toString() ==
+            'http://$_address:4040/favicon.ico') {
+        } else if (request.requestedUri.toString() ==
+            'http://$_address:4040/') {
+        } else {
+          String filePath = fileList[
+              int.parse(request.requestedUri.toString().split('/').last)]!;
+          File file = File(filePath);
+          int size = await file.length();
+          String fileName =
+              filePath.split(Platform.isWindows ? r'\' : 'r').last;
+
+          request.response.headers.contentType = ContentType(
+            'application',
+            'octet-stream',
+            charset: 'utf-8',
+          );
+          request.response.headers.add(
+            'Content-Transfer-Encoding',
+            'Binary',
+          );
+          request.response.headers.add(
+            'Content-disposition',
+            'attachment; filename=$fileName',
+          );
+
+          request.response.headers.add(
+            'Content-length',
+            size,
+          );
+          try {
+            await file.openRead().pipe(request.response);
+            request.response.close();
+          } catch (_) {}
         }
       },
     );
@@ -83,4 +123,19 @@ class PhotonServer {
       print("Server not yet started");
     }
   }
+
+  //get details about server
+  static getServerInfo() {
+    var info = {
+      'ip': _server.address.address,
+      'port': _server.port,
+      'host': Platform.localHostname,
+      'os': Platform.operatingSystem,
+      'version': Platform.operatingSystemVersion,
+    };
+    ServerModel serverData = ServerModel.fromJson(info);
+    return serverData;
+  }
+
+  bool get hasMultipleFiles => _fileList.length > 1 ? true : false;
 }
