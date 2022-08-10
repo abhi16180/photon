@@ -49,10 +49,8 @@ class _SharePageState extends State<SharePage> {
                               width: 25, height: 25)
                           : ElevatedButton(
                               onPressed: () async {
-                                setState(() {
-                                  isloading = true;
-                                });
-
+                                await PhotonServer.closeServer();
+                                // ignore: use_build_context_synchronously
                                 Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
                                         builder: (context) => const App()),
