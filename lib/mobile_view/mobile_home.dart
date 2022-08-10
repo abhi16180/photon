@@ -4,6 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:glass/glass.dart';
 import 'package:photon/services/photon_server/photon_server.dart';
 
+import '../methods/methods.dart';
+
 class MobileHome extends StatefulWidget {
   const MobileHome({Key? key}) : super(key: key);
 
@@ -27,7 +29,7 @@ class _MobileHomeState extends State<MobileHome> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           onPressed: () async {
-            await PhotonServer.share();
+            await handleSharing(context);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,7 +70,9 @@ class _MobileHomeState extends State<MobileHome> {
           height: size.height / 5,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          onPressed: () async {},
+          onPressed: () async {
+            print('receive');
+          },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

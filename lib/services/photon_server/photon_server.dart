@@ -32,7 +32,6 @@ class PhotonServer {
         for (InternetAddress internetAddress in netInt.addresses) {
           if (internetAddress.address.toString().startsWith('192.168')) {
             _address = internetAddress.address;
-    
           }
         }
       }
@@ -50,31 +49,36 @@ class PhotonServer {
           'version': Platform.operatingSystemVersion
         },
         'host': Platform.localHostname,
-      
       };
     } catch (e) {
       print('$e ');
     }
     print('server at ${_server.address}');
-    _server.listen((HttpRequest request) {
-      if (request.requestedUri.toString() ==
-          'http://$_address:4040/photon-server') {
-        request.response.write(jsonEncode(serverInf));
-        request.response.close();
-      }
-    });
+    _server.listen(
+      (HttpRequest request) {
+        if (request.requestedUri.toString() ==
+            'http://$_address:4040/photon-server') {
+          request.response.write(jsonEncode(serverInf));
+          request.response.close();
+        }
+      },
+    );
   }
 
   static share() async {
     if (await getFilesPath()) {
       await assignIP();
-      await _startServer(_fileList);
+      _startServer(_fileList);
+      return true;
+    } else {
+      return null;
     }
   }
 
   static closeServer() async {
     try {
       await _server.close();
+      print('closed');
     } catch (e) {
       print("Server not yet started");
     }
