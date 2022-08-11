@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../services/photon_server/photon_server.dart';
+import '../services/photon_server.dart';
 
 handleSharing(BuildContext context) async {
   

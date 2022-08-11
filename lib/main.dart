@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:photon/receive_page.dart';
-import 'package:photon/share_page.dart';
 
 import 'app.dart';
+import 'views/receive_page.dart';
+import 'views/share_page.dart';
 
 void main() {
   runApp(

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:photon/models/Server_model.dart';
+import 'package:photon/models/server_model.dart';
 
-import '../file_methods.dart';
+import 'file_services.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 class PhotonServer {

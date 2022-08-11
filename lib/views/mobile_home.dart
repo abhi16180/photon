@@ -3,9 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:glass/glass.dart';
 import 'package:lottie/lottie.dart';
-import 'package:photon/services/photon_server/photon_server.dart';
+import 'package:photon/services/photon_server.dart';
 
 import '../methods/methods.dart';
+
 
 class MobileHome extends StatefulWidget {
   const MobileHome({Key? key}) : super(key: key);

@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:photon/models/Server_model.dart';
-import 'package:photon/services/photon_server/photon_server.dart';
+import 'package:photon/models/server_model.dart';
+import 'package:photon/services/photon_server.dart';
 import 'package:unicons/unicons.dart';
 
-import 'app.dart';
+import '../app.dart';
+
 
 class SharePage extends StatefulWidget {
   const SharePage({Key? key}) : super(key: key);
@@ -74,6 +75,9 @@ class _SharePageState extends State<SharePage> {
               Card(
                 clipBehavior: Clip.antiAlias,
                 elevation: 5,
+                color: Platform.isWindows ? Colors.grey.shade300 : null,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
                 child: SizedBox(
                   height: width > 720 ? 200 : 128,
                   width: width > 720 ? width / 2 : width / 1.25,
