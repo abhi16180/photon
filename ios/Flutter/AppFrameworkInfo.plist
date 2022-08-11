@@ -22,5 +22,6 @@
   <string>1.0</string>
   <key>MinimumOSVersion</key>
   <string>9.0</string>
+  <key>NSAllowsArbitraryLoads</key><true/>
 </dict>
 </plist>

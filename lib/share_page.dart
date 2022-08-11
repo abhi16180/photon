@@ -20,7 +20,6 @@ class _SharePageState extends State<SharePage> {
   PhotonServer photonServer = PhotonServer();
   late double width;
   late double height;
-  bool isloading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,23 +40,17 @@ class _SharePageState extends State<SharePage> {
                       ElevatedButton(
                           onPressed: () => Navigator.of(context).pop(),
                           child: const Text('Stay')),
-
-                      ///[it wont rebuild alert dialog ,try different approach]
-
-                      isloading
-                          ? Lottie.asset('assets/lottie/load_exit.json',
-                              width: 25, height: 25)
-                          : ElevatedButton(
-                              onPressed: () async {
-                                await PhotonServer.closeServer();
-                                // ignore: use_build_context_synchronously
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) => const App()),
-                                    (route) => false);
-                              },
-                              child: const Text('Terminate'),
-                            )
+                      ElevatedButton(
+                        onPressed: () async {
+                          await PhotonServer.closeServer();
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => const App()),
+                              (route) => false);
+                        },
+                        child: const Text('Terminate'),
+                      )
                     ],
                   );
                 });
@@ -80,10 +73,10 @@ class _SharePageState extends State<SharePage> {
               ),
               Card(
                 clipBehavior: Clip.antiAlias,
-                child: Container(
-                  height: width > 720 ? 200 : 120,
-                  width: width > 720 ? width / 2 : width / 1.4,
-                  color: Colors.yellow,
+                elevation: 5,
+                child: SizedBox(
+                  height: width > 720 ? 200 : 128,
+                  width: width > 720 ? width / 2 : width / 1.25,
                   child: Center(
                     child: Wrap(
                       direction: Axis.vertical,
@@ -99,8 +92,9 @@ class _SharePageState extends State<SharePage> {
 
   infoList(ServerModel serverModel) {
     var iconList = [
-      const Icon(
+      Icon(
         UniconsLine.location_point,
+        color: Colors.blue.shade600,
       ),
       const Icon(
         UniconsLine.process,
@@ -153,20 +147,23 @@ class _SharePageState extends State<SharePage> {
               width: 20,
             ),
             RichText(
+                overflow: TextOverflow.ellipsis,
                 text: TextSpan(
-              text: serverDataList[i]['type'],
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  overflow: TextOverflow.ellipsis),
-              children: [
-                TextSpan(
-                    text: serverDataList[i]['value'].toString(),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontStyle: FontStyle.italic)),
-              ],
-            ))
+                  text: width > 720
+                      ? serverDataList[i]['type']
+                      : serverDataList[i]['type'] + ' : ',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black.withAlpha(200),
+                      overflow: TextOverflow.ellipsis),
+                  children: [
+                    TextSpan(
+                        text: serverDataList[i]['value'].toString(),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontStyle: FontStyle.italic)),
+                  ],
+                ))
           ],
         ),
       ));
