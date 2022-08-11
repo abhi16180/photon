@@ -1,3 +1,4 @@
+// ignore: file_names
 class ServerModel {
   String ip;
   int port;
