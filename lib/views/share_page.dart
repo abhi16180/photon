@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:photon/models/servermodel.dart';
+import 'package:photon/models/server_model.dart';
 import 'package:photon/services/photon_server.dart';
 import 'package:unicons/unicons.dart';
 
