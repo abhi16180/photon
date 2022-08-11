@@ -1,9 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'package:photon/services/photon_server/photon_server.dart';
-import 'package:photon/widescreen_view/widescreen_home.dart';
+import 'package:photon/services/photon_server.dart';
 
-import 'mobile_view/mobile_home.dart';
+import 'views/mobile_home.dart';
+import 'views/widescreen_home.dart';
+
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
