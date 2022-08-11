@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:photon/methods/methods.dart';
 import 'package:photon/models/server_model.dart';
 
 import 'file_services.dart';
-import 'package:network_info_plus/network_info_plus.dart';
 
 class PhotonServer {
   static late HttpServer _server;
@@ -22,27 +22,18 @@ class PhotonServer {
 
   static assignIP() async {
     //todo handle exception when no ip available
-    var wifiIP = await NetworkInfo().getWifiIP();
-    if (wifiIP != null) {
-      _address = wifiIP.toString();
-    } else {
-      //sometimes when device acts as hotspot it will return null
-      //find list of interfaces
-      //assign ip with proper ip-address
-      List<NetworkInterface> listOfInterfaces = await NetworkInterface.list();
-      for (NetworkInterface netInt in listOfInterfaces) {
-        for (InternetAddress internetAddress in netInt.addresses) {
-          if (internetAddress.address.toString().startsWith('192.168')) {
-            _address = internetAddress.address;
-          }
-        }
-      }
-    }
+    String ip = await getIP();
+    _address = ip;
   }
 
   static _startServer(List<String?> fileList) async {
     //todo remove print statements
     late Map<String, Object> serverInf;
+    //check if no proper address is assigned
+
+    if (_address == '') {
+      return false;
+    }
     try {
       _server = await HttpServer.bind(_address, 4040);
       serverInf = {
@@ -109,7 +100,7 @@ class PhotonServer {
   static share() async {
     if (await getFilesPath()) {
       await assignIP();
-      var res= _startServer(_fileList);
+      var res = _startServer(_fileList);
       return await res;
     } else {
       return null;

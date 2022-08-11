@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 
 import '../services/photon_server.dart';
 
 handleSharing(BuildContext context) async {
-  
   if ((await PhotonServer.share() == true)) {
     Navigator.pushNamed(context, '/sharepage');
   } else {
@@ -33,4 +35,28 @@ handleSharing(BuildContext context) async {
       },
     );
   }
+}
+
+Future<String> getIP() async {
+  //todo handle exception when no ip available
+  String? wifiIP;
+  try {
+    wifiIP = await NetworkInfo().getWifiIP();
+  } catch (_) {}
+
+  if (wifiIP != null) {
+    return wifiIP.toString();
+  }
+  //sometimes when device acts as hotspot it will return null
+  //find list of interfaces
+  //assign ip with proper ip-address
+  List<NetworkInterface> listOfInterfaces = await NetworkInterface.list();
+  for (NetworkInterface netInt in listOfInterfaces) {
+    for (InternetAddress internetAddress in netInt.addresses) {
+      if (internetAddress.address.toString().startsWith('192.168')) {
+        return internetAddress.address;
+      }
+    }
+  }
+  return '';
 }
