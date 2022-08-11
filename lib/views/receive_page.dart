@@ -12,7 +12,11 @@ class ReceivePage extends StatefulWidget {
 
 class _ReceivePageState extends State<ReceivePage> {
   _scan() async {
-    return await PhotonClient.scan();
+    try {
+      var resp = await PhotonClient.scan();
+      return resp;
+    } catch (_) {}
+    return [];
   }
 
   @override
@@ -41,7 +45,7 @@ class _ReceivePageState extends State<ReceivePage> {
                         itemBuilder: (context, index) {
                           return ListTile(
                             onTap: () {},
-                            title: Text(snap.data[index]),
+                            title: Text(snap.data[index].toString()),
                           );
                         })
                   }
