@@ -53,9 +53,9 @@ class PhotonServer {
         'host': Platform.localHostname,
       };
     } catch (e) {
-      print('$e ');
+      return false;
     }
-    print('server at ${_server.address}');
+
     _server.listen(
       (HttpRequest request) async {
         if (request.requestedUri.toString() ==
@@ -103,13 +103,14 @@ class PhotonServer {
         }
       },
     );
+    return true;
   }
 
   static share() async {
     if (await getFilesPath()) {
       await assignIP();
-      _startServer(_fileList);
-      return true;
+      var res= _startServer(_fileList);
+      return await res;
     } else {
       return null;
     }
