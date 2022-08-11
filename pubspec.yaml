@@ -40,6 +40,7 @@ dependencies:
   network_info_plus: ^2.1.4
   lottie:
   unicons: 
+  dio: ^4.0.6
 
 
 dev_dependencies:
