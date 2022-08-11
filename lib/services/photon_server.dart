@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:photon/models/server_model.dart';
+import 'package:photon/models/servermodel.dart';
 
 import 'file_services.dart';
 import 'package:network_info_plus/network_info_plus.dart';
