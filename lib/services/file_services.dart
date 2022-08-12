@@ -4,8 +4,11 @@ import 'package:file_picker/file_picker.dart';
 
 class FileMethods {
   static Future<List<String?>> pickFiles() async {
-    FilePickerResult? files = await FilePicker.platform
-        .pickFiles(allowMultiple: true, type: FileType.any);
+    FilePickerResult? files = await FilePicker.platform.pickFiles(
+        withReadStream: true,
+        allowMultiple: true,
+        type: FileType.any,
+        onFileLoading: (status) {});
     if (files == null) {
       return [];
     } else {
