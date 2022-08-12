@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:photon/services/photon_server.dart';
+import 'package:photon/services/photon_sender.dart';
 
 import 'views/mobile_home.dart';
 import 'views/widescreen_home.dart';
@@ -34,7 +34,7 @@ class _AppState extends State<App> {
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.close),
           onPressed: () async {
-            await PhotonServer.closeServer();
+            await PhotonSender.closeServer();
           }),
     );
   }
