@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:photon/methods/methods.dart';
-import 'package:photon/models/server_model.dart';
+import 'package:photon/models/sender_model.dart';
 
 import 'file_services.dart';
 
@@ -37,11 +37,11 @@ class PhotonSender {
     try {
       _server = await HttpServer.bind(_address, 4040);
       serverInf = {
-        'os': {
-          'name': Platform.operatingSystem,
-          'version': Platform.operatingSystemVersion
-        },
+        'ip': _server.address.address,
+        'port': _server.port,
         'host': Platform.localHostname,
+        'os': Platform.operatingSystem,
+        'version': Platform.operatingSystemVersion,
       };
     } catch (e) {
       return false;
@@ -125,9 +125,9 @@ class PhotonSender {
       'os': Platform.operatingSystem,
       'version': Platform.operatingSystemVersion,
     };
-    ServerModel serverData = ServerModel.fromJson(info);
-    return serverData;
+    SenderModel senderData = SenderModel.fromJson(info);
+    return senderData;
   }
 
-  bool get hasMultipleFiles => _fileList.length > 1 ? true : false;
+  bool get hasMultipleFiles => _fileList.length > 1;
 }

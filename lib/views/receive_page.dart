@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:photon/models/sender_model.dart';
 
 import '../services/photon_receiver.dart';
 
@@ -13,7 +14,7 @@ class ReceivePage extends StatefulWidget {
 class _ReceivePageState extends State<ReceivePage> {
   _scan() async {
     try {
-      var resp = await PhotonReceiver.scan();
+      List<SenderModel> resp = await PhotonReceiver.scan();
       return resp;
     } catch (_) {}
     return [];
@@ -31,6 +32,7 @@ class _ReceivePageState extends State<ReceivePage> {
         future: _scan(),
         builder: (context, AsyncSnapshot snap) {
           if (snap.connectionState == ConnectionState.done) {
+            List<SenderModel> data = snap.data;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +47,7 @@ class _ReceivePageState extends State<ReceivePage> {
                         itemBuilder: (context, index) {
                           return ListTile(
                             onTap: () {},
-                            title: Text(snap.data[index].toString()),
+                            title: Text(data[index].ip.toString()),
                           );
                         })
                   }
