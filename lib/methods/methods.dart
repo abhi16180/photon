@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
-import '../services/photon_server.dart';
+import '../services/photon_sender.dart';
 
 handleSharing(BuildContext context) async {
-  if ((await PhotonServer.share() == true)) {
+  if ((await PhotonSender.share() == true)) {
     Navigator.pushNamed(context, '/sharepage');
   } else {
     showDialog(

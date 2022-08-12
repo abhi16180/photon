@@ -5,7 +5,7 @@ import 'package:photon/models/server_model.dart';
 
 import 'file_services.dart';
 
-class PhotonServer {
+class PhotonSender {
   static late HttpServer _server;
   static late String _address;
   static late List<String?> _fileList;

@@ -6,7 +6,7 @@ import 'package:photon/models/server_model.dart';
 
 //globals
 
-class PhotonClient {
+class PhotonReceiver {
   ///to get network address [assumes class C address]
   static String getNetAddress(String ip) {
     var ipToList = ip.split('.');

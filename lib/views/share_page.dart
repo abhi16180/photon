@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/models/server_model.dart';
-import 'package:photon/services/photon_server.dart';
+import 'package:photon/services/photon_sender.dart';
 import 'package:unicons/unicons.dart';
 
 import '../app.dart';
@@ -16,8 +16,8 @@ class SharePage extends StatefulWidget {
 }
 
 class _SharePageState extends State<SharePage> {
-  ServerModel serverModel = PhotonServer.getServerInfo();
-  PhotonServer photonServer = PhotonServer();
+  ServerModel serverModel = PhotonSender.getServerInfo();
+  PhotonSender photonSender = PhotonSender();
   late double width;
   late double height;
   bool willPop = false;
@@ -43,7 +43,7 @@ class _SharePageState extends State<SharePage> {
                           child: const Text('Stay')),
                       ElevatedButton(
                         onPressed: () async {
-                          await PhotonServer.closeServer();
+                          await PhotonSender.closeServer();
                           // ignore: use_build_context_synchronously
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
@@ -63,7 +63,7 @@ class _SharePageState extends State<SharePage> {
               children: [
                 Lottie.asset('assets/lottie/share.json'),
                 Text(
-                  '${photonServer.hasMultipleFiles ? 'Your files are ready to be shared' : 'Your file is ready to be shared'}\nAsk receiver to tap on receive button',
+                  '${photonSender.hasMultipleFiles ? 'Your files are ready to be shared' : 'Your file is ready to be shared'}\nAsk receiver to tap on receive button',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: width > 720 ? 18 : 14,
@@ -110,7 +110,7 @@ class _SharePageState extends State<SharePage> {
                     child: const Text('Stay')),
                 ElevatedButton(
                   onPressed: () async {
-                    await PhotonServer.closeServer();
+                    await PhotonSender.closeServer();
                     willPop = true;
                     // ignore: use_build_context_synchronously
                     Navigator.of(context).pop();
