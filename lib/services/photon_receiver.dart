@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
-
 
 class PhotonReceiver {
   ///to get network address [assumes class C address]
@@ -42,7 +42,7 @@ class PhotonReceiver {
     List<Future<Map<String, dynamic>>> list = [];
     List<SenderModel> photonServers = [];
     String netAddress = getNetAddress(await getIP());
-
+   
     for (int i = 2; i < 255; i++) {
       for (int port in [4040, 4999, 5000]) {
         Future<Map<String, dynamic>> res = _connect('$netAddress.$i', port);
