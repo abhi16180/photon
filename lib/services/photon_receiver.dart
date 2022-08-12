@@ -18,7 +18,7 @@ class PhotonReceiver {
   static Future<Map<String, dynamic>> _connect(String host, int port) async {
     try {
       var socket =
-          await Socket.connect(host, port).timeout(const Duration(seconds: 3));
+          await Socket.connect(host, port).timeout(const Duration(seconds: 2));
       socket.destroy();
       return {"host": host, 'port': port};
     } catch (_) {

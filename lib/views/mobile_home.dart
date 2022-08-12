@@ -7,7 +7,6 @@ import 'package:photon/services/photon_sender.dart';
 
 import '../methods/methods.dart';
 
-
 class MobileHome extends StatefulWidget {
   const MobileHome({Key? key}) : super(key: key);
 
@@ -129,7 +128,7 @@ class _MobileHomeState extends State<MobileHome> {
           ),
           const Center(
             child: Text(
-              'Please wait,setting up the SePhotonSender',
+              'Please wait !',
               style: TextStyle(
                 fontSize: 18,
               ),

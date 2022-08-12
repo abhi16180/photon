@@ -126,6 +126,15 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                   width: 40, height: 40),
             ),
           ),
+          const Center(
+            child: Text(
+              'Please wait !',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          )
         }
       ],
     );

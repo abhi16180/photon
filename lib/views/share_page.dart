@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/services/photon_sender.dart';
-import 'package:unicons/unicons.dart';
 
 import '../app.dart';
+import '../components/components.dart';
 
 class SharePage extends StatefulWidget {
   const SharePage({Key? key}) : super(key: key);
@@ -85,7 +85,7 @@ class _SharePageState extends State<SharePage> {
                     child: Center(
                       child: Wrap(
                         direction: Axis.vertical,
-                        children: infoList(senderModel),
+                        children: infoList(senderModel, width, height, true),
                       ),
                     ),
                   ),
@@ -128,94 +128,5 @@ class _SharePageState extends State<SharePage> {
         return willPop;
       },
     );
-  }
-
-  infoList(SenderModel senderModel) {
-    var iconList = [
-      Icon(
-        UniconsLine.location_point,
-        color: Colors.blue.shade600,
-      ),
-      const Icon(
-        UniconsLine.process,
-      ),
-      if (Platform.isAndroid) ...{
-        Icon(
-          Icons.android,
-          color: Colors.greenAccent.shade400,
-        )
-      } else if (Platform.isIOS) ...{
-        Icon(
-          Icons.apple,
-          color: Colors.blueGrey.shade300,
-        )
-      } else if (Platform.isWindows) ...{
-        Icon(
-          Icons.laptop_windows,
-          color: Colors.blue.shade400,
-        )
-      } else if (Platform.isMacOS) ...{
-        Icon(
-          Icons.laptop_mac,
-          color: Colors.blueGrey.shade300,
-        )
-      } else if (Platform.isLinux) ...{
-        Icon(
-          UniconsLine.linux,
-          color: Colors.blueGrey.shade300,
-        )
-      },
-      const Icon(
-        UniconsLine.info_circle,
-      )
-    ];
-    var serverDataList = [
-      {'type': 'IP'.padRight(12), 'value': senderModel.ip},
-      {'type': 'Port'.padRight(10), 'value': senderModel.port},
-      {'type': 'Os'.padRight(11), 'value': senderModel.os},
-      {'type': 'Version', 'value': senderModel.version}
-    ];
-    List<Widget> data = [];
-    for (int i = 0; i < iconList.length; i++) {
-      data.add(Padding(
-        padding: const EdgeInsets.all(0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            iconList[i],
-            const SizedBox(
-              width: 20,
-            ),
-            RichText(
-                overflow: TextOverflow.ellipsis,
-                text: TextSpan(
-                  text: width > 720
-                      ? serverDataList[i]['type']
-                      : serverDataList[i]['type'] + ' : ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black.withAlpha(200),
-                      overflow: TextOverflow.ellipsis),
-                  children: [
-                    TextSpan(
-                        text: serverDataList[i]['value'].toString(),
-                        style: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontStyle: FontStyle.italic)),
-                  ],
-                ))
-          ],
-        ),
-      ));
-    }
-    data.insert(
-      0,
-      Text(
-        'Receiver can discover you as,',
-        style: TextStyle(fontSize: width > 720 ? 20 : 16),
-        textAlign: TextAlign.center,
-      ),
-    );
-    return data;
   }
 }
