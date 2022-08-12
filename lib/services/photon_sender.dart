@@ -23,8 +23,9 @@ class PhotonSender {
 
   static assignIP() async {
     //todo handle exception when no ip available
-    String ip = await getIP();
-    _address = ip;
+    //todo add option to choose ip from list
+    List<String> ip = await getIP();
+    _address = ip.first;
   }
 
   static _startServer(List<String?> fileList) async {
@@ -86,8 +87,8 @@ class PhotonSender {
               await fileModel.file.openRead().pipe(request.response);
               request.response.close();
             } catch (_) {}
-          } catch (_) {
-            request.response.write('Format error');
+          } catch (e) {
+            request.response.write(e);
             request.response.close();
           }
         }

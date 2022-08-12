@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:photon/models/file_model.dart';
 
 class FileMethods {
+  //todo implement separate file picker for android to avoid caching
   static Future<List<String?>> pickFiles() async {
     FilePickerResult? files = await FilePicker.platform.pickFiles(
         allowMultiple: true, type: FileType.any, onFileLoading: (status) {});
@@ -26,8 +27,9 @@ class FileMethods {
     File file = File(path);
     int size = await file.length();
     String fileName = path.split(Platform.isWindows ? r'\' : '/').last;
+    String type = path.toString().split('.').last;
     return FileModel.fromFileData(
-        {'name': fileName, 'size': size, 'file': file});
+        {'name': fileName, 'size': size, 'file': file, 'extension': type});
   }
 
   static getSaveDirectory() async {}

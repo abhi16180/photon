@@ -1,16 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
 
+import 'package:path_provider/path_provider.dart' as path;
+// ignore: depend_on_referenced_packages
+import 'package:path/path.dart' as p;
+
 class PhotonReceiver {
   ///to get network address [assumes class C address]
-  static String getNetAddress(String ip) {
-    var ipToList = ip.split('.');
-    ipToList.removeLast();
-    return ipToList.join('.');
+  static List<String> getNetAddress(List<String> ipList) {
+    List<String> netAdd = [];
+    for (String ip in ipList) {
+      var ipToList = ip.split('.');
+      ipToList.removeLast();
+      netAdd.add(ipToList.join('.'));
+    }
+    return netAdd;
   }
 
   ///tries to establish socket connection
@@ -41,11 +48,10 @@ class PhotonReceiver {
   static Future<List<SenderModel>> scan() async {
     List<Future<Map<String, dynamic>>> list = [];
     List<SenderModel> photonServers = [];
-    String netAddress = getNetAddress(await getIP());
-   
+    List<String> netAddresses = getNetAddress(await getIP());
     for (int i = 2; i < 255; i++) {
-      for (int port in [4040, 4999, 5000]) {
-        Future<Map<String, dynamic>> res = _connect('$netAddress.$i', port);
+      for (String netAddress in netAddresses) {
+        Future<Map<String, dynamic>> res = _connect('$netAddress.$i', 4040);
         list.add(res);
       }
     }
@@ -64,5 +70,79 @@ class PhotonReceiver {
     }
     list.clear();
     return photonServers;
+  }
+
+  static receive(SenderModel senderModel) async {
+    //  var data = jsonDecode(resp.body);
+    var resp = await Dio()
+        .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
+    var dataMap = jsonDecode(resp.data);
+    for (int i = 0; i < dataMap['paths'].length; i++) {
+      await receiveFile(
+          senderModel.ip, dataMap['paths'][i], i.toString(), senderModel);
+    }
+  }
+
+  static receiveFile(ip, filePath, i, SenderModel senderModel) async {
+    Dio dio = Dio();
+    String? finalPath;
+    Directory? directory;
+    //extract filename from filepath send by the sender
+    String fileName =
+        filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
+
+    switch (Platform.operatingSystem) {
+      case "android":
+        //  Directory('/storage/emulated/0/Download/')
+        directory = await path.getApplicationDocumentsDirectory();
+        finalPath = p.join(directory.path, fileName);
+        break;
+      case "ios":
+        directory = await path.getApplicationDocumentsDirectory();
+        break;
+//currently it will create folder photon inside downloads directory if folder' photon' doesn't exist
+//implement the same for macOs and linux
+      case "windows":
+        directory = await path.getDownloadsDirectory();
+        finalPath = p.join(directory!.path, fileName);
+        break;
+      case "linux":
+      case "macos":
+        directory = await path.getDownloadsDirectory();
+        finalPath = p.join(directory!.path, fileName);
+        break;
+      default:
+        print("Error");
+    }
+
+    dio.download(
+      'http://$ip:4040/$i',
+      finalPath,
+      onReceiveProgress: (received, total) {
+        if (total != -1) {
+          print("${(received / total * 100).toStringAsFixed(0)}%");
+          //you can build progressbar feature too
+        }
+      },
+    );
+  }
+
+  Future<String?> getPath() async {
+    Directory? directory;
+    try {
+      if (Platform.isIOS) {
+        directory = await path.getApplicationDocumentsDirectory();
+      } else if (Platform.isAndroid) {
+        directory = Directory('/storage/emulated/0/Download');
+        // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+        // ignore: avoid_slow_async_io
+        if (!await directory.exists()) {
+          directory = await path.getExternalStorageDirectory();
+        }
+      }
+    } catch (err) {
+      print("Cannot get download folder path");
+    }
+    return directory?.path;
   }
 }
