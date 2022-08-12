@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:photon/models/server_model.dart';
+import 'package:photon/models/sender_model.dart';
 import 'package:photon/services/photon_sender.dart';
 import 'package:unicons/unicons.dart';
 
@@ -16,7 +16,7 @@ class SharePage extends StatefulWidget {
 }
 
 class _SharePageState extends State<SharePage> {
-  ServerModel serverModel = PhotonSender.getServerInfo();
+  SenderModel senderModel = PhotonSender.getServerInfo();
   PhotonSender photonSender = PhotonSender();
   late double width;
   late double height;
@@ -85,7 +85,7 @@ class _SharePageState extends State<SharePage> {
                     child: Center(
                       child: Wrap(
                         direction: Axis.vertical,
-                        children: infoList(serverModel),
+                        children: infoList(senderModel),
                       ),
                     ),
                   ),
@@ -130,7 +130,7 @@ class _SharePageState extends State<SharePage> {
     );
   }
 
-  infoList(ServerModel serverModel) {
+  infoList(SenderModel senderModel) {
     var iconList = [
       Icon(
         UniconsLine.location_point,
@@ -170,10 +170,10 @@ class _SharePageState extends State<SharePage> {
       )
     ];
     var serverDataList = [
-      {'type': 'IP'.padRight(12), 'value': serverModel.ip},
-      {'type': 'Port'.padRight(10), 'value': serverModel.port},
-      {'type': 'Os'.padRight(11), 'value': serverModel.os},
-      {'type': 'Version', 'value': serverModel.version}
+      {'type': 'IP'.padRight(12), 'value': senderModel.ip},
+      {'type': 'Port'.padRight(10), 'value': senderModel.port},
+      {'type': 'Os'.padRight(11), 'value': senderModel.os},
+      {'type': 'Version', 'value': senderModel.version}
     ];
     List<Widget> data = [];
     for (int i = 0; i < iconList.length; i++) {

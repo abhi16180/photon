@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:photon/methods/methods.dart';
-import 'package:photon/models/server_model.dart';
+import 'package:photon/models/sender_model.dart';
 
 //globals
 
@@ -31,17 +31,17 @@ class PhotonReceiver {
     var dio = Dio();
     try {
       var resp = await dio.get('http://$ip:$port/photon-server');
-      Map<String, dynamic> serverInfo = jsonDecode(resp.data);
-      return ServerModel.fromJson(serverInfo);
+      Map<String, dynamic> senderInfo = jsonDecode(resp.data);
+      return SenderModel.fromJson(senderInfo);
     } catch (_) {
       return null;
     }
   }
 
   ///scan presence of photon-server[driver func]
-  static scan() async {
+  static Future<List<SenderModel>> scan() async {
     List<Future<Map<String, dynamic>>> list = [];
-    List<Map<String, dynamic>> photonServers = [];
+    List<SenderModel> photonServers = [];
     String netAddress = getNetAddress(await getIP());
 
     for (int i = 2; i < 255; i++) {
@@ -51,14 +51,15 @@ class PhotonReceiver {
       }
     }
 
-    ///todo add server info along with the list
+    ///todo add sender info along with the list
     for (var ele in list) {
       Map<String, dynamic> item = await ele;
       if (item.containsKey('host')) {
-        if ((isPhotonServer(
-                item['host'].toString(), item['port'].toString())) !=
+        Future<dynamic> resp;
+        if ((resp = (isPhotonServer(
+                item['host'].toString(), item['port'].toString()))) !=
             null) {
-          photonServers.add(item);
+          photonServers.add(await resp);
         }
       }
     }
