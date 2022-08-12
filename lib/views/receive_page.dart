@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import '../services/photon_client.dart';
+import '../services/photon_receiver.dart';
 
 class ReceivePage extends StatefulWidget {
   const ReceivePage({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class ReceivePage extends StatefulWidget {
 class _ReceivePageState extends State<ReceivePage> {
   _scan() async {
     try {
-      var resp = await PhotonClient.scan();
+      var resp = await PhotonReceiver.scan();
       return resp;
     } catch (_) {}
     return [];

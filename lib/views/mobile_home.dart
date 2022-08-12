@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:glass/glass.dart';
 import 'package:lottie/lottie.dart';
-import 'package:photon/services/photon_server.dart';
+import 'package:photon/services/photon_sender.dart';
 
 import '../methods/methods.dart';
 
@@ -16,7 +16,7 @@ class MobileHome extends StatefulWidget {
 }
 
 class _MobileHomeState extends State<MobileHome> {
-  PhotonServer photonServer = PhotonServer();
+  PhotonSender photonSePhotonSender = PhotonSender();
   bool isloading = false;
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class _MobileHomeState extends State<MobileHome> {
           ),
           const Center(
             child: Text(
-              'Please wait,setting up the server',
+              'Please wait,setting up the SePhotonSender',
               style: TextStyle(
                 fontSize: 18,
               ),
