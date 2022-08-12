@@ -62,35 +62,40 @@ class PhotonSender {
         } else if (request.requestedUri.toString() ==
             'http://$_address:4040/') {
         } else {
-          String filePath = fileList[
-              int.parse(request.requestedUri.toString().split('/').last)]!;
-          File file = File(filePath);
-          int size = await file.length();
-          String fileName =
-              filePath.split(Platform.isWindows ? r'\' : 'r').last;
-
-          request.response.headers.contentType = ContentType(
-            'application',
-            'octet-stream',
-            charset: 'utf-8',
-          );
-          request.response.headers.add(
-            'Content-Transfer-Encoding',
-            'Binary',
-          );
-          request.response.headers.add(
-            'Content-disposition',
-            'attachment; filename=$fileName',
-          );
-
-          request.response.headers.add(
-            'Content-length',
-            size,
-          );
           try {
-            await file.openRead().pipe(request.response);
+            String filePath = fileList[
+                int.parse(request.requestedUri.toString().split('/').last)]!;
+            File file = File(filePath);
+            int size = await file.length();
+            String fileName =
+                filePath.split(Platform.isWindows ? r'\' : 'r').last;
+
+            request.response.headers.contentType = ContentType(
+              'application',
+              'octet-stream',
+              charset: 'utf-8',
+            );
+            request.response.headers.add(
+              'Content-Transfer-Encoding',
+              'Binary',
+            );
+            request.response.headers.add(
+              'Content-disposition',
+              'attachment; filename=$fileName',
+            );
+
+            request.response.headers.add(
+              'Content-length',
+              size,
+            );
+            try {
+              await file.openRead().pipe(request.response);
+              request.response.close();
+            } catch (_) {}
+          } catch (_) {
+            request.response.write('Format error');
             request.response.close();
-          } catch (_) {}
+          }
         }
       },
     );
