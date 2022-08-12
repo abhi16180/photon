@@ -3,5 +3,6 @@
         "hotspot",
         "receivepage",
         "sharepage"
-    ]
+    ],
+    "cmake.configureOnOpen": false
 }

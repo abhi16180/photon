@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:photon/methods/methods.dart';
+import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
 
 import 'file_services.dart';
@@ -63,12 +64,8 @@ class PhotonSender {
             'http://$_address:4040/') {
         } else {
           try {
-            String filePath = fileList[
-                int.parse(request.requestedUri.toString().split('/').last)]!;
-            File file = File(filePath);
-            int size = await file.length();
-            String fileName =
-                filePath.split(Platform.isWindows ? r'\' : 'r').last;
+            FileModel fileModel = await FileMethods.extractFileData(fileList[
+                int.parse(request.requestedUri.toString().split('/').last)]!);
 
             request.response.headers.contentType = ContentType(
               'application',
@@ -81,15 +78,12 @@ class PhotonSender {
             );
             request.response.headers.add(
               'Content-disposition',
-              'attachment; filename=$fileName',
+              'attachment; filename=${fileModel.name}',
             );
 
-            request.response.headers.add(
-              'Content-length',
-              size,
-            );
+            request.response.headers.add('Content-length', fileModel.size);
             try {
-              await file.openRead().pipe(request.response);
+              await fileModel.file.openRead().pipe(request.response);
               request.response.close();
             } catch (_) {}
           } catch (_) {
