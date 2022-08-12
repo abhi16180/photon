@@ -15,7 +15,7 @@ class ReceivePage extends StatefulWidget {
 }
 
 class _ReceivePageState extends State<ReceivePage> {
-  _scan() async {
+  Future<List<SenderModel>> _scan() async {
     try {
       List<SenderModel> resp = await PhotonReceiver.scan();
       return resp;
@@ -55,7 +55,31 @@ class _ReceivePageState extends State<ReceivePage> {
                         borderRadius: BorderRadius.circular(20),
                         clipBehavior: Clip.antiAlias,
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            print('download');
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Receive'),
+                                    content: const Text(
+                                        'Do you want to receive files from this sender?'),
+                                    actions: [
+                                      ElevatedButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: const Text('Go back')),
+                                      ElevatedButton(
+                                          onPressed: () async {
+                                            Navigator.of(context).pop();
+                                            await PhotonReceiver.receive(snap
+                                                .data[index] as SenderModel);
+                                          },
+                                          child: const Text('Yes'))
+                                    ],
+                                  );
+                                });
+                          },
                           child: Card(
                             clipBehavior: Clip.antiAlias,
                             elevation: 5,
