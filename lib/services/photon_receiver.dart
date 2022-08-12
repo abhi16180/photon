@@ -41,7 +41,7 @@ class PhotonReceiver {
   ///scan presence of photon-server[driver func]
   static scan() async {
     List<Future<Map<String, dynamic>>> list = [];
-    List<Map<String, dynamic>> photonServers = [];
+    List<dynamic> photonServers = [];
     String netAddress = getNetAddress(await getIP());
 
     for (int i = 2; i < 255; i++) {
@@ -55,10 +55,14 @@ class PhotonReceiver {
     for (var ele in list) {
       Map<String, dynamic> item = await ele;
       if (item.containsKey('host')) {
-        if ((isPhotonServer(
-                item['host'].toString(), item['port'].toString())) !=
+        Future<dynamic> resp;
+        if ((resp = (isPhotonServer(
+                item['host'].toString(), item['port'].toString()))) !=
             null) {
-          photonServers.add(item);
+          print(await resp);
+          photonServers.add({
+            'data': [await resp, item]
+          });
         }
       }
     }
