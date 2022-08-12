@@ -115,7 +115,7 @@ class PhotonSender {
   static closeServer() async {
     try {
       await _server.close();
-      print('closed');
+      await FileMethods.clearCache();
     } catch (e) {
       print("Server not yet started");
     }
