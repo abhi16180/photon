@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
 
-//globals
 
 class PhotonReceiver {
   ///to get network address [assumes class C address]
