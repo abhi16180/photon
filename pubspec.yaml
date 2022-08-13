@@ -42,6 +42,9 @@ dependencies:
   unicons: 
   dio: ^4.0.6
   path_provider: ^2.0.11
+  get_it: ^7.2.0
+  provider: ^6.0.3
+  get:
 
 
 dev_dependencies:

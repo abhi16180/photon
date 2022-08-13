@@ -4,7 +4,7 @@ class FileModel {
   String name;
   int size;
   File file;
-  String extn;
+  String? extn;
   FileModel(
       {required this.name,
       required this.size,

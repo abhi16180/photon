@@ -44,6 +44,7 @@ class PhotonSender {
         'host': Platform.localHostname,
         'os': Platform.operatingSystem,
         'version': Platform.operatingSystemVersion,
+        'files-count': fileList.length
       };
     } catch (e) {
       return false;
@@ -124,6 +125,7 @@ class PhotonSender {
       'host': Platform.localHostname,
       'os': Platform.operatingSystem,
       'version': Platform.operatingSystemVersion,
+      'files-count': _fileList.length
     };
     SenderModel senderData = SenderModel.fromJson(info);
     return senderData;
