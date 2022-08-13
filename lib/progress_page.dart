@@ -36,7 +36,13 @@ class _ProgressPageState extends State<ProgressPage> {
     });
     return Scaffold(
       appBar: AppBar(
-        title: const Text(' Receiving'),
+        title: const Text(
+          ' Receiving',
+        ),
+        leading: BackButton(onPressed: () {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+        }),
       ),
       body: ListView.builder(
           itemCount: widget.senderModel.filesCount,
@@ -46,44 +52,65 @@ class _ProgressPageState extends State<ProgressPage> {
               () {
                 percentageList[item] =
                     (getInstance.percentage[item] as RxDouble).value;
-
-                // return LinearProgressIndicator(
-                //   value: (getInstance.percentage[item] as RxDouble).value,
-                //   color: Colors.cyan,
-                // );
-                print((getInstance.percentage[item] as RxDouble).value);
                 return UnconstrainedBox(
-                  child: AnimatedContainer(
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                          color: Colors.greenAccent,
-                          borderRadius: BorderRadius.circular(10)),
-                      duration: const Duration(microseconds: 100),
-                      height: 10,
-                      width: (getInstance.percentage[item] as RxDouble).value),
-                );
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.2,
+                    height: 80,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomPaint(
+                          painter: ProgressLine(
+                              pos: (getInstance.percentage[item] as RxDouble)
+                                      .value *
+                                  (MediaQuery.of(context).size.width / 100)),
+                          child: Container(),
+                        ),
+                        Text('${(getInstance.percentage[item] as RxDouble)}'),
+                      ],
+                    ),
+                  ),
+                ));
               },
             );
           }),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        percentageList[0]++;
-      }),
     );
   }
 }
 
 class ProgressLine extends CustomPainter {
+  final double pos;
+  ProgressLine({required this.pos});
+
   @override
   void paint(Canvas canvas, Size size) {
-    // TODO: implement paint
+    var rect = Offset.zero & size;
     var paint = Paint()
       ..color = Colors.green.shade400
-      ..strokeWidth = 5;
+      ..strokeWidth = 10
+      ..shader = LinearGradient(
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        colors: [
+          Colors.blue[900]!,
+          Colors.blue[500]!,
+        ],
+      ).createShader(rect)
+      ..strokeCap = StrokeCap.round;
+
+    double i = -0.0;
+    //to animate
+    while (i != pos * 10) {
+      i = i + 1;
+      canvas.drawLine(const Offset(0, 0), Offset(i, 0), paint);
+    }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     // TODO: implement shouldRepaint
-    throw UnimplementedError();
+    return true;
   }
 }
