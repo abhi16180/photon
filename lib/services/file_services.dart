@@ -1,7 +1,13 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart' as path;
+
 import 'package:photon/models/file_model.dart';
+
+import '../models/sender_model.dart';
 
 class FileMethods {
   //todo implement separate file picker for android to avoid caching
@@ -32,5 +38,35 @@ class FileMethods {
         {'name': fileName, 'size': size, 'file': file, 'extension': type});
   }
 
-  static getSaveDirectory() async {}
+  static getSavePath(String filePath, SenderModel senderModel) async {
+    // ignore: unused_local_variable
+    String? finalPath;
+    Directory? directory;
+    //extract filename from filepath send by the sender
+    String fileName =
+        filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
+
+    switch (Platform.operatingSystem) {
+      case "android":
+        directory = Directory('/storage/emulated/0/Download/');
+        finalPath = p.join(directory.path, fileName);
+        break;
+      case "ios":
+        directory = await path.getApplicationDocumentsDirectory();
+        break;
+      case "windows":
+        directory = await path.getDownloadsDirectory();
+        finalPath = p.join(directory!.path, fileName);
+        break;
+      case "linux":
+      case "macos":
+        directory = await path.getDownloadsDirectory();
+        finalPath = p.join(directory!.path, fileName);
+        break;
+      default:
+        debugPrint("Error");
+    }
+
+    return filePath;
+  }
 }

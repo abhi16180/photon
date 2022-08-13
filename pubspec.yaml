@@ -45,6 +45,7 @@ dependencies:
   get_it: ^7.2.0
   provider: ^6.0.3
   get:
+  path: ^1.8.1
 
 
 dev_dependencies:

@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
 
 import 'package:path_provider/path_provider.dart' as path;
-// ignore: depend_on_referenced_packages
-import 'package:path/path.dart' as p;
+
+import 'package:photon/services/file_services.dart';
 
 import '../controllers/controllers.dart';
 import 'package:get_it/get_it.dart';
@@ -87,57 +87,25 @@ class PhotonReceiver {
     }
   }
 
-  static receiveFile(ip, filePath, i, SenderModel senderModel) async {
+  static receiveFile(ip, filePath, fileIndex, SenderModel senderModel) async {
     Dio dio = Dio();
-    String? finalPath;
-    Directory? directory;
     var getInstance = GetIt.I<PercentageController>();
-    //extract filename from filepath send by the sender
-    String fileName =
-        filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
-
-    switch (Platform.operatingSystem) {
-      case "android":
-        directory = Directory('/storage/emulated/0/Download/');
-        finalPath = p.join(directory.path, fileName);
-
-        break;
-      case "ios":
-        directory = await path.getApplicationDocumentsDirectory();
-        break;
-//currently it will create folder photon inside downloads directory if folder' photon' doesn't exist
-//implement the same for macOs and linux
-      case "windows":
-        directory = await path.getDownloadsDirectory();
-        finalPath = p.join(directory!.path, fileName);
-        break;
-      case "linux":
-      case "macos":
-        directory = await path.getDownloadsDirectory();
-        finalPath = p.join(directory!.path, fileName);
-        break;
-      default:
-        print("Error");
-    }
+    String finalPath = await FileMethods.getSavePath(filePath, senderModel);
 
     try {
-    
       await dio.download(
-        'http://$ip:4040/${i.toString()}',
+        'http://$ip:4040/${fileIndex.toString()}',
         finalPath,
         onReceiveProgress: (received, total) {
           if (total != -1) {
             // print("${(received / total * 100).toStringAsFixed(0)}%");
-
-            getInstance.percentage[i].value =
+            getInstance.percentage[fileIndex].value =
                 (double.parse((received / total * 100).toStringAsFixed(0)));
-
-            // print(GetIt.I<PercentageController>().percentage[i].value);
           }
         },
       );
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
