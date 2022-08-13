@@ -1,12 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
 
 import 'package:path_provider/path_provider.dart' as path;
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
+
+import '../controllers/controllers.dart';
+import 'package:get_it/get_it.dart';
 
 class PhotonReceiver {
   ///to get network address [assumes class C address]
@@ -77,9 +81,9 @@ class PhotonReceiver {
     var resp = await Dio()
         .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
     var dataMap = jsonDecode(resp.data);
+
     for (int i = 0; i < dataMap['paths'].length; i++) {
-      await receiveFile(
-          senderModel.ip, dataMap['paths'][i], i.toString(), senderModel);
+      await receiveFile(senderModel.ip, dataMap['paths'][i], i, senderModel);
     }
   }
 
@@ -87,15 +91,16 @@ class PhotonReceiver {
     Dio dio = Dio();
     String? finalPath;
     Directory? directory;
+    var getInstance = GetIt.I<PercentageController>();
     //extract filename from filepath send by the sender
     String fileName =
         filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
 
     switch (Platform.operatingSystem) {
       case "android":
-        //  Directory('/storage/emulated/0/Download/')
-        directory = await path.getApplicationDocumentsDirectory();
+        directory = Directory('/storage/emulated/0/Download/');
         finalPath = p.join(directory.path, fileName);
+
         break;
       case "ios":
         directory = await path.getApplicationDocumentsDirectory();
@@ -115,16 +120,25 @@ class PhotonReceiver {
         print("Error");
     }
 
-    dio.download(
-      'http://$ip:4040/$i',
-      finalPath,
-      onReceiveProgress: (received, total) {
-        if (total != -1) {
-          print("${(received / total * 100).toStringAsFixed(0)}%");
-          //you can build progressbar feature too
-        }
-      },
-    );
+    try {
+    
+      await dio.download(
+        'http://$ip:4040/${i.toString()}',
+        finalPath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            // print("${(received / total * 100).toStringAsFixed(0)}%");
+
+            getInstance.percentage[i].value =
+                (double.parse((received / total * 100).toStringAsFixed(0)));
+
+            // print(GetIt.I<PercentageController>().percentage[i].value);
+          }
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<String?> getPath() async {

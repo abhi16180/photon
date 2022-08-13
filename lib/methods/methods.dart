@@ -51,7 +51,7 @@ Future<List<String>> getIP() async {
   ///assign ip with proper ip-address
   List<NetworkInterface> listOfInterfaces = await NetworkInterface.list();
   List<String> ipList = [];
-  print(listOfInterfaces);
+
   for (NetworkInterface netInt in listOfInterfaces) {
     for (InternetAddress internetAddress in netInt.addresses) {
       if (internetAddress.address.toString().startsWith('192.168')) {

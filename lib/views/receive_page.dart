@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/components/components.dart';
+import 'package:photon/main.dart';
 import 'package:photon/models/sender_model.dart';
-
+import 'package:get/get.dart';
+import 'package:photon/progress_page.dart';
 import '../services/photon_receiver.dart';
 
 class ReceivePage extends StatefulWidget {
@@ -23,10 +26,13 @@ class _ReceivePageState extends State<ReceivePage> {
     return [];
   }
 
+  GetIt getIt = GetIt.instance;
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Receive'),
@@ -35,7 +41,6 @@ class _ReceivePageState extends State<ReceivePage> {
         future: _scan(),
         builder: (context, AsyncSnapshot snap) {
           if (snap.connectionState == ConnectionState.done) {
-            List<SenderModel> data = snap.data;
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,7 +61,6 @@ class _ReceivePageState extends State<ReceivePage> {
                         clipBehavior: Clip.antiAlias,
                         child: InkWell(
                           onTap: () {
-                            print('download');
                             showDialog(
                                 context: context,
                                 builder: (context) {
@@ -70,12 +74,20 @@ class _ReceivePageState extends State<ReceivePage> {
                                               Navigator.of(context).pop(),
                                           child: const Text('Go back')),
                                       ElevatedButton(
-                                          onPressed: () async {
-                                            Navigator.of(context).pop();
-                                            await PhotonReceiver.receive(snap
-                                                .data[index] as SenderModel);
-                                          },
-                                          child: const Text('Yes'))
+                                        onPressed: () async {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return ProgressPage(
+                                                    senderModel:
+                                                        snap.data[index]
+                                                            as SenderModel);
+                                              },
+                                            ),
+                                          );
+                                        },
+                                        child: const Text('Yes'),
+                                      )
                                     ],
                                   );
                                 });
