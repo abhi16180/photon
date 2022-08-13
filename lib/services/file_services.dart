@@ -38,7 +38,7 @@ class FileMethods {
         {'name': fileName, 'size': size, 'file': file, 'extension': type});
   }
 
-  static getSavePath(String filePath, SenderModel senderModel) async {
+  static Future<String> getSavePath(String filePath, SenderModel senderModel) async {
     // ignore: unused_local_variable
     String? finalPath;
     Directory? directory;
