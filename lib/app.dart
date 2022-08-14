@@ -1,10 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:photon/services/photon_sender.dart';
 
 import 'views/mobile_home.dart';
 import 'views/widescreen_home.dart';
-
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -19,7 +17,6 @@ class _AppState extends State<App> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: const Text(
           'Photon',
           style: TextStyle(

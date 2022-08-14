@@ -32,7 +32,7 @@ class _ProgressPageState extends State<ProgressPage> {
     var getInstance = GetIt.I<PercentageController>();
     var width = MediaQuery.of(context).size.width > 720
         ? MediaQuery.of(context).size.width / 1.8
-        : MediaQuery.of(context).size.width / 1.2;
+        : MediaQuery.of(context).size.width / 1.12;
     getInstance.percentage = RxList.generate(
       widget.senderModel!.filesCount!,
       (i) {
@@ -61,7 +61,7 @@ class _ProgressPageState extends State<ProgressPage> {
                 percentageList.add(0.0);
                 return Obx(
                   () {
-                    double progressLineWidth = width *
+                    double progressLineWidth = (width - 24) *
                         (getInstance.percentage[item] as RxDouble).value /
                         100;
 
@@ -69,17 +69,17 @@ class _ProgressPageState extends State<ProgressPage> {
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Card(
-                        color: Colors.blue.shade100,
+                        // color: Colors.blue.shade100,
                         clipBehavior: Clip.antiAlias,
                         child: SizedBox(
                           width: width,
-                          height: 80,
+                          height: 100,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
                                   snap.data![item],
                                   overflow: TextOverflow.ellipsis,
@@ -94,8 +94,11 @@ class _ProgressPageState extends State<ProgressPage> {
                               const SizedBox(
                                 height: 40,
                               ),
-                              Text(
-                                  '${(getInstance.percentage[item] as RxDouble)}'),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                    '${(getInstance.percentage[item] as RxDouble)}'),
+                              ),
                             ],
                           ),
                         ),

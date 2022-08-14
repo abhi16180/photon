@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/models/sender_model.dart';
@@ -76,7 +74,7 @@ class _SharePageState extends State<SharePage> {
                 Card(
                   clipBehavior: Clip.antiAlias,
                   elevation: 5,
-                  color: Platform.isWindows ? Colors.grey.shade300 : null,
+                  // color: Platform.isWindows ? Colors.grey.shade300 : null,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   child: SizedBox(
