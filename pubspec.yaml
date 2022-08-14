@@ -36,7 +36,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_svg: ^1.1.3
   glass: ^1.0.1+1
-  file_picker: ^5.0.1
   network_info_plus: ^2.1.4
   lottie:
   unicons: 
@@ -48,6 +47,12 @@ dependencies:
   path: ^1.8.1
   percent_indicator: ^4.2.2
   flex_color_scheme: 
+  file_picker:
+    git:
+      url: https://github.com/abhi16180/flutter_file_picker.git
+     
+ 
+  
 
 
 dev_dependencies:
