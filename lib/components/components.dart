@@ -67,7 +67,7 @@ infoList(SenderModel senderModel, double width, double height, bool sender) {
                   : serverDataList[i]['type'] + ' : ',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black.withAlpha(200),
+                  color: Color.fromARGB(255, 255, 255, 255).withAlpha(200),
                   overflow: TextOverflow.ellipsis),
               children: [
                 TextSpan(

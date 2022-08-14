@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
@@ -33,7 +31,7 @@ class _ReceivePageState extends State<ReceivePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Receive'),
+        title: const Text('Scan'),
       ),
       body: FutureBuilder(
         future: _scan(),
@@ -97,9 +95,9 @@ class _ReceivePageState extends State<ReceivePage> {
                           child: Card(
                             clipBehavior: Clip.antiAlias,
                             elevation: 5,
-                            color: Platform.isWindows
-                                ? Colors.grey.shade300
-                                : null,
+                            // color: Platform.isWindows
+                            //     ? Colors.grey.shade300
+                            //     : null,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
                             child: SizedBox(
