@@ -47,6 +47,7 @@ dependencies:
   get:
   path: ^1.8.1
   percent_indicator: ^4.2.2
+  flex_color_scheme: 
 
 
 dev_dependencies:
