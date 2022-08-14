@@ -4,10 +4,11 @@ import 'package:get_it/get_it.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'package:photon/services/photon_receiver.dart';
 import 'models/sender_model.dart';
+import 'services/file_services.dart';
 
 class ProgressPage extends StatefulWidget {
-  final SenderModel senderModel;
-  const ProgressPage({
+  SenderModel? senderModel;
+  ProgressPage({
     Key? key,
     required this.senderModel,
   }) : super(key: key);
@@ -20,62 +21,94 @@ class _ProgressPageState extends State<ProgressPage> {
   @override
   void initState() {
     super.initState();
-    PhotonReceiver.receive(widget.senderModel);
+    PhotonReceiver.receive(widget.senderModel!);
   }
 
   final percentageController = PercentageController();
-  double percentage = 0.0;
   List percentageList = [];
 
   @override
   Widget build(BuildContext context) {
     var getInstance = GetIt.I<PercentageController>();
-    getInstance.percentage =
-        RxList.generate(widget.senderModel.filesCount!, (i) {
-      return RxDouble(0.0);
-    });
+    var width = MediaQuery.of(context).size.width / 1.8;
+    getInstance.percentage = RxList.generate(
+      widget.senderModel!.filesCount!,
+      (i) {
+        return RxDouble(0.0);
+      },
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           ' Receiving',
         ),
-        leading: BackButton(onPressed: () {
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-        }),
+        leading: BackButton(
+          onPressed: () {
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+          },
+        ),
       ),
-      body: ListView.builder(
-          itemCount: widget.senderModel.filesCount,
-          itemBuilder: (context, item) {
-            percentageList.add(0.0);
-            return Obx(
-              () {
-                percentageList[item] =
-                    (getInstance.percentage[item] as RxDouble).value;
-                return UnconstrainedBox(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.2,
-                    height: 80,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomPaint(
-                          painter: ProgressLine(
-                              pos: (getInstance.percentage[item] as RxDouble)
-                                      .value *
-                                  (MediaQuery.of(context).size.width / 100)),
-                          child: Container(),
+      body: FutureBuilder(
+        future: FileMethods.getFileNames(widget.senderModel!),
+        builder: (context, AsyncSnapshot snap) {
+          if (snap.connectionState == ConnectionState.done) {
+            return ListView.builder(
+              itemCount: snap.data.length,
+              itemBuilder: (context, item) {
+                percentageList.add(0.0);
+                return Obx(
+                  () {
+                    double progressLineWidth = width *
+                        (getInstance.percentage[item] as RxDouble).value /
+                        100;
+
+                    return UnconstrainedBox(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width / 1.2,
+                        height: 80,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomPaint(
+                              painter: ProgressLine(
+                                pos: progressLineWidth,
+                              ),
+                              child: Container(),
+                            ),
+                            Text(
+                              snap.data![item],
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                                '${(getInstance.percentage[item] as RxDouble)}'),
+                          ],
                         ),
-                        Text('${(getInstance.percentage[item] as RxDouble)}'),
-                      ],
-                    ),
-                  ),
-                ));
+                      ),
+                    ));
+                  },
+                );
               },
             );
-          }),
+          } else if (snap.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return Center(
+              child: Card(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  child: const Text('Something went wrong'),
+                ),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -90,27 +123,27 @@ class ProgressLine extends CustomPainter {
     var paint = Paint()
       ..color = Colors.green.shade400
       ..strokeWidth = 10
-      ..shader = LinearGradient(
+      ..shader = const LinearGradient(
         begin: Alignment.topRight,
         end: Alignment.bottomLeft,
         colors: [
-          Colors.blue[900]!,
-          Colors.blue[500]!,
+          Color.fromARGB(255, 24, 228, 218),
+          Color.fromARGB(255, 15, 147, 255),
         ],
       ).createShader(rect)
       ..strokeCap = StrokeCap.round;
 
-    double i = -0.0;
+    // double i = -0.0;
     //to animate
-    while (i != pos * 10) {
-      i = i + 1;
-      canvas.drawLine(const Offset(0, 0), Offset(i, 0), paint);
-    }
+    // while (i != pos) {
+    //   i = i + 1;
+    //   canvas.drawLine(const Offset(0, 0), Offset(i, 0), paint);
+    // }
+    canvas.drawLine(const Offset(0, 0), Offset(pos, 0), paint);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
     return true;
   }
 }
