@@ -71,6 +71,7 @@ class FileMethods {
     }
     //checking if file can be created at savePath
     try {
+      // ignore: unused_local_variable
       var file = await File(savePath!).create();
     } catch (_) {
       //renaming the path
