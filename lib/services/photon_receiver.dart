@@ -96,6 +96,7 @@ class PhotonReceiver {
     Dio dio = Dio();
     var getInstance = GetIt.I<PercentageController>();
     String finalPath = await FileMethods.getSavePath(filePath, senderModel);
+
     try {
       await dio.download(
         'http://$ip:4040/${fileIndex.toString()}',

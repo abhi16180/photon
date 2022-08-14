@@ -14,8 +14,8 @@ import '../models/sender_model.dart';
 class FileMethods {
   //todo implement separate file picker for android to avoid caching
   static Future<List<String?>> pickFiles() async {
-    FilePickerResult? files = await FilePicker.platform.pickFiles(
-        allowMultiple: true, type: FileType.any, onFileLoading: (status) {});
+    FilePickerResult? files = await FilePicker.platform
+        .pickFiles(allowMultiple: true, type: FileType.any, withData: false);
     if (files == null) {
       return [];
     } else {
@@ -43,7 +43,7 @@ class FileMethods {
   static Future<String> getSavePath(
       String filePath, SenderModel senderModel) async {
     // ignore: unused_local_variable
-    String? finalPath;
+    String? savePath;
     Directory? directory;
     //extract filename from filepath send by the sender
     String fileName =
@@ -52,25 +52,33 @@ class FileMethods {
     switch (Platform.operatingSystem) {
       case "android":
         directory = Directory('/storage/emulated/0/Download/');
-        finalPath = p.join(directory.path, fileName);
+        savePath = p.join(directory.path, fileName);
         break;
       case "ios":
         directory = await path.getApplicationDocumentsDirectory();
         break;
       case "windows":
         directory = await path.getDownloadsDirectory();
-        finalPath = p.join(directory!.path, fileName);
+        savePath = p.join(directory!.path, fileName);
         break;
       case "linux":
       case "macos":
         directory = await path.getDownloadsDirectory();
-        finalPath = p.join(directory!.path, fileName);
+        savePath = p.join(directory!.path, fileName);
         break;
       default:
         debugPrint("Error");
     }
-
-    return finalPath!;
+    //checking if file can be created at savePath
+    try {
+      var file = await File(savePath!).create();
+    } catch (_) {
+      //renaming the path
+      List newPath = savePath!.split('.');
+      newPath[0] = newPath[0] + "1";
+      savePath = newPath.join();
+    }
+    return savePath;
   }
 
 //for receiver to display filenames
@@ -84,4 +92,6 @@ class FileMethods {
     }
     return fileNames;
   }
+
+  static changeFileNameOnly(String currentFileName) {}
 }
