@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
@@ -38,7 +40,8 @@ class FileMethods {
         {'name': fileName, 'size': size, 'file': file, 'extension': type});
   }
 
-  static Future<String> getSavePath(String filePath, SenderModel senderModel) async {
+  static Future<String> getSavePath(
+      String filePath, SenderModel senderModel) async {
     // ignore: unused_local_variable
     String? finalPath;
     Directory? directory;
@@ -67,6 +70,18 @@ class FileMethods {
         debugPrint("Error");
     }
 
-    return filePath;
+    return finalPath!;
+  }
+
+//for receiver to display filenames
+  static Future<List<String>> getFileNames(SenderModel senderModel) async {
+    var resp = await Dio()
+        .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
+    var filePathMap = jsonDecode(resp.data);
+    List<String> fileNames = [];
+    for (String path in filePathMap['paths']) {
+      fileNames.add(path.split(senderModel.os == "windows" ? r'\' : r'/').last);
+    }
+    return fileNames;
   }
 }

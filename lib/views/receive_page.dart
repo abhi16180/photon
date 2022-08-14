@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/components/components.dart';
-import 'package:photon/main.dart';
 import 'package:photon/models/sender_model.dart';
-import 'package:get/get.dart';
 import 'package:photon/progress_page.dart';
 import '../services/photon_receiver.dart';
 
@@ -42,11 +40,15 @@ class _ReceivePageState extends State<ReceivePage> {
         builder: (context, AsyncSnapshot snap) {
           if (snap.connectionState == ConnectionState.done) {
             return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: snap.data.length == 0
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (snap.data.length == 0) ...{
-                  const Text('No device found')
+                  const Center(
+                    child: Text('No device found'),
+                  )
                 } else ...{
                   const Center(
                     child: Text(
