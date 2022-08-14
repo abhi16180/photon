@@ -30,7 +30,9 @@ class _ProgressPageState extends State<ProgressPage> {
   @override
   Widget build(BuildContext context) {
     var getInstance = GetIt.I<PercentageController>();
-    var width = MediaQuery.of(context).size.width / 1.8;
+    var width = MediaQuery.of(context).size.width > 720
+        ? MediaQuery.of(context).size.width / 1.8
+        : MediaQuery.of(context).size.width / 1.2;
     getInstance.percentage = RxList.generate(
       widget.senderModel!.filesCount!,
       (i) {
@@ -66,25 +68,36 @@ class _ProgressPageState extends State<ProgressPage> {
                     return UnconstrainedBox(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        height: 80,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CustomPaint(
-                              painter: ProgressLine(
-                                pos: progressLineWidth,
+                      child: Card(
+                        color: Colors.blue.shade100,
+                        clipBehavior: Clip.antiAlias,
+                        child: SizedBox(
+                          width: width,
+                          height: 80,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  snap.data![item],
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                              child: Container(),
-                            ),
-                            Text(
-                              snap.data![item],
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                                '${(getInstance.percentage[item] as RxDouble)}'),
-                          ],
+                              CustomPaint(
+                                painter: ProgressLine(
+                                  pos: progressLineWidth,
+                                ),
+                                child: Container(),
+                              ),
+                              const SizedBox(
+                                height: 40,
+                              ),
+                              Text(
+                                  '${(getInstance.percentage[item] as RxDouble)}'),
+                            ],
+                          ),
                         ),
                       ),
                     ));
@@ -139,7 +152,7 @@ class ProgressLine extends CustomPainter {
     //   i = i + 1;
     //   canvas.drawLine(const Offset(0, 0), Offset(i, 0), paint);
     // }
-    canvas.drawLine(const Offset(0, 0), Offset(pos, 0), paint);
+    canvas.drawLine(const Offset(10, 24), Offset(pos + 10, 24), paint);
   }
 
   @override
