@@ -30,7 +30,9 @@ class _ReceivePageState extends State<ReceivePage> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(207, 10, 9, 17),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 14, 11, 33),
         title: const Text('Scan'),
       ),
       body: FutureBuilder(

@@ -46,7 +46,9 @@ dependencies:
   get:
   path: ^1.8.1
   percent_indicator: ^4.2.2
+  animated_splash_screen: 
   flex_color_scheme: 
+  url_launcher: ^6.1.5
   file_picker:
     git:
       url: https://github.com/abhi16180/flutter_file_picker.git
@@ -84,6 +86,7 @@ flutter:
   assets:
       - assets/icons/
       - assets/lottie/
+      - assets/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
