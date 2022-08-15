@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photon/controllers/controllers.dart';
@@ -21,11 +22,21 @@ class _ProgressPageState extends State<ProgressPage> {
   @override
   void initState() {
     super.initState();
+    generateEmptyList();
     PhotonReceiver.receive(widget.senderModel!);
   }
 
   final percentageController = PercentageController();
   List percentageList = [];
+  generateEmptyList() {
+    var getInstance = GetIt.I<PercentageController>();
+    getInstance.percentage = RxList.generate(
+      widget.senderModel!.filesCount!,
+      (i) {
+        return RxDouble(0.0);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +44,7 @@ class _ProgressPageState extends State<ProgressPage> {
     var width = MediaQuery.of(context).size.width > 720
         ? MediaQuery.of(context).size.width / 1.8
         : MediaQuery.of(context).size.width / 1.12;
-    getInstance.percentage = RxList.generate(
-      widget.senderModel!.filesCount!,
-      (i) {
-        return RxDouble(0.0);
-      },
-    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -61,7 +67,7 @@ class _ProgressPageState extends State<ProgressPage> {
                 percentageList.add(0.0);
                 return Obx(
                   () {
-                    double progressLineWidth = (width - 24) *
+                    double progressLineWidth = (width - 80) *
                         (getInstance.percentage[item] as RxDouble).value /
                         100;
 
@@ -72,36 +78,46 @@ class _ProgressPageState extends State<ProgressPage> {
                         // color: Colors.blue.shade100,
                         clipBehavior: Clip.antiAlias,
                         child: SizedBox(
-                          width: width,
-                          height: 100,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  snap.data![item],
-                                  overflow: TextOverflow.ellipsis,
+                            width: width,
+                            height: 100,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  width: 10,
                                 ),
-                              ),
-                              CustomPaint(
-                                painter: ProgressLine(
-                                  pos: progressLineWidth,
+                                getIcon(
+                                    snap.data[item].toString().split('.').last),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 8.0, top: 8.0),
+                                      child: Text(
+                                        snap.data![item],
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    CustomPaint(
+                                      painter: ProgressLine(
+                                        pos: progressLineWidth,
+                                      ),
+                                      child: Container(),
+                                    ),
+                                    const SizedBox(
+                                      height: 40,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Text(
+                                          '${(getInstance.percentage[item] as RxDouble)} %'),
+                                    ),
+                                  ],
                                 ),
-                                child: Container(),
-                              ),
-                              const SizedBox(
-                                height: 40,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                    '${(getInstance.percentage[item] as RxDouble)}'),
-                              ),
-                            ],
-                          ),
-                        ),
+                              ],
+                            )),
                       ),
                     ));
                   },
@@ -161,5 +177,41 @@ class ProgressLine extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
+  }
+}
+
+Widget getIcon(String extn) {
+  switch (extn) {
+    case 'pdf':
+      return SvgPicture.asset(
+        'assets/icons/pdffile.svg',
+        width: 30,
+        height: 30,
+      );
+    case 'html':
+      return const Icon(
+        Icons.html,
+        size: 30,
+      );
+    case 'mp3':
+      return const Icon(
+        Icons.audio_file,
+        size: 30,
+      );
+    case 'jpeg':
+      return const Icon(
+        Icons.image,
+        size: 30,
+      );
+    case 'mp4':
+      return const Icon(
+        Icons.video_collection_rounded,
+        size: 30,
+      );
+    default:
+      return const Icon(
+        Icons.file_present,
+        size: 30,
+      );
   }
 }
