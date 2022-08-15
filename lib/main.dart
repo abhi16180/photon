@@ -1,3 +1,5 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photon/controllers/controllers.dart';
@@ -30,7 +32,7 @@ void main() {
           // fontFamily: GoogleFonts.notoSans().fontFamily,
           ),
       darkTheme: FlexThemeData.dark(
-          scheme: FlexScheme.bahamaBlue,
+          scheme: FlexScheme.deepBlue,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
           blendLevel: 15,
           appBarStyle: FlexAppBarStyle.background,
@@ -50,7 +52,13 @@ void main() {
 
       initialRoute: '/',
       routes: {
-        '/': (context) => const App(),
+        '/': (context) => AnimatedSplashScreen(
+            splash: 'assets/images/splash.png',
+            nextScreen: const App(),
+            splashTransition: SplashTransition.fadeTransition,
+            pageTransitionType: PageTransitionType.fade,
+            backgroundColor: const Color.fromARGB(255, 0, 4, 7)),
+        '/home': (context) => const App(),
         '/sharepage': (context) => const SharePage(),
         '/receivepage': (context) => const ReceivePage()
       },

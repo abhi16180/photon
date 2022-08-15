@@ -48,7 +48,9 @@ class _ProgressPageState extends State<ProgressPage> {
 
     return WillPopScope(
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(207, 10, 9, 17),
         appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 14, 11, 33),
           title: const Text(
             ' Receiving',
           ),
@@ -71,7 +73,7 @@ class _ProgressPageState extends State<ProgressPage> {
                         onPressed: () async {
                           // ignore: use_build_context_synchronously
                           Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/', (Route<dynamic> route) => false);
+                              '/home', (Route<dynamic> route) => false);
                         },
                         child: const Text('Go back'),
                       )
@@ -189,8 +191,8 @@ class _ProgressPageState extends State<ProgressPage> {
                   onPressed: () async {
                     willPop = true;
                     // ignore: use_build_context_synchronously
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/', (Route<dynamic> route) => false);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/home', (Route<dynamic> route) => false);
                   },
                   child: const Text('Go back'),
                 )
