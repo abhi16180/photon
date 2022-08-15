@@ -64,7 +64,7 @@ class _ProgressPageState extends State<ProgressPage> {
                   return AlertDialog(
                     title: const Text('Alert'),
                     content:
-                        const Text('Make sure that download is completed !'),
+                        const Text('Make sure that transfer is completed !'),
                     actions: [
                       ElevatedButton(
                           onPressed: () {

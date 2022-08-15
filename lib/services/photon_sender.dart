@@ -63,8 +63,8 @@ class PhotonSender {
           request.response.close();
         } else if (request.requestedUri.toString() ==
             'http://$_address:4040/get-code') {
-          String os = (request.headers['os']).toString();
-          String username = request.headers['receiver-name'].toString();
+          String os = (request.headers['os']![0]);
+          String username = request.headers['receiver-name']![0];
           await showDialog(
               context: context,
               builder: (context) {
