@@ -15,7 +15,8 @@
 - Works between the devices connected to same router (same local area network)
 - Smooth UI
 - Pick files faster 
-- 
+- Supports high-speed data transfer (Depends on wifi bandwidth) 
+(No internet connection required)
 ## Platforms
 - Android
 - Windows
@@ -28,7 +29,7 @@
   - *Coming soon*
 
 ### Note:- 
->The source code doesn't have any platform specific dependencies.But I don't the machine to test app on Linux,iOS and macOS ,if you have the respective machine you can build and test it out.
+>The source code doesn't have any platform specific dependencies.But I don't have machines to test app on Linux,iOS and macOS ,if you have the respective machine you can build and test it out.
 
 ## To build app
 ```sh
