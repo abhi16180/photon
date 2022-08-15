@@ -9,6 +9,7 @@ import 'package:photon/services/file_services.dart';
 
 import '../controllers/controllers.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
 
 class PhotonReceiver {
   static Map<String, dynamic>? filePathMap;
@@ -77,13 +78,14 @@ class PhotonReceiver {
   }
 
   static isRequestAccepted(SenderModel senderModel) async {
-    var resp = await Dio()
-        .post('http://${senderModel.ip}:${senderModel.port}/get-code',
-            data: jsonEncode({
-              'receiver-name': 'Name',
-              'os': Platform.operatingSystem,
-            }));
-    var info = jsonDecode(resp.data);
+    var resp = await http.get(
+        Uri.parse('http://${senderModel.ip}:${senderModel.port}/get-code'),
+        headers: {
+          'receiver-name': 'Name',
+          'os': Platform.operatingSystem,
+        });
+
+    var info = [];
     return info;
   }
 
