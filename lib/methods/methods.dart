@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
 import '../services/photon_sender.dart';
 
 handleSharing(BuildContext context) async {
-  if ((await PhotonSender.share() == true)) {
+  if ((await PhotonSender.share(context) == true)) {
     Navigator.pushNamed(context, '/sharepage');
   } else {
     showDialog(
@@ -60,4 +61,14 @@ Future<List<String>> getIP() async {
     }
   }
   return ipList;
+}
+
+int getRandomNumber() {
+  Random rnd;
+  try {
+    rnd = Random.secure();
+  } catch (_) {
+    rnd = Random();
+  }
+  return rnd.nextInt(10000);
 }

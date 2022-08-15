@@ -76,28 +76,41 @@ class PhotonReceiver {
     return photonServers;
   }
 
-  static receive(SenderModel senderModel) async {
+  static isRequestAccepted(SenderModel senderModel) async {
+    var resp = await Dio()
+        .post('http://${senderModel.ip}:${senderModel.port}/get-code',
+            data: jsonEncode({
+              'receiver-name': 'Name',
+              'os': Platform.operatingSystem,
+            }));
+    var info = jsonDecode(resp.data);
+    return info;
+  }
+
+  static receive(SenderModel senderModel, int secretCode) async {
     try {
       var resp = await Dio()
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
       filePathMap = jsonDecode(resp.data);
 
       for (int i = 0; i < filePathMap!['paths']!.length; i++) {
-        await receiveFile(
-            senderModel.ip, filePathMap!['paths']![i], i, senderModel);
+        await receiveFile(senderModel.ip, filePathMap!['paths']![i], i,
+            senderModel, secretCode);
       }
     } catch (_) {
       print('Refused to connect');
     }
   }
 
-  static receiveFile(ip, filePath, fileIndex, SenderModel senderModel) async {
+  static receiveFile(
+      ip, filePath, fileIndex, SenderModel senderModel, int secretCode) async {
     Dio dio = Dio();
     var getInstance = GetIt.I<PercentageController>();
     String finalPath = await FileMethods.getSavePath(filePath, senderModel);
     try {
+      print('http://$ip:4040/${secretCode.toString()}/${fileIndex.toString()}');
       await dio.download(
-        'http://$ip:4040/${fileIndex.toString()}',
+        'http://$ip:4040/${secretCode.toString()}/${fileIndex.toString()}',
         finalPath,
         onReceiveProgress: (received, total) {
           if (total != -1) {

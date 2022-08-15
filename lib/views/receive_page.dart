@@ -93,35 +93,49 @@ class _ReceivePageState extends State<ReceivePage> {
                         child: InkWell(
                           onTap: () {
                             showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('Receive'),
-                                    content: const Text(
-                                        'Do you want to receive files from this sender?'),
-                                    actions: [
-                                      ElevatedButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: const Text('Go back')),
-                                      ElevatedButton(
-                                        onPressed: () async {
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Receive'),
+                                  content: const Text(
+                                      'Do you want to receive files from this sender?'),
+                                  actions: [
+                                    ElevatedButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: const Text('Go back')),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        var resp = await PhotonReceiver
+                                            .isRequestAccepted(snap.data[index]
+                                                as SenderModel);
+                                        if (resp['accepted']) {
+                                          // ignore: use_build_context_synchronously
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) {
                                                 return ProgressPage(
-                                                    senderModel:
-                                                        snap.data[index]
-                                                            as SenderModel);
+                                                  senderModel: snap.data[index]
+                                                      as SenderModel,
+                                                  secretCode: resp['code'],
+                                                );
                                               },
                                             ),
                                           );
-                                        },
-                                        child: const Text('Yes'),
-                                      )
-                                    ],
-                                  );
-                                });
+                                        } else {
+                                          // ignore: use_build_context_synchronously
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                                  content: Text(
+                                                      'Request denied by the receiver')));
+                                        }
+                                      },
+                                      child: const Text('Yes'),
+                                    )
+                                  ],
+                                );
+                              },
+                            );
                           },
                           child: Card(
                             clipBehavior: Clip.antiAlias,
