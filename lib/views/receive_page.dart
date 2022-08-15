@@ -44,8 +44,25 @@ class _ReceivePageState extends State<ReceivePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (snap.data.length == 0) ...{
-                  const Center(
-                    child: Text('No device found'),
+                  Center(
+                    child: Text(
+                      'No device found',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: MediaQuery.of(context).size.width > 720
+                              ? 20
+                              : 16),
+                    ),
+                  ),
+                  Center(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {});
+                        },
+                        child: const Icon(
+                          Icons.refresh_rounded,
+                          size: 80,
+                        )),
                   )
                 } else ...{
                   const Center(
@@ -150,12 +167,12 @@ class _ReceivePageState extends State<ReceivePage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          setState(() {});
-        },
-        child: const Text('Retry'),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     setState(() {});
+      //   },
+      //   child: const Text('Retry'),
+      // ),
     );
   }
 }
