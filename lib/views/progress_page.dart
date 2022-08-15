@@ -27,6 +27,7 @@ class _ProgressPageState extends State<ProgressPage> {
   }
 
   final percentageController = PercentageController();
+  bool willPop = false;
   List percentageList = [];
   generateEmptyList() {
     var getInstance = GetIt.I<PercentageController>();
@@ -45,102 +46,160 @@ class _ProgressPageState extends State<ProgressPage> {
         ? MediaQuery.of(context).size.width / 1.8
         : MediaQuery.of(context).size.width / 1.12;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          ' Receiving',
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            ' Receiving',
+          ),
+          leading: BackButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Alert'),
+                    content:
+                        const Text('Make sure that download is completed !'),
+                    actions: [
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Stay')),
+                      ElevatedButton(
+                        onPressed: () async {
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/', (Route<dynamic> route) => false);
+                        },
+                        child: const Text('Terminate'),
+                      )
+                    ],
+                  );
+                },
+              );
+            },
+          ),
         ),
-        leading: BackButton(
-          onPressed: () {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+        body: FutureBuilder(
+          future: FileMethods.getFileNames(widget.senderModel!),
+          builder: (context, AsyncSnapshot snap) {
+            if (snap.connectionState == ConnectionState.done) {
+              return ListView.builder(
+                itemCount: snap.data.length,
+                itemBuilder: (context, item) {
+                  percentageList.add(0.0);
+                  return Obx(
+                    () {
+                      double progressLineWidth = (width - 80) *
+                          (getInstance.percentage[item] as RxDouble).value /
+                          100;
+
+                      return UnconstrainedBox(
+                          child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          // color: Colors.blue.shade100,
+                          clipBehavior: Clip.antiAlias,
+                          child: SizedBox(
+                              width: width,
+                              height: 100,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  getIcon(snap.data[item]
+                                      .toString()
+                                      .split('.')
+                                      .last),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8.0, top: 8.0),
+                                        child: Text(
+                                          snap.data![item],
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      CustomPaint(
+                                        painter: ProgressLine(
+                                          pos: progressLineWidth,
+                                        ),
+                                        child: Container(),
+                                      ),
+                                      const SizedBox(
+                                        height: 40,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: Text(
+                                            '${(getInstance.percentage[item] as RxDouble)} %'),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ));
+                    },
+                  );
+                },
+              );
+            } else if (snap.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return Center(
+                child: Card(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    child: const Text('Something went wrong'),
+                  ),
+                ),
+              );
+            }
           },
         ),
       ),
-      body: FutureBuilder(
-        future: FileMethods.getFileNames(widget.senderModel!),
-        builder: (context, AsyncSnapshot snap) {
-          if (snap.connectionState == ConnectionState.done) {
-            return ListView.builder(
-              itemCount: snap.data.length,
-              itemBuilder: (context, item) {
-                percentageList.add(0.0);
-                return Obx(
-                  () {
-                    double progressLineWidth = (width - 80) *
-                        (getInstance.percentage[item] as RxDouble).value /
-                        100;
-
-                    return UnconstrainedBox(
-                        child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        // color: Colors.blue.shade100,
-                        clipBehavior: Clip.antiAlias,
-                        child: SizedBox(
-                            width: width,
-                            height: 100,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                getIcon(
-                                    snap.data[item].toString().split('.').last),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8.0, top: 8.0),
-                                      child: Text(
-                                        snap.data![item],
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    CustomPaint(
-                                      painter: ProgressLine(
-                                        pos: progressLineWidth,
-                                      ),
-                                      child: Container(),
-                                    ),
-                                    const SizedBox(
-                                      height: 40,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Text(
-                                          '${(getInstance.percentage[item] as RxDouble)} %'),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )),
-                      ),
-                    ));
+      onWillPop: () async {
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Alert'),
+              content: const Text('Make sure that download is completed !'),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      willPop = false;
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Stay')),
+                ElevatedButton(
+                  onPressed: () async {
+                    willPop = true;
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).pop();
                   },
-                );
-              },
+                  child: const Text('Go back'),
+                )
+              ],
             );
-          } else if (snap.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return Center(
-              child: Card(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  child: const Text('Something went wrong'),
-                ),
-              ),
-            );
-          }
-        },
-      ),
+          },
+        );
+
+        return willPop;
+      },
     );
   }
 }
