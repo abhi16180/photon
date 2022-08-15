@@ -52,6 +52,7 @@ dependencies:
   file_picker:
     git:
       url: https://github.com/abhi16180/flutter_file_picker.git
+  http: ^0.13.5
      
  
   

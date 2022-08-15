@@ -40,7 +40,6 @@ class PhotonSender {
       return false;
     }
     try {
-      print('object');
       _server = await HttpServer.bind(_address, 4040);
 
       _randomSecretCode = getRandomNumber();
@@ -64,14 +63,15 @@ class PhotonSender {
           request.response.close();
         } else if (request.requestedUri.toString() ==
             'http://$_address:4040/get-code') {
-          var receiverData = jsonDecode(request.requestedUri.data.toString());
+          String os = (request.headers['os']).toString();
+          String username = request.headers['receiver-name'].toString();
           await showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
                   title: const Text('Request from receiver'),
                   content: Text(
-                      "${receiverData['receiver-name']} -(${receiverData['os']}) is requesting for files. Would you like to share with them ?"),
+                      "$username ($os) is requesting for files. Would you like to share with them ?"),
                   actions: [
                     ElevatedButton(
                       onPressed: () {
