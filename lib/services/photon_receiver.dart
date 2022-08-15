@@ -84,9 +84,9 @@ class PhotonReceiver {
           'receiver-name': 'Name',
           'os': Platform.operatingSystem,
         });
+    var senderRespData = jsonDecode(resp.body);
 
-    var info = [];
-    return info;
+    return senderRespData;
   }
 
   static receive(SenderModel senderModel, int secretCode) async {
