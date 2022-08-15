@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:photon/services/photon_sender.dart';
 
 import 'views/mobile_home.dart';
 import 'views/widescreen_home.dart';
@@ -28,11 +27,6 @@ class _AppState extends State<App> {
       body: Center(
         child: size.width > 720 ? const WidescreenHome() : const MobileHome(),
       ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.close),
-          onPressed: () async {
-            await PhotonSender.closeServer();
-          }),
     );
   }
 }
