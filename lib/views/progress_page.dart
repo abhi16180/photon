@@ -73,7 +73,7 @@ class _ProgressPageState extends State<ProgressPage> {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               '/', (Route<dynamic> route) => false);
                         },
-                        child: const Text('Terminate'),
+                        child: const Text('Go back'),
                       )
                     ],
                   );
@@ -189,7 +189,8 @@ class _ProgressPageState extends State<ProgressPage> {
                   onPressed: () async {
                     willPop = true;
                     // ignore: use_build_context_synchronously
-                    Navigator.of(context).pop();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/', (Route<dynamic> route) => false);
                   },
                   child: const Text('Go back'),
                 )
