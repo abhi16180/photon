@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'package:photon/services/photon_receiver.dart';
-import 'models/sender_model.dart';
-import 'services/file_services.dart';
+import '../models/sender_model.dart';
+import '../services/file_services.dart';
 
 class ProgressPage extends StatefulWidget {
   SenderModel? senderModel;

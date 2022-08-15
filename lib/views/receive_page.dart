@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/components/components.dart';
 import 'package:photon/models/sender_model.dart';
-import 'package:photon/progress_page.dart';
+import 'package:photon/views/progress_page.dart';
 import '../services/photon_receiver.dart';
 
 class ReceivePage extends StatefulWidget {
