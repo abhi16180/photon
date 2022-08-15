@@ -15,6 +15,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(207, 10, 9, 17),
       appBar: AppBar(

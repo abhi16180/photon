@@ -9,9 +9,11 @@ import '../services/file_services.dart';
 
 class ProgressPage extends StatefulWidget {
   SenderModel? senderModel;
+  int? secretCode;
   ProgressPage({
     Key? key,
     required this.senderModel,
+    required this.secretCode,
   }) : super(key: key);
 
   @override
@@ -23,7 +25,7 @@ class _ProgressPageState extends State<ProgressPage> {
   void initState() {
     super.initState();
     generateEmptyList();
-    PhotonReceiver.receive(widget.senderModel!);
+    PhotonReceiver.receive(widget.senderModel!, widget.secretCode!);
   }
 
   final percentageController = PercentageController();
