@@ -107,9 +107,6 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   fonts: 
-    - family: logirent 
-      fonts: 
-        - asset: assets/fonts/Logirent-Regular.otf
     - family: ytf 
       fonts: 
         - asset: assets/fonts/Yftoow-R.ttf

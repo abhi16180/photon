@@ -13,6 +13,7 @@ void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
+
       theme: FlexThemeData.light(
           scheme: FlexScheme.bahamaBlue,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
@@ -45,7 +46,7 @@ void main() {
           ),
 // If you do not have a themeMode switch, uncomment this line
 // to let the device system mode control the theme mode:
-// themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
 
       initialRoute: '/',
       routes: {

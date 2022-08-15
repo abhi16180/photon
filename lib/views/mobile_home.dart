@@ -26,7 +26,7 @@ class _MobileHomeState extends State<MobileHome> {
       children: [
         if (!isloading) ...{
           MaterialButton(
-            color: Colors.lightGreenAccent.shade700,
+            color: Colors.lightGreenAccent.shade400.withAlpha(225),
             minWidth: size.width / 2,
             height: size.height / 5,
             shape:
@@ -60,12 +60,15 @@ class _MobileHomeState extends State<MobileHome> {
                 Card(
                   clipBehavior: Clip.antiAlias,
                   elevation: 1,
+                  color: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                   child: const SizedBox(
                     width: 120,
                     height: 30,
-                    child: Center(child: Text('Send')),
+                    child: Center(
+                        child: Text('Send',
+                            style: TextStyle(color: Colors.black))),
                   ),
                 ),
               ],
@@ -103,12 +106,17 @@ class _MobileHomeState extends State<MobileHome> {
                 Card(
                   clipBehavior: Clip.antiAlias,
                   elevation: 1,
+                  color: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                   child: const SizedBox(
                     width: 120,
                     height: 30,
-                    child: Center(child: Text('Receive')),
+                    child: Center(
+                        child: Text(
+                      'Receive',
+                      style: TextStyle(color: Colors.black),
+                    )),
                   ),
                 )
               ],
