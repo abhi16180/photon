@@ -46,12 +46,13 @@ class _ReceivePageState extends State<ReceivePage> {
                 if (snap.data.length == 0) ...{
                   Center(
                     child: Text(
-                      'No device found',
+                      'No device found\nMake sure sender & receiver are connected through mobile hotspot\nOR\nSender and Receivers are connected to same wifi\n',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: MediaQuery.of(context).size.width > 720
-                              ? 20
-                              : 16),
+                        fontWeight: FontWeight.bold,
+                        fontSize:
+                            MediaQuery.of(context).size.width > 720 ? 20 : 16,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   Center(
@@ -63,6 +64,17 @@ class _ReceivePageState extends State<ReceivePage> {
                           Icons.refresh_rounded,
                           size: 80,
                         )),
+                  ),
+                  Center(
+                    child: Text(
+                      'Re-Scan',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize:
+                            MediaQuery.of(context).size.width > 720 ? 20 : 16,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   )
                 } else ...{
                   const Center(
@@ -145,7 +157,7 @@ class _ReceivePageState extends State<ReceivePage> {
                   children: [
                     if (width < 720) ...{
                       const SizedBox(
-                        height: 50,
+                        height: 100,
                       ),
                     },
                     const Text(

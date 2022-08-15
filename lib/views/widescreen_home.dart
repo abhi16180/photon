@@ -23,7 +23,7 @@ class _WidescreenHomeState extends State<WidescreenHome> {
       children: [
         if (!isloading) ...{
           MaterialButton(
-            color: Colors.lightGreenAccent.shade700,
+            color: Colors.lightGreenAccent.shade400.withAlpha(225),
             minWidth: size.width / 4,
             height: size.height / 4,
             shape:
@@ -59,12 +59,15 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                   Card(
                     clipBehavior: Clip.antiAlias,
                     elevation: 1,
+                    color: Colors.white,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                     child: const SizedBox(
                       width: 120,
                       height: 30,
-                      child: Center(child: Text('Send')),
+                      child: Center(
+                          child: Text('Send',
+                              style: TextStyle(color: Colors.black))),
                     ),
                   ),
                 ],
@@ -105,12 +108,15 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                   Card(
                     clipBehavior: Clip.antiAlias,
                     elevation: 1,
+                    color: Colors.white,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                     child: const SizedBox(
                       width: 120,
                       height: 30,
-                      child: Center(child: Text('Receive')),
+                      child: Center(
+                          child: Text('Receive',
+                              style: TextStyle(color: Colors.black))),
                     ),
                   ),
                 ],

@@ -97,8 +97,8 @@ class _SharePageState extends State<SharePage> {
           builder: (context) {
             return AlertDialog(
               title: const Text('Server alert'),
-              content:
-                  const Text('Would you like to terminate the current session'),
+              content: const Text(
+                  'Would you like to terminate the current session ?'),
               actions: [
                 ElevatedButton(
                     onPressed: () {
