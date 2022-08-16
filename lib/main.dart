@@ -3,7 +3,8 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:photon/views/intro_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:photon/controllers/controllers.dart';
 
 import 'app.dart';
@@ -13,6 +14,9 @@ import 'views/share_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GetIt getIt = GetIt.instance;
+  SharedPreferences prefInst = await SharedPreferences.getInstance();
+  prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
+
   getIt.registerSingleton<PercentageController>(PercentageController());
   runApp(
     MaterialApp(
@@ -55,11 +59,14 @@ void main() async {
       initialRoute: '/',
       routes: {
         '/': (context) => AnimatedSplashScreen(
-            splash: 'assets/images/splash.png',
-            nextScreen: const App(),
-            splashTransition: SplashTransition.fadeTransition,
-            pageTransitionType: PageTransitionType.fade,
-            backgroundColor: const Color.fromARGB(255, 0, 4, 7)),
+              splash: 'assets/images/splash.png',
+              nextScreen: prefInst.getBool('isIntroRead') == true
+                  ? const App()
+                  : const IntroPage(),
+              splashTransition: SplashTransition.fadeTransition,
+              pageTransitionType: PageTransitionType.fade,
+              backgroundColor: const Color.fromARGB(255, 0, 4, 7),
+            ),
         '/home': (context) => const App(),
         '/sharepage': (context) => const SharePage(),
         '/receivepage': (context) => const ReceivePage()

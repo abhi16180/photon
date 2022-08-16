@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:glass/glass.dart';
 import 'package:lottie/lottie.dart';
-
-import '../methods/methods.dart';
+import 'package:photon/views/intro_page.dart';
 
 class WidescreenHome extends StatefulWidget {
   const WidescreenHome({Key? key}) : super(key: key);
@@ -29,13 +27,17 @@ class _WidescreenHomeState extends State<WidescreenHome> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             onPressed: () async {
-              setState(() {
-                isloading = true;
-              });
-              await handleSharing(context);
-              setState(() {
-                isloading = false;
-              });
+              //todo remove this after testing
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return const IntroPage();
+              }));
+              // setState(() {
+              //   isloading = true;
+              // });
+              // await handleSharing(context);
+              // setState(() {
+              //   isloading = false;
+              // });
             },
             child: SizedBox(
               width: size.width / 4,
@@ -53,9 +55,7 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                       color: Colors.white,
                       width: 80,
                     ),
-                  ).asGlass(
-                      clipBorderRadius: BorderRadius.circular(10),
-                      tintColor: Colors.grey),
+                  ),
                   Card(
                     clipBehavior: Clip.antiAlias,
                     elevation: 1,
@@ -102,8 +102,6 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                       color: Colors.white,
                       width: 80,
                     ),
-                  ).asGlass(
-                    clipBorderRadius: BorderRadius.circular(10),
                   ),
                   Card(
                     clipBehavior: Clip.antiAlias,
