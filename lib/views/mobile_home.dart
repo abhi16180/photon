@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:glass/glass.dart';
+
 import 'package:lottie/lottie.dart';
 import 'package:photon/services/photon_sender.dart';
 
@@ -54,9 +54,7 @@ class _MobileHomeState extends State<MobileHome> {
                     color: Colors.white,
                     width: 60,
                   ),
-                ).asGlass(
-                    clipBorderRadius: BorderRadius.circular(10),
-                    tintColor: Colors.grey),
+                ),
                 Card(
                   clipBehavior: Clip.antiAlias,
                   elevation: 1,
@@ -99,9 +97,6 @@ class _MobileHomeState extends State<MobileHome> {
                     color: Colors.white,
                     width: 60,
                   ),
-                ).asGlass(
-                  clipBorderRadius: BorderRadius.circular(10),
-                  tileMode: TileMode.mirror,
                 ),
                 Card(
                   clipBehavior: Clip.antiAlias,
