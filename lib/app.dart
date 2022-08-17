@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:photon/components/dialogs.dart';
 import 'package:photon/views/widescreen_home.dart';
+import 'package:unicons/unicons.dart';
 
 import 'views/mobile_home.dart';
 
@@ -51,7 +53,10 @@ class _AppState extends State<App> {
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.info_outline_rounded),
+                leading: SvgPicture.asset(
+                  'assets/icons/licenses.svg',
+                  color: Colors.white,
+                ),
                 onTap: () {
                   showLicensePage(
                       context: context,
@@ -73,6 +78,21 @@ class _AppState extends State<App> {
                   privacyPolicyDialog(context, privacyPolicy);
                 },
                 title: const Text('Privacy policy'),
+              ),
+              ListTile(
+                title: const Text('About'),
+                leading: const Icon(UniconsLine.info_circle),
+                onTap: () {
+                  about(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Credits'),
+                leading: SvgPicture.asset('assets/icons/credits.svg',
+                    color: Colors.white),
+                onTap: () {
+                  credits(context);
+                },
               ),
             ],
           ),
