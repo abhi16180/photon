@@ -12,9 +12,11 @@ void privacyPolicyDialog(BuildContext context, String data) {
         return AlertDialog(
           title: const Text('Privacy policy'),
           content: SizedBox(
-              width: MediaQuery.of(context).size.width / 1.2,
               height: MediaQuery.of(context).size.height / 2,
-              child: Markdown(data: data)),
+              child: Markdown(
+                  listItemCrossAxisAlignment:
+                      MarkdownListItemCrossAxisAlignment.start,
+                  data: data)),
           actions: [
             ElevatedButton(
                 onPressed: () async {
