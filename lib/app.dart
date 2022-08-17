@@ -80,18 +80,18 @@ class _AppState extends State<App> {
                 title: const Text('Privacy policy'),
               ),
               ListTile(
-                title: const Text('About'),
-                leading: const Icon(UniconsLine.info_circle),
-                onTap: () {
-                  about(context);
-                },
-              ),
-              ListTile(
                 title: const Text('Credits'),
                 leading: SvgPicture.asset('assets/icons/credits.svg',
                     color: Colors.white),
                 onTap: () {
                   credits(context);
+                },
+              ),
+              ListTile(
+                title: const Text('About'),
+                leading: const Icon(UniconsLine.info_circle),
+                onTap: () {
+                  about(context);
                 },
               ),
             ],
