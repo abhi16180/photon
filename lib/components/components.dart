@@ -64,7 +64,7 @@ infoList(SenderModel senderModel, double width, double height, bool sender) {
   var serverDataList = [
     {'type': 'IP'.padRight(12), 'value': senderModel.ip},
     {'type': 'Port'.padRight(10), 'value': senderModel.port},
-    {'type': 'Os'.padRight(11), 'value': senderModel.os},
+    {'type': 'OS'.padRight(11), 'value': senderModel.os},
     {'type': 'Version', 'value': senderModel.version}
   ];
   List<Widget> data = [];
