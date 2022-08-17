@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'package:photon/services/photon_receiver.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../components/dialogs.dart';
 import '../methods/methods.dart';
 import '../models/sender_model.dart';
 import '../services/file_services.dart';
@@ -51,31 +52,7 @@ class _ProgressPageState extends State<ProgressPage> {
           ),
           leading: BackButton(
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Alert'),
-                    content:
-                        const Text('Make sure that transfer is completed !'),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Stay')),
-                      ElevatedButton(
-                        onPressed: () async {
-                          // ignore: use_build_context_synchronously
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/home', (Route<dynamic> route) => false);
-                        },
-                        child: const Text('Go back'),
-                      )
-                    ],
-                  );
-                },
-              );
+              progressPageAlertDialog(context);
             },
           ),
         ),
@@ -212,33 +189,7 @@ class _ProgressPageState extends State<ProgressPage> {
         ),
       ),
       onWillPop: () async {
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Alert'),
-              content: const Text('Make sure that download is completed !'),
-              actions: [
-                ElevatedButton(
-                    onPressed: () {
-                      willPop = false;
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Stay')),
-                ElevatedButton(
-                  onPressed: () async {
-                    willPop = true;
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/home', (Route<dynamic> route) => false);
-                  },
-                  child: const Text('Go back'),
-                )
-              ],
-            );
-          },
-        );
-
+        willPop = await progressPageWillPopDialog(context);
         return willPop;
       },
     );

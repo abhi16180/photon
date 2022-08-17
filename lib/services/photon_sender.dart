@@ -5,6 +5,8 @@ import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
 
+import '../components/dialogs.dart';
+import '../components/snackbar.dart';
 import 'file_services.dart';
 
 class PhotonSender {
@@ -52,6 +54,7 @@ class PhotonSender {
         'files-count': _fileList.length,
       };
     } catch (e) {
+      showSnackBar(context, e.toString());
       return false;
     }
     bool? allowRequest;
@@ -65,32 +68,7 @@ class PhotonSender {
             'http://$_address:4040/get-code') {
           String os = (request.headers['os']![0]);
           String username = request.headers['receiver-name']![0];
-          await showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Request from receiver'),
-                  content: Text(
-                      "$username ($os) is requesting for files. Would you like to share with them ?"),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        allowRequest = false;
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Deny'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        allowRequest = true;
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Accept'),
-                    )
-                  ],
-                );
-              });
-
+          allowRequest = await senderRequestDialog(context, username, os);
           if (allowRequest == true) {
             request.response.write(
                 jsonEncode({'code': _randomSecretCode, 'accepted': true}));
@@ -163,12 +141,12 @@ class PhotonSender {
     }
   }
 
-  static closeServer() async {
+  static closeServer(context) async {
     try {
       await _server.close();
       await FileMethods.clearCache();
     } catch (e) {
-      print("Server not yet started");
+      showSnackBar(context, 'Server not started yet');
     }
   }
 

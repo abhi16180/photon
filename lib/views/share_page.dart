@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:photon/components/dialogs.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/services/photon_sender.dart';
 
-import '../app.dart';
 import '../components/components.dart';
 
 class SharePage extends StatefulWidget {
@@ -29,32 +29,7 @@ class _SharePageState extends State<SharePage> {
           appBar: AppBar(
             title: const Text('Share'),
             leading: BackButton(onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Server alert'),
-                    content: const Text(
-                        'Would you like to terminate the current session'),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Stay')),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await PhotonSender.closeServer();
-                          // ignore: use_build_context_synchronously
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => const App()),
-                              (route) => false);
-                        },
-                        child: const Text('Terminate'),
-                      )
-                    ],
-                  );
-                },
-              );
+              sharePageAlertDialog(context);
             }),
           ),
           body: Center(
@@ -93,37 +68,7 @@ class _SharePageState extends State<SharePage> {
             ),
           )),
       onWillPop: () async {
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Server alert'),
-              content: const Text(
-                  'Would you like to terminate the current session ?'),
-              actions: [
-                ElevatedButton(
-                    onPressed: () {
-                      willPop = false;
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Stay')),
-                ElevatedButton(
-                  onPressed: () async {
-                    await PhotonSender.closeServer();
-                    willPop = true;
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pop();
-                    // Navigator.of(context).pushAndRemoveUntil(
-                    //     MaterialPageRoute(builder: (context) => const App()),
-                    //     (route) => false);
-                  },
-                  child: const Text('Terminate'),
-                )
-              ],
-            );
-          },
-        );
-
+        willPop = await sharePageWillPopDialog(context);
         return willPop;
       },
     );
