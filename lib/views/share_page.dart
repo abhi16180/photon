@@ -25,9 +25,9 @@ class _SharePageState extends State<SharePage> {
     height = MediaQuery.of(context).size.height;
     return WillPopScope(
       child: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 27, 32, 35),
+          backgroundColor: const Color.fromARGB(255, 13, 16, 18),
           appBar: AppBar(
-            backgroundColor: const Color.fromARGB(255, 19, 18, 21),
+            backgroundColor: Colors.blueGrey.shade900,
             title: const Text('Share'),
             leading: BackButton(onPressed: () {
               sharePageAlertDialog(context);

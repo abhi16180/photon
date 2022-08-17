@@ -6,7 +6,7 @@ Photon app is built as  an Open Source application. This SERVICE is provided by 
 
 **Information Collection and Use**
 
-No user information is collected and stored by the developer. However to provide file-transfer service information like ip-address, operating system(to identify the sender / receiver),etc will be temporarily stored locally in your device. But all these information will be cleared from app every time sharing process is terminated. 
+No user information is collected and stored by the developer. However to provide file-transfer service , information like ip-address, operating system(to identify the sender / receiver),etc will be *temporarily* stored locally in your device. But all these information will be cleared from app every time sharing process is terminated. 
 *No information is stored by the developer.*
 
 **Log Data**

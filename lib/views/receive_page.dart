@@ -32,9 +32,9 @@ class _ReceivePageState extends State<ReceivePage> {
     double height = MediaQuery.of(context).size.height;
     bool isRequestSent = false;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 27, 32, 35),
+      backgroundColor: const Color.fromARGB(255, 13, 16, 18),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 19, 18, 21),
+        backgroundColor: Colors.blueGrey.shade900,
         title: const Text('Scan'),
       ),
       body: FutureBuilder(
@@ -104,60 +104,64 @@ class _ReceivePageState extends State<ReceivePage> {
                         shrinkWrap: true,
                         itemCount: snap.data.length,
                         itemBuilder: (c, index) {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            clipBehavior: Clip.antiAlias,
-                            child: InkWell(
-                              onTap: () async {
-                                //only rebuild the column
-                                sts(() {
-                                  isRequestSent = true;
-                                });
-                                var resp =
-                                    await PhotonReceiver.isRequestAccepted(
-                                  snap.data[index] as SenderModel,
-                                );
-
-                                if (resp['accepted']) {
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return ProgressPage(
-                                          senderModel:
-                                              snap.data[index] as SenderModel,
-                                          secretCode: resp['code'],
-                                        );
-                                      },
-                                    ),
-                                  );
-                                } else {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                onTap: () async {
+                                  //only rebuild the column
                                   sts(() {
-                                    isRequestSent = false;
+                                    isRequestSent = true;
                                   });
-                                  // ignore: use_build_context_synchronously
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Access denied by the sender')));
-                                }
-                              },
-                              child: Card(
-                                clipBehavior: Clip.antiAlias,
-                                elevation: 5,
-                                // color: Platform.isWindows
-                                //     ? Colors.grey.shade300
-                                //     : null,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: SizedBox(
-                                  height: width > 720 ? 200 : 128,
-                                  width: width > 720 ? width / 2 : width / 1.25,
-                                  child: Center(
-                                    child: Wrap(
-                                      direction: Axis.vertical,
-                                      children: infoList(snap.data[index],
-                                          width, height, false),
+                                  var resp =
+                                      await PhotonReceiver.isRequestAccepted(
+                                    snap.data[index] as SenderModel,
+                                  );
+
+                                  if (resp['accepted']) {
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return ProgressPage(
+                                            senderModel:
+                                                snap.data[index] as SenderModel,
+                                            secretCode: resp['code'],
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    sts(() {
+                                      isRequestSent = false;
+                                    });
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'Access denied by the sender')));
+                                  }
+                                },
+                                child: Card(
+                                  clipBehavior: Clip.antiAlias,
+                                  elevation: 5,
+                                  // color: Platform.isWindows
+                                  //     ? Colors.grey.shade300
+                                  //     : null,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: SizedBox(
+                                    height: width > 720 ? 200 : 128,
+                                    width:
+                                        width > 720 ? width / 2 : width / 1.25,
+                                    child: Center(
+                                      child: Wrap(
+                                        direction: Axis.vertical,
+                                        children: infoList(snap.data[index],
+                                            width, height, false),
+                                      ),
                                     ),
                                   ),
                                 ),

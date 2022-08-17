@@ -1,6 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:photon/views/intro_page.dart';
@@ -16,8 +17,8 @@ void main() async {
   GetIt getIt = GetIt.instance;
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
-
   getIt.registerSingleton<PercentageController>(PercentageController());
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,

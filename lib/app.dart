@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:photon/components/dialogs.dart';
 import 'package:photon/views/widescreen_home.dart';
 
@@ -23,7 +22,7 @@ class _AppState extends State<App> {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 27, 32, 35),
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 19, 18, 21),
+          backgroundColor: Colors.blueGrey.shade900,
           title: const Text(
             'Photon',
             style: TextStyle(
@@ -68,8 +67,8 @@ class _AppState extends State<App> {
               ListTile(
                 leading: const Icon(Icons.privacy_tip_rounded),
                 onTap: () async {
-                  File f = File('assets/texts/privacy_policy.txt');
-                  String privacyPolicy = await f.readAsString();
+                  String privacyPolicy = await rootBundle
+                      .loadString('assets/texts/privacy_policy.txt');
                   // ignore: use_build_context_synchronously
                   privacyPolicyDialog(context, privacyPolicy);
                 },
