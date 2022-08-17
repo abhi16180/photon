@@ -77,7 +77,7 @@ class FileMethods {
       //renaming the path
       List newPath = savePath!.split('.');
       newPath[0] = newPath[0] + "1";
-      savePath = newPath.join();
+      savePath = newPath.join('.');
     }
     return savePath;
   }

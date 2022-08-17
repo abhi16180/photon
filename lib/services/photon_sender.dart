@@ -75,17 +75,17 @@ class PhotonSender {
                   actions: [
                     ElevatedButton(
                       onPressed: () {
-                        allowRequest = true;
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Accept'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
                         allowRequest = false;
                         Navigator.of(context).pop();
                       },
                       child: const Text('Deny'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        allowRequest = true;
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Accept'),
                     )
                   ],
                 );
