@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 import '../methods/methods.dart';
@@ -21,13 +20,8 @@ class _WidescreenHomeState extends State<WidescreenHome> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (!isloading) ...{
-          MaterialButton(
-            color: Colors.lightGreenAccent.shade400.withAlpha(225),
-            minWidth: size.width / 4,
-            height: size.height / 4,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            onPressed: () async {
+          GestureDetector(
+            onTap: () async {
               setState(() {
                 isloading = true;
               });
@@ -36,84 +30,54 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                 isloading = false;
               });
             },
-            child: SizedBox(
-              width: size.width / 4,
-              height: size.height / 4,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Transform.rotate(
-                    angle: 0,
-                    child: SvgPicture.asset(
-                      'assets/icons/rocket-blue.svg',
-                      color: Colors.white,
-                      width: 80,
+            child: Center(
+              child: Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Lottie.asset(
+                      'assets/lottie/rocket-send.json',
+                      width: size.width / 4,
+                      height: size.height / 4,
                     ),
-                  ),
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    elevation: 1,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    child: const SizedBox(
-                      width: 120,
-                      height: 30,
-                      child: Center(
-                          child: Text('Send',
-                              style: TextStyle(color: Colors.black))),
-                    ),
-                  ),
-                ],
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Share',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
           SizedBox(
             width: size.width / 10,
           ),
-          MaterialButton(
-            color: Colors.blue,
-            minWidth: size.width / 4,
-            height: size.height / 4,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            onPressed: () {
+          GestureDetector(
+            onTap: () {
               Navigator.of(context).pushNamed('/receivepage');
             },
-            child: SizedBox(
-              width: size.width / 4,
-              height: size.height / 4,
+            child: Card(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Transform.rotate(
-                    angle: 0,
-                    child: SvgPicture.asset(
-                      'assets/icons/save.svg',
-                      color: Colors.white,
-                      width: 80,
+                  Lottie.asset('assets/lottie/receive-file.json',
+                      width: size.width / 4, height: size.height / 4),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Receive',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
-                  ),
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    elevation: 1,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    child: const SizedBox(
-                      width: 120,
-                      height: 30,
-                      child: Center(
-                          child: Text('Receive',
-                              style: TextStyle(color: Colors.black))),
-                    ),
-                  ),
+                  )
                 ],
               ),
             ),
