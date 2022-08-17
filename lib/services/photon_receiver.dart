@@ -12,7 +12,8 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class PhotonReceiver {
-  static Map<String, dynamic>? filePathMap;
+  static late int _secretCode;
+  static late Map<String, dynamic> filePathMap;
 
   ///to get network address [assumes class C address]
   static List<String> getNetAddress(List<String> ipList) {
@@ -81,7 +82,7 @@ class PhotonReceiver {
     var resp = await http.get(
         Uri.parse('http://${senderModel.ip}:${senderModel.port}/get-code'),
         headers: {
-          'receiver-name': 'Name',
+          'receiver-name': Platform.localHostname,
           'os': Platform.operatingSystem,
         });
     var senderRespData = jsonDecode(resp.body);
@@ -94,36 +95,38 @@ class PhotonReceiver {
       var resp = await Dio()
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
       filePathMap = jsonDecode(resp.data);
-
-      for (int i = 0; i < filePathMap!['paths']!.length; i++) {
-        await receiveFile(senderModel.ip, filePathMap!['paths']![i], i,
-            senderModel, secretCode);
+      _secretCode = secretCode;
+      for (int i = 0; i < filePathMap['paths']!.length; i++) {
+        await getFile(filePathMap['paths'][i], i, senderModel);
       }
-    } catch (_) {
-      print('Refused to connect');
+    } catch (e) {
+      debugPrint('$e');
     }
   }
 
-  static receiveFile(
-      ip, filePath, fileIndex, SenderModel senderModel, int secretCode) async {
+  static getFile(
+      String filePath, int fileIndex, SenderModel senderModel) async {
     Dio dio = Dio();
     var getInstance = GetIt.I<PercentageController>();
-    String finalPath = await FileMethods.getSavePath(filePath, senderModel);
+    getInstance.cancelTokenList.insert(fileIndex, CancelToken());
+    String savePath = await FileMethods.getSavePath(filePath, senderModel);
     try {
-      print('http://$ip:4040/${secretCode.toString()}/${fileIndex.toString()}');
       await dio.download(
-        'http://$ip:4040/${secretCode.toString()}/${fileIndex.toString()}',
-        finalPath,
+        'http://${senderModel.ip}:4040/${_secretCode.toString()}/${fileIndex.toString()}',
+        savePath,
+        deleteOnError: true,
+        cancelToken: getInstance.cancelTokenList[fileIndex],
         onReceiveProgress: (received, total) {
           if (total != -1) {
-            // print("${(received / total * 100).toStringAsFixed(0)}%");
             getInstance.percentage[fileIndex].value =
                 (double.parse((received / total * 100).toStringAsFixed(0)));
           }
         },
       );
     } catch (e) {
-      debugPrint(e.toString());
+      if (!CancelToken.isCancel(e as DioError)) {
+        debugPrint(e.toString());
+      }
     }
   }
 }

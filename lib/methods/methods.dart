@@ -2,7 +2,11 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get_it/get_it.dart';
 
+import '../controllers/controllers.dart';
 import '../services/photon_sender.dart';
 
 handleSharing(BuildContext context) async {
@@ -71,4 +75,50 @@ int getRandomNumber() {
     rnd = Random();
   }
   return rnd.nextInt(10000);
+}
+
+generatePercentageList(len) {
+  var getInstance = GetIt.I<PercentageController>();
+  getInstance.percentage = RxList.generate(len, (index) {
+    return RxDouble(0.0);
+  });
+  getInstance.isCancelled = RxList.generate(len, (index) {
+    return RxBool(false);
+  });
+}
+
+Widget getFileIcon(String extn) {
+  switch (extn) {
+    case 'pdf':
+      return SvgPicture.asset(
+        'assets/icons/pdffile.svg',
+        width: 30,
+        height: 30,
+      );
+    case 'html':
+      return const Icon(
+        Icons.html,
+        size: 30,
+      );
+    case 'mp3':
+      return const Icon(
+        Icons.audio_file,
+        size: 30,
+      );
+    case 'jpeg':
+      return const Icon(
+        Icons.image,
+        size: 30,
+      );
+    case 'mp4':
+      return const Icon(
+        Icons.video_collection_rounded,
+        size: 30,
+      );
+    default:
+      return const Icon(
+        Icons.file_present,
+        size: 30,
+      );
+  }
 }

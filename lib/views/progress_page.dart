@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'package:photon/services/photon_receiver.dart';
+import '../methods/methods.dart';
 import '../models/sender_model.dart';
 import '../services/file_services.dart';
 
 class ProgressPage extends StatefulWidget {
-  SenderModel? senderModel;
-  int? secretCode;
-  ProgressPage({
+  final SenderModel? senderModel;
+  final int secretCode;
+  const ProgressPage({
     Key? key,
     required this.senderModel,
     required this.secretCode,
@@ -24,29 +24,18 @@ class _ProgressPageState extends State<ProgressPage> {
   @override
   void initState() {
     super.initState();
-    generateEmptyList();
-    PhotonReceiver.receive(widget.senderModel!, widget.secretCode!);
+    generatePercentageList(widget.senderModel!.filesCount);
+    PhotonReceiver.receive(widget.senderModel!, widget.secretCode);
   }
 
-  final percentageController = PercentageController();
   bool willPop = false;
-  List percentageList = [];
-  generateEmptyList() {
-    var getInstance = GetIt.I<PercentageController>();
-    getInstance.percentage = RxList.generate(
-      widget.senderModel!.filesCount!,
-      (i) {
-        return RxDouble(0.0);
-      },
-    );
-  }
-
+  bool isDownloaded = false;
   @override
   Widget build(BuildContext context) {
     var getInstance = GetIt.I<PercentageController>();
     var width = MediaQuery.of(context).size.width > 720
         ? MediaQuery.of(context).size.width / 1.8
-        : MediaQuery.of(context).size.width / 1.12;
+        : MediaQuery.of(context).size.width / 1.4;
 
     return WillPopScope(
       child: Scaffold(
@@ -93,12 +82,11 @@ class _ProgressPageState extends State<ProgressPage> {
               return ListView.builder(
                 itemCount: snap.data.length,
                 itemBuilder: (context, item) {
-                  percentageList.add(0.0);
                   return Obx(
                     () {
-                      double progressLineWidth = (width - 80) *
+                      double progressLineWidth = ((width - 80) *
                           (getInstance.percentage[item] as RxDouble).value /
-                          100;
+                          100);
 
                       return UnconstrainedBox(
                           child: Padding(
@@ -107,50 +95,86 @@ class _ProgressPageState extends State<ProgressPage> {
                           // color: Colors.blue.shade100,
                           clipBehavior: Clip.antiAlias,
                           child: SizedBox(
-                              width: width,
-                              height: 100,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  getIcon(snap.data[item]
-                                      .toString()
-                                      .split('.')
-                                      .last),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 8.0, top: 8.0),
-                                        child: Text(
-                                          snap.data![item],
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                            width: width + 60,
+                            height: 100,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                getFileIcon(
+                                    snap.data[item].toString().split('.').last),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 8.0, top: 8.0),
+                                      child: Text(
+                                        snap.data![item],
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      CustomPaint(
+                                    ),
+                                    SizedBox(
+                                      width: width - 80,
+                                      child: CustomPaint(
                                         painter: ProgressLine(
                                           pos: progressLineWidth,
                                         ),
                                         child: Container(),
                                       ),
-                                      const SizedBox(
-                                        height: 40,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 8.0),
-                                        child: Text(
-                                            '${(getInstance.percentage[item] as RxDouble)} %'),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )),
+                                    ),
+                                    const SizedBox(
+                                      height: 40,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(0.0),
+                                      child: Text(getInstance
+                                              .isCancelled[item].value
+                                          ? 'Cancelled'
+                                          : '${(getInstance.percentage[item] as RxDouble)} %'),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                if (getInstance.isCancelled[item].value) ...{
+                                  IconButton(
+                                    icon: const Padding(
+                                      padding: EdgeInsets.all(0),
+                                      child: Icon(Icons.refresh),
+                                    ),
+                                    onPressed: () {
+                                      //restart download
+                                      getInstance.isCancelled[item].value =
+                                          false;
+                                      PhotonReceiver.getFile(
+                                        snap.data[item],
+                                        item,
+                                        widget.senderModel!,
+                                      );
+                                    },
+                                  )
+                                } else ...{
+                                  IconButton(
+                                    icon: const Padding(
+                                      padding: EdgeInsets.all(0.0),
+                                      child: Icon(Icons.cancel),
+                                    ),
+                                    onPressed: () {
+                                      getInstance.isCancelled[item].value =
+                                          true;
+                                      getInstance.cancelTokenList[item]
+                                          .cancel();
+                                    },
+                                  )
+                                },
+                              ],
+                            ),
+                          ),
                         ),
                       ));
                     },
@@ -241,41 +265,5 @@ class ProgressLine extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
-  }
-}
-
-Widget getIcon(String extn) {
-  switch (extn) {
-    case 'pdf':
-      return SvgPicture.asset(
-        'assets/icons/pdffile.svg',
-        width: 30,
-        height: 30,
-      );
-    case 'html':
-      return const Icon(
-        Icons.html,
-        size: 30,
-      );
-    case 'mp3':
-      return const Icon(
-        Icons.audio_file,
-        size: 30,
-      );
-    case 'jpeg':
-      return const Icon(
-        Icons.image,
-        size: 30,
-      );
-    case 'mp4':
-      return const Icon(
-        Icons.video_collection_rounded,
-        size: 30,
-      );
-    default:
-      return const Icon(
-        Icons.file_present,
-        size: 30,
-      );
   }
 }
