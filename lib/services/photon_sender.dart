@@ -85,8 +85,7 @@ class PhotonSender {
           request.response.close();
         } else if (request.requestedUri.toString() ==
             'http://$_address:4040/favicon.ico') {
-        } else if (request.requestedUri.toString() ==
-            'http://$_address:4040/') {
+          request.response.close();
         } else {
 //uri should be in format http://ip:port/secrecode/file-index
           List requriToList = request.requestedUri.toString().split('/');
