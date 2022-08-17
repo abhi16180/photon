@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
-import 'package:photon/views/intro_page.dart';
+
+import '../methods/methods.dart';
 
 class WidescreenHome extends StatefulWidget {
   const WidescreenHome({Key? key}) : super(key: key);
@@ -27,17 +28,13 @@ class _WidescreenHomeState extends State<WidescreenHome> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             onPressed: () async {
-              //todo remove this after testing
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return const IntroPage();
-              }));
-              // setState(() {
-              //   isloading = true;
-              // });
-              // await handleSharing(context);
-              // setState(() {
-              //   isloading = false;
-              // });
+              setState(() {
+                isloading = true;
+              });
+              await handleSharing(context);
+              setState(() {
+                isloading = false;
+              });
             },
             child: SizedBox(
               width: size.width / 4,
