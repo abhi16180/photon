@@ -22,7 +22,7 @@ void main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: FlexThemeData.light(
-          scheme: FlexScheme.bahamaBlue,
+          scheme: FlexScheme.hippieBlue,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
           blendLevel: 20,
           appBarOpacity: 0.95,
@@ -34,7 +34,7 @@ void main() async {
           useMaterial3: true,
           fontFamily: 'ytf'),
       darkTheme: FlexThemeData.dark(
-          scheme: FlexScheme.deepBlue,
+          scheme: FlexScheme.hippieBlue,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
           blendLevel: 15,
           appBarStyle: FlexAppBarStyle.background,

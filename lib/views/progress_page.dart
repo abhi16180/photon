@@ -202,14 +202,14 @@ class _ProgressPageState extends State<ProgressPage> {
       if (Platform.isAndroid || Platform.isIOS) {
         OpenFile.open(path);
       } else {
-        if (await canLaunchUrl(Uri.parse(path))) {
+        print(path);
+        try {
           launchUrl(
             Uri.parse(
               path,
             ),
-            mode: LaunchMode.platformDefault,
           );
-        } else {
+        } catch (e) {
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Unable to open the file')));

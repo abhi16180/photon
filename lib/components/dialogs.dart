@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart' as ulaunch;
 
 import '../app.dart';
 import '../services/photon_sender.dart';
 
-void privacyDialog(BuildContext context) {
+void privacyPolicyDialog(BuildContext context, String data) {
   showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Privacy policy'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text(
-                """This app doesn't collect any sort of data and doesn't track / log user activity. All libraries used in this application are open-source. Please refer to license section  for more info. Source code of this application is available on github.
-                              Since no data is collected from app's side,data handling and data-security purely depends upon the user. Make sure that you are connected to trusted wifi or hotspot while sharing the files.(Developer is not responsible).
-                              """,
-                textAlign: TextAlign.justify,
-              ),
-            ],
-          ),
+          content: SizedBox(
+              width: MediaQuery.of(context).size.width / 1.2,
+              height: MediaQuery.of(context).size.height / 2,
+              child: Markdown(data: data)),
           actions: [
             ElevatedButton(
                 onPressed: () async {

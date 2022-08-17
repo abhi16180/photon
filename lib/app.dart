@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:photon/components/dialogs.dart';
 import 'package:photon/views/widescreen_home.dart';
@@ -65,8 +67,11 @@ class _AppState extends State<App> {
               ),
               ListTile(
                 leading: const Icon(Icons.privacy_tip_rounded),
-                onTap: () {
-                  privacyDialog(context);
+                onTap: () async {
+                  File f = File('assets/texts/privacy_policy.txt');
+                  String privacyPolicy = await f.readAsString();
+                  // ignore: use_build_context_synchronously
+                  privacyPolicyDialog(context, privacyPolicy);
                 },
                 title: const Text('Privacy policy'),
               ),
