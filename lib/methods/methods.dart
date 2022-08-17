@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get_it/get_it.dart';
+import 'package:photon/components/snackbar.dart';
 
 import '../controllers/controllers.dart';
 import '../services/photon_sender.dart';
@@ -13,31 +14,7 @@ handleSharing(BuildContext context) async {
   if ((await PhotonSender.share(context) == true)) {
     Navigator.pushNamed(context, '/sharepage');
   } else {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            'Error',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.red,
-            ),
-          ),
-          content: const Text('No file chosen',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-              )),
-          actions: [
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Back'),
-            )
-          ],
-        );
-      },
-    );
+    showSnackBar(context, 'No file chosen');
   }
 }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:photon/components/dialogs.dart';
 import 'package:photon/views/widescreen_home.dart';
-
-import 'package:url_launcher/url_launcher.dart' as ulaunch;
 
 import 'views/mobile_home.dart';
 
@@ -67,37 +66,7 @@ class _AppState extends State<App> {
               ListTile(
                 leading: const Icon(Icons.privacy_tip_rounded),
                 onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Privacy policy'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Text(
-                                """This app doesn't collect any sort of data and doesn't track / log user activity. All libraries used in this application are open-source. Please refer to license section  for more info. Source code of this application is available on github.
-                              Since no data is collected from app's side,data handling and data-security purely depends upon the user. Make sure that you are connected to trusted wifi or hotspot while sharing the files.(Developer is not responsible).
-                              """,
-                                textAlign: TextAlign.justify,
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            ElevatedButton(
-                                onPressed: () async {
-                                  await ulaunch.launchUrl(Uri.parse(
-                                      'https://github.com/abhi16180/photon-file-transfer'));
-                                },
-                                child: const Text('Source-code')),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Okay'))
-                          ],
-                        );
-                      });
+                  privacyDialog(context);
                 },
                 title: const Text('Privacy policy'),
               ),
