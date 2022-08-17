@@ -19,9 +19,9 @@ class _AppState extends State<App> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-        backgroundColor: const Color.fromARGB(207, 10, 9, 17),
+        backgroundColor: const Color.fromARGB(255, 27, 32, 35),
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 14, 11, 33),
+          backgroundColor: const Color.fromARGB(255, 19, 18, 21),
           title: const Text(
             'Photon',
             style: TextStyle(
