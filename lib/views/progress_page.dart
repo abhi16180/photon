@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'package:photon/services/photon_receiver.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../methods/methods.dart';
 import '../models/sender_model.dart';
 import '../services/file_services.dart';
+import 'package:open_file/open_file.dart';
 
 class ProgressPage extends StatefulWidget {
   final SenderModel? senderModel;
@@ -91,88 +95,96 @@ class _ProgressPageState extends State<ProgressPage> {
                       return UnconstrainedBox(
                           child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          // color: Colors.blue.shade100,
-                          clipBehavior: Clip.antiAlias,
-                          child: SizedBox(
-                            width: width + 60,
-                            height: 100,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                getFileIcon(
-                                    snap.data[item].toString().split('.').last),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8.0, top: 8.0),
-                                      child: Text(
-                                        snap.data![item],
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: width - 80,
-                                      child: CustomPaint(
-                                        painter: ProgressLine(
-                                          pos: progressLineWidth,
+                        child: GestureDetector(
+                          onTap: () async {
+                            openFile(snap.data[item], widget.senderModel!);
+                          },
+                          child: Card(
+                            // color: Colors.blue.shade100,
+                            clipBehavior: Clip.antiAlias,
+                            child: SizedBox(
+                              width: width + 60,
+                              height: 100,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  getFileIcon(snap.data[item]
+                                      .toString()
+                                      .split('.')
+                                      .last),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8.0, top: 8.0),
+                                        child: Text(
+                                          snap.data![item],
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        child: Container(),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      height: 40,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(0.0),
-                                      child: Text(getInstance
-                                              .isCancelled[item].value
-                                          ? 'Cancelled'
-                                          : '${(getInstance.percentage[item] as RxDouble)} %'),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                if (getInstance.isCancelled[item].value) ...{
-                                  IconButton(
-                                    icon: const Padding(
-                                      padding: EdgeInsets.all(0),
-                                      child: Icon(Icons.refresh),
-                                    ),
-                                    onPressed: () {
-                                      //restart download
-                                      getInstance.isCancelled[item].value =
-                                          false;
-                                      PhotonReceiver.getFile(
-                                        snap.data[item],
-                                        item,
-                                        widget.senderModel!,
-                                      );
-                                    },
-                                  )
-                                } else ...{
-                                  IconButton(
-                                    icon: const Padding(
-                                      padding: EdgeInsets.all(0.0),
-                                      child: Icon(Icons.cancel),
-                                    ),
-                                    onPressed: () {
-                                      getInstance.isCancelled[item].value =
-                                          true;
-                                      getInstance.cancelTokenList[item]
-                                          .cancel();
-                                    },
-                                  )
-                                },
-                              ],
+                                      SizedBox(
+                                        width: width - 80,
+                                        child: CustomPaint(
+                                          painter: ProgressLine(
+                                            pos: progressLineWidth,
+                                          ),
+                                          child: Container(),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 40,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(0.0),
+                                        child: Text(getInstance
+                                                .isCancelled[item].value
+                                            ? 'Cancelled'
+                                            : '${(getInstance.percentage[item] as RxDouble)} %'),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  if (getInstance.isCancelled[item].value) ...{
+                                    IconButton(
+                                      icon: const Padding(
+                                        padding: EdgeInsets.all(0),
+                                        child: Icon(Icons.refresh),
+                                      ),
+                                      onPressed: () {
+                                        //restart download
+                                        getInstance.isCancelled[item].value =
+                                            false;
+                                        PhotonReceiver.getFile(
+                                          snap.data[item],
+                                          item,
+                                          widget.senderModel!,
+                                        );
+                                      },
+                                    )
+                                  } else ...{
+                                    IconButton(
+                                      icon: const Padding(
+                                        padding: EdgeInsets.all(0.0),
+                                        child: Icon(Icons.cancel),
+                                      ),
+                                      onPressed: () {
+                                        getInstance.isCancelled[item].value =
+                                            true;
+                                        getInstance.cancelTokenList[item]
+                                            .cancel();
+                                      },
+                                    )
+                                  },
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -230,6 +242,31 @@ class _ProgressPageState extends State<ProgressPage> {
         return willPop;
       },
     );
+  }
+
+  openFile(String filepath, SenderModel senderModel) async {
+    try {
+      String path = (await FileMethods.getSavePath(filepath, senderModel))
+          .replaceAll(r'\', '/');
+      if (Platform.isAndroid || Platform.isIOS) {
+        OpenFile.open(path);
+      } else {
+        if (await canLaunchUrl(Uri.parse(path))) {
+          launchUrl(
+            Uri.parse(
+              path,
+            ),
+            mode: LaunchMode.platformDefault,
+          );
+        } else {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Unable to open the file')));
+        }
+      }
+    } catch (_) {
+      print('Error');
+    }
   }
 }
 
