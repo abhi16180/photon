@@ -13,7 +13,17 @@
 ## Snapshots
 
 <img src="snapshots/photon_desktop.png">
-<img src="snapshots/home_mobile.jpg" style="width:100px;padding-right:10px"><img src="snapshots/photon_receive.jpg" style="width:100px;padding-right:10px">
+
+<div style="display: table;">
+  <div style="float: left;width: 33.33%; padding: 5px;">
+ <img src="snapshots/home_mobile.jpg" style="width:100px;padding-right:10px">
+  </div>
+  <div style="float: left;width: 33.33%; padding: 5px;">
+    <img src="snapshots/photon_receive.jpg" style="width:100px;padding-right:10px">
+  </div>
+
+</div>
+
 
 ## Current features
 
