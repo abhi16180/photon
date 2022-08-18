@@ -126,6 +126,8 @@ class PhotonReceiver {
     } catch (e) {
       if (!CancelToken.isCancel(e as DioError)) {
         debugPrint(e.toString());
+      } else {
+        print('error');
       }
     }
   }
