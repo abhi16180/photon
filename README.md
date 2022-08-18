@@ -13,7 +13,7 @@
 ## Snapshots
 
 <img src="snapshots/photon_desktop.png">
-<img src="snapshots/home_mobile.jpg" style="padding-right:10px"><img src="snapshots/photon_receive.jpg">
+<img src="snapshots/home_mobile.jpg" style="width:100px;padding-right:10px"><img src="snapshots/photon_receive.jpg" style="width:100px;padding-right:10px">
 
 ## Current features
 
