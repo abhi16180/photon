@@ -59,6 +59,7 @@ dependencies:
   open_file:
     git:
       url: https://github.com/abhi16180/open_file.git
+  mailto: ^2.0.0
  
 
 

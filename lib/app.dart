@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:photon/components/dialogs.dart';
+import 'package:photon/views/contact_page.dart';
 import 'package:photon/views/widescreen_home.dart';
 import 'package:unicons/unicons.dart';
 
@@ -92,6 +93,18 @@ class _AppState extends State<App> {
                 leading: const Icon(UniconsLine.info_circle),
                 onTap: () {
                   about(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Contact Me'),
+                leading: const Icon(
+                  UniconsLine.mailbox,
+                ),
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return const ContactPage();
+                  }));
                 },
               ),
             ],
