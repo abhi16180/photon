@@ -100,9 +100,12 @@ class _ProgressPageState extends State<ProgressPage> {
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             left: 8.0, top: 8.0),
-                                        child: Text(
-                                          snap.data![item],
-                                          overflow: TextOverflow.ellipsis,
+                                        child: SizedBox(
+                                          width: width / 1.4,
+                                          child: Text(
+                                            snap.data![item],
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
