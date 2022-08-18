@@ -1,5 +1,5 @@
 <h1 >Welcome to Photon👋</h1><br>
- <img style="border-radius:20px" src="photon.png" width="400px"></h1>
+<p align="center"> <img style="border-radius:20px" src="photon.png" width="400px"></p>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://twitter.com/AbhilashHegde9" target="_blank">
