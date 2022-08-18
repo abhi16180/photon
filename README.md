@@ -7,16 +7,29 @@
   </a>
 </p>
 
-> Photon is a cross-platform file-transfer application built using flutter. It uses http to transfer files between devices. Make sure devices are connected via mobile-hotspot or common wifi-router.You can transfer files between devices that run Photon. For example you can transfer files between Android and Windows.(*No wifi router is required ,you can use  hotspot*)
+> Photon is a cross-platform file-transfer application built using flutter. It uses http to transfer files between devices.You can transfer files between devices that run Photon.(*No wifi router is required ,you can use  hotspot*)
 
 ## Current features
-- Cross-platform support 
-- Transfer multiple files 
-- Works between the devices connected via mobile-hotspot
-- Works between the devices connected to same router (same local area network)
-- Smooth UI
-- Pick files faster 
-- Supports high-speed data transfer (Depends on wifi bandwidth) 
+- *Cross-platform support*
+  For instance you can transfer files between Android and Windows
+<br>
+- *Transfer multiple files*
+  You can pick any number of files.
+  <br>
+- *Pick files faster*
+  Most of the apps use <a href='https://github.com/miguelpruivo/flutter_file_picker'>file_picker</a> for picking the files. But for android it caches files before retrieving the paths. If the file size is large it will result in considerable amount of delay. So I have tweaked <a href='https://github.com/abhi16180/flutter_file_picker'>file_picker</a> to avoid caching(android) *unless it is required (some files need to be cached)*. No matter how many files are selected ,paths will be retrieved within no time.
+  (Note:Caching issue is android specific)
+<br>
+- *Smooth UI*
+  Material You design.
+<br>
+- *Works between the devices connected via mobile-hotspot / between the devices connected to same router (same local area network)*
+<br>
+- *Uses cryptographically secure secret code generation for authentication (internally )*
+ Even though the files are streamed at local area network,files cannot be downloaded/received without using Photon. No external client like browser can get the files using url,as secret code is associated with url. It will be regenerated for every session.
+<br>
+- *Supports high-speed data transfer* 
+  Photon is capable of transferring files at a very high rate but it depends upon the wifi bandwidth.
 (No internet connection required)
 ## Platforms
 - Android
@@ -29,6 +42,8 @@
 - macOS   
   - *Coming soon*
 
+## Downloads
+https://sourceforge.net/projects/photon-fileshare/ 
 ### Note:- 
 >The source code doesn't have any platform specific dependencies.But I don't have machines to test app on Linux,iOS and macOS ,if you have the respective machine you can build and test it out.
 
