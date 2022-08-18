@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/components/components.dart';
 import 'package:photon/models/sender_model.dart';
+import 'package:photon/services/file_services.dart';
 import 'package:photon/views/progress_page.dart';
 import '../services/photon_receiver.dart';
 
@@ -14,7 +17,10 @@ class ReceivePage extends StatefulWidget {
 }
 
 class _ReceivePageState extends State<ReceivePage> {
+  late Directory dir;
+  @override
   Future<List<SenderModel>> _scan() async {
+    dir = await FileMethods.getSaveDirectory();
     try {
       List<SenderModel> resp = await PhotonReceiver.scan();
       return resp;
@@ -31,6 +37,7 @@ class _ReceivePageState extends State<ReceivePage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     bool isRequestSent = false;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 13, 16, 18),
       appBar: AppBar(
@@ -89,8 +96,24 @@ class _ReceivePageState extends State<ReceivePage> {
                       SizedBox(
                         height: MediaQuery.of(context).size.height / 2 - 80,
                       ),
-                      const Center(
-                        child: Text('Waiting for sender to approve'),
+                      Center(
+                        child: Text(
+                          'Waiting for sender to approve,ask sender to approve !',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: MediaQuery.of(context).size.width > 720
+                                ? 18
+                                : 16,
+                          ),
+                        ),
+                      ),
+                      Card(
+                        child: SizedBox(
+                            child: Text(
+                          '(Files will be saved at $dir)',
+                          textAlign: TextAlign.center,
+                        )),
                       )
                     } else ...{
                       const SizedBox(
@@ -115,6 +138,7 @@ class _ReceivePageState extends State<ReceivePage> {
                                   sts(() {
                                     isRequestSent = true;
                                   });
+
                                   var resp =
                                       await PhotonReceiver.isRequestAccepted(
                                     snap.data[index] as SenderModel,

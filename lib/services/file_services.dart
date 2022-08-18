@@ -94,5 +94,29 @@ class FileMethods {
     return fileNames;
   }
 
-  static changeFileNameOnly(String currentFileName) {}
+  static Future<Directory> getSaveDirectory() async {
+    Directory directory = Directory('');
+    switch (Platform.operatingSystem) {
+      case "android":
+        directory = Directory('/storage/emulated/0/Download/');
+
+        break;
+      case "ios":
+        directory = await path.getApplicationDocumentsDirectory();
+        break;
+      case "windows":
+        directory = (await path.getDownloadsDirectory())!;
+
+        break;
+      case "linux":
+      case "macos":
+        directory = (await path.getDownloadsDirectory())!;
+
+        break;
+      default:
+        debugPrint("Error");
+    }
+
+    return directory;
+  }
 }
