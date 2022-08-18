@@ -283,6 +283,24 @@ credits(context) {
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text('Font\nYftoowhy', textAlign: TextAlign.center),
+                GestureDetector(
+                  onTap: () {
+                    ulaunch.launchUrl(Uri.parse(
+                        'https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL'));
+                  },
+                  child: const Text(
+                    """ Font license""",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
