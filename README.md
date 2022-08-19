@@ -66,7 +66,6 @@ flutter run
 👤 **Abhilash Hegde**
 
 * Twitter: [@AbhilashHegde9](https://twitter.com/AbhilashHegde9)
-* Github: [@abhi16180](https://github.com/abhi16180)
 
 ## Show your support
 
