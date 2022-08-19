@@ -30,26 +30,28 @@
   Material You design.
 - **Works between the devices connected via mobile-hotspot / between the devices connected to same router (same local area network)**
 
-- **Uses cryptographically secure secret code generation for authentication (internally )**<br>
+- **Uses cryptographically secure secret code generation for authentication (internally).**<br>
  Even though the files are streamed at local area network,files cannot be downloaded/received without using Photon. No external client like browser can get the files using url,as secret code is associated with url. It will be regenerated for every session.
 - **Supports high-speed data transfer** <br>
   Photon is capable of transferring files at a very high rate but it depends upon the wifi bandwidth.
 (No internet connection required)
 ## Platforms
 - Android
-- Windows
- 
+- Windows 
 - Linux
-  - *Coming soon*
+
 - iOS     
   - *Coming soon*
 - macOS   
   - *Coming soon*
 
 ## Downloads
-https://sourceforge.net/projects/photon-fileshare/ 
+<a href="https://github.com/abhi16180/photon/releases/download/v1.0.0/photon_ARM64bit_v1.0.0.apk">Android 64bit ARM (.apk)</a><br>
+<a href="https://github.com/abhi16180/photon/releases/download/v1.0.0/photon_windows_v1.0.0.zip">Windows (.zip)</a><br>
+<a href="https://github.com/abhi16180/photon/releases/download/v1.0.0/photon_linux_v1.0.0.tar.gz">Linux (.tar.gz)</a><br>
+
 ### Note:- 
->The source code doesn't have any platform specific dependencies.But I don't have machines to test app on Linux,iOS and macOS ,if you have the respective machine you can build and test it out.
+>The source code doesn't have any platform specific dependencies.But I don't have machines to test app on iOS and macOS ,if you have the respective machine you can build and test it out.
 
 ## To build app
 ```sh
