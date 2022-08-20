@@ -136,7 +136,10 @@ class _ProgressPageState extends State<ProgressPage> {
                                     IconButton(
                                       icon: const Padding(
                                         padding: EdgeInsets.all(0),
-                                        child: Icon(Icons.refresh),
+                                        child: Icon(
+                                          Icons.refresh,
+                                          semanticLabel: 'Restart',
+                                        ),
                                       ),
                                       onPressed: () {
                                         //restart download
@@ -153,7 +156,10 @@ class _ProgressPageState extends State<ProgressPage> {
                                     IconButton(
                                       icon: const Padding(
                                         padding: EdgeInsets.all(0.0),
-                                        child: Icon(Icons.cancel),
+                                        child: Icon(
+                                          Icons.cancel,
+                                          semanticLabel: 'Cancel receive',
+                                        ),
                                       ),
                                       onPressed: () {
                                         getInstance.isCancelled[item].value =
