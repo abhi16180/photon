@@ -46,9 +46,8 @@
   - *Coming soon*
 
 ## Downloads
-<a href="https://github.com/abhi16180/photon/releases/download/v1.0.0/photon_ARM64bit_v1.0.0.apk">Android 64bit ARM (.apk)</a><br>
-<a href="https://github.com/abhi16180/photon/releases/download/v1.0.0/photon_windows_v1.0.0.zip">Windows (.zip)</a><br>
-<a href="https://github.com/abhi16180/photon/releases/download/v1.0.0/photon_linux_v1.0.0.tar.gz">Linux (.tar.gz)</a><br>
+<a href="https://github.com/abhi16180/photon/releases/">All releases</a><br>
+
 
 ### Note:- 
 >The source code doesn't have any platform specific dependencies.But I don't have machines to test app on iOS and macOS ,if you have the respective machine you can build and test it out.
