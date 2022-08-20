@@ -23,19 +23,18 @@ class _MobileHomeState extends State<MobileHome> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (!isloading) ...{
-          GestureDetector(
-              onTap: () async {
-                setState(() {
-                  isloading = true;
-                });
-                await handleSharing(context);
-
-                setState(() {
-                  isloading = false;
-                });
-              },
-              child: Card(
-                  child: Column(
+          MaterialButton(
+            onPressed: () async {
+              setState(() {
+                isloading = true;
+              });
+              await handleSharing(context);
+              setState(() {
+                isloading = false;
+              });
+            },
+            child: Card(
+              child: Column(
                 children: [
                   Lottie.asset(
                     'assets/lottie/rocket-send.json',
@@ -52,15 +51,17 @@ class _MobileHomeState extends State<MobileHome> {
                     ),
                   )
                 ],
-              ))),
+              ),
+            ),
+          ),
           const SizedBox(
             height: 32,
           ),
-          GestureDetector(
-            onTap: () async {
-              Navigator.of(context).pushNamed('/receivepage');
-            },
-            child: Card(
+          Card(
+            child: MaterialButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/receivepage');
+              },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
