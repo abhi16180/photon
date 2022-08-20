@@ -6,6 +6,7 @@ import 'package:photon/views/contact_page.dart';
 import 'package:photon/views/widescreen_home.dart';
 import 'package:unicons/unicons.dart';
 
+import 'controllers/intents.dart';
 import 'views/mobile_home.dart';
 
 class App extends StatefulWidget {
@@ -21,8 +22,9 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
+        key: scaffoldKey,
         backgroundColor: const Color.fromARGB(255, 27, 32, 35),
         appBar: AppBar(
           backgroundColor: Colors.blueGrey.shade900,
@@ -34,80 +36,95 @@ class _AppState extends State<App> {
             ),
           ),
         ),
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              const SizedBox(
-                height: 50,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      'assets/images/icon.png',
-                      width: 75,
-                      height: 75,
+        drawer: Shortcuts(
+          shortcuts: {
+            LogicalKeySet(LogicalKeyboardKey.backspace): GoBackIntent()
+          },
+          child: Actions(
+            actions: {
+              GoBackIntent: CallbackAction<GoBackIntent>(onInvoke: (intent) {
+                if (scaffoldKey.currentState!.isDrawerOpen) {
+                  scaffoldKey.currentState!.openEndDrawer();
+                }
+                return null;
+              })
+            },
+            child: Drawer(
+              child: ListView(
+                children: [
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'assets/images/icon.png',
+                          width: 75,
+                          height: 75,
+                        ),
+                        const Text('Photon')
+                      ],
                     ),
-                    const Text('Photon')
-                  ],
-                ),
+                  ),
+                  ListTile(
+                    leading: SvgPicture.asset(
+                      'assets/icons/licenses.svg',
+                      color: Colors.white,
+                    ),
+                    onTap: () {
+                      showLicensePage(
+                          context: context,
+                          applicationLegalese: 'MIT license',
+                          applicationVersion: 'v1.0.0',
+                          applicationIcon: Image.asset(
+                            'assets/images/splash.png',
+                            width: 60,
+                          ));
+                    },
+                    title: const Text('Licenses'),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.privacy_tip_rounded),
+                    onTap: () async {
+                      String privacyPolicy = await rootBundle
+                          .loadString('assets/texts/privacy_policy.txt');
+                      // ignore: use_build_context_synchronously
+                      privacyPolicyDialog(context, privacyPolicy);
+                    },
+                    title: const Text('Privacy policy'),
+                  ),
+                  ListTile(
+                    title: const Text('Credits'),
+                    leading: SvgPicture.asset('assets/icons/credits.svg',
+                        color: Colors.white),
+                    onTap: () {
+                      credits(context);
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('About'),
+                    leading: const Icon(UniconsLine.info_circle),
+                    onTap: () {
+                      about(context);
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Contact Me'),
+                    leading: const Icon(
+                      UniconsLine.mailbox,
+                    ),
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return const ContactPage();
+                      }));
+                    },
+                  ),
+                ],
               ),
-              ListTile(
-                leading: SvgPicture.asset(
-                  'assets/icons/licenses.svg',
-                  color: Colors.white,
-                ),
-                onTap: () {
-                  showLicensePage(
-                      context: context,
-                      applicationLegalese: 'MIT license',
-                      applicationVersion: 'v1.0.0',
-                      applicationIcon: Image.asset(
-                        'assets/images/splash.png',
-                        width: 60,
-                      ));
-                },
-                title: const Text('Licenses'),
-              ),
-              ListTile(
-                leading: const Icon(Icons.privacy_tip_rounded),
-                onTap: () async {
-                  String privacyPolicy = await rootBundle
-                      .loadString('assets/texts/privacy_policy.txt');
-                  // ignore: use_build_context_synchronously
-                  privacyPolicyDialog(context, privacyPolicy);
-                },
-                title: const Text('Privacy policy'),
-              ),
-              ListTile(
-                title: const Text('Credits'),
-                leading: SvgPicture.asset('assets/icons/credits.svg',
-                    color: Colors.white),
-                onTap: () {
-                  credits(context);
-                },
-              ),
-              ListTile(
-                title: const Text('About'),
-                leading: const Icon(UniconsLine.info_circle),
-                onTap: () {
-                  about(context);
-                },
-              ),
-              ListTile(
-                title: const Text('Contact Me'),
-                leading: const Icon(
-                  UniconsLine.mailbox,
-                ),
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return const ContactPage();
-                  }));
-                },
-              ),
-            ],
+            ),
           ),
         ),
         body: Center(
