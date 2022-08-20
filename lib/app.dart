@@ -77,7 +77,7 @@ class _AppState extends State<App> {
                       showLicensePage(
                           context: context,
                           applicationLegalese: 'MIT license',
-                          applicationVersion: 'v1.0.0',
+                          applicationVersion: 'v1.0.1',
                           applicationIcon: Image.asset(
                             'assets/images/splash.png',
                             width: 60,
