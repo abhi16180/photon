@@ -20,18 +20,18 @@ class _WidescreenHomeState extends State<WidescreenHome> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (!isloading) ...{
-          GestureDetector(
-            onTap: () async {
-              setState(() {
-                isloading = true;
-              });
-              await handleSharing(context);
-              setState(() {
-                isloading = false;
-              });
-            },
-            child: Center(
-              child: Card(
+          Center(
+            child: Card(
+              child: MaterialButton(
+                onPressed: () async {
+                  setState(() {
+                    isloading = true;
+                  });
+                  await handleSharing(context);
+                  setState(() {
+                    isloading = false;
+                  });
+                },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -58,11 +58,12 @@ class _WidescreenHomeState extends State<WidescreenHome> {
           SizedBox(
             width: size.width / 10,
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed('/receivepage');
-            },
-            child: Card(
+          Card(
+            child: MaterialButton(
+              clipBehavior: Clip.hardEdge,
+              onPressed: () {
+                Navigator.of(context).pushNamed('/receivepage');
+              },
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -81,7 +82,7 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                 ],
               ),
             ),
-          )
+          ),
         } else ...{
           Center(
             child: SizedBox(
