@@ -48,8 +48,9 @@
 ## Downloads
 <a href="https://github.com/abhi16180/photon/releases/">All releases</a><br>
 
-#####External sites 
+*External sites*
 - Android 
+<br>
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.example.photon"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width=240px> </a>
 
 
