@@ -48,6 +48,10 @@
 ## Downloads
 <a href="https://github.com/abhi16180/photon/releases/">All releases</a><br>
 
+#####External sites 
+- Android 
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.example.photon"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width=240px> </a>
+
 
 ### Note:- 
 >The source code doesn't have any platform specific dependencies.But I don't have machines to test app on iOS and macOS ,if you have the respective machine you can build and test it out.
