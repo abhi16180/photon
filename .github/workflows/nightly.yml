@@ -51,12 +51,18 @@ jobs:
           flutter pub get
           flutter build apk
           make apk
-      - uses: actions/upload-artifact@v2
+      - name: rename
+        if: ${{ github.event_name != 'release' }}
+        run: mv build/app/outputs/apk/release/pstube-* build/app/outputs/apk/release/photon-android-nightly.apk
+      - uses: svenstaro/upload-release-action@latest
         with:
-          name: Photon-Android-Bundle
-          token: ${{secrets.TOKEN}}
-          path: |
-            build/photon-android-all-arch.apk
+          repo_token: ${{ secrets.TOKEN }}
+          file: build/app/outputs/apk/release/photon-*
+          file_glob: true
+          prerelease: ${{ github.event_name != 'release' }}
+          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+          overwrite: true
 
   build_windows:
     name: Windows
