@@ -124,6 +124,6 @@ jobs:
         name: Photon-iOS-Bundle
         token: ${{secrets.TOKEN}}
         path: |
-          build/photon-ios-
+          build/ios/iphoneos/Runner.app
 
     
