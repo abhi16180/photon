@@ -1,0 +1,45 @@
+**Privacy Policy**
+
+Photon app is built as  an Open Source application. This SERVICE is provided by the developer at no cost and is intended for use as is. If you choose to use my Service, then you agree to the privacy policy.
+
+
+
+**Information Collection and Use**
+
+No user information is collected and stored by the developer. However to provide file-transfer service , information like ip-address, operating system(to identify the sender / receiver),etc will be *temporarily* stored locally in your device. But all these information will be cleared from app every time sharing process is terminated. 
+*No information is stored by the developer.*
+
+**Log Data**
+
+*I want to inform you that no log data is collected by the app when the app crashes and no usage data is collected by the developer.*
+
+**Cookies**
+
+*This application doesn't use any sort of Cookies.*
+
+**Third-party flutter packages**
+
+I want to inform users that all third-party flutter packages used in this application are open-source and available on github.
+
+**Security**
+
+I do not store or posses any kind of information ,so handling data completely depends upon the user. Make sure that you are connected to trusted wifi. Remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
+
+**Links to Other Sites**
+
+This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by me. Therefore, I strongly advise you to review the Privacy Policy of these websites. I have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.
+
+**Children’s Privacy**
+
+I do not knowingly collect personally identifiable information from any user including children.
+
+**Changes to This Privacy Policy**
+
+I may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page.
+
+This policy is effective as of 2022-08-17
+
+**Contact Me**
+
+If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at photon19dev@gmail.com
+
