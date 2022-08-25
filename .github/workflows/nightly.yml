@@ -59,30 +59,40 @@ jobs:
             build/photon-android-all-arch.apk
 
   build_windows:
+    name: Windows
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v3
-      # Build Windows Executable
-      - uses: subosito/flutter-action@v2.2.0
+      - uses: actions/checkout@v2
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@master
         with:
-          cache: true
-          token: ${{secrets.TOKEN}}
+          channel: stable
+
+      - name: Enable desktop support
+        run: flutter config --enable-windows-desktop
+
+      - name: Build Flutter app
+        run: flutter build windows
+
+      - run: cp -r build/windows/runner/Release photon-windows-exe
+      - run: tar.exe -a -c -f photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.zip photon-windows-exe
+
       - run: |
-          flutter config --enable-windows-desktop
-          flutter pub get
-          dart pub global activate flutter_distributor
-          make innoinstall
-          flutter_distributor package --platform=windows --targets=exe --skip-clean
+          "%programfiles(x86)%\Inno Setup 6\iscc.exe" "photon_inst.iss"
+        shell: cmd
+      - run: cp Output/* ./photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.exe
 
- 
-      - run: mv dist/**/photon-*-windows-setup.exe dist/photon-windows-x86_64-setup.exe
-
-      # Upload artifacts
-      - uses: actions/upload-artifact@v3
+      - uses: svenstaro/upload-release-action@latest
         with:
-          name: Photon-Windows-Bundle
-          token: ${{secrets.TOKEN}}
-          path: dist/*.exe
+          repo_token: ${{ secrets.TOKEN }}
+          file: photon-windows-*
+          file_glob: true
+          prerelease: ${{ github.event_name != 'release' }}
+          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+          overwrite: true
 
   build_macos:
     runs-on: macos-11
@@ -114,7 +124,7 @@ jobs:
         channel: 'stable'
         architecture: x64
     - run: flutter pub get
-    - run: flutter build ipa --release
+    - run: flutter build ipa --release 
     - uses: actions/upload-artifact@v2 
       with:
         name: Photon-iOS-Bundle
