@@ -27,28 +27,11 @@ jobs:
       - name: Build Flutter app
         run: flutter build linux
 
-      - name: Bump versions
-        run: |
-          version=$(grep "^version" pubspec.yaml | awk '{print $2}')
-          sed -i "s:VERSION:$(echo $version):" linux/packaging/rpm/photon.spec
-          sed -i "s:VERSION:$(echo $version):" linux/packaging/deb/DEBIAN/control
- 
-      - name: Build RPM Package
-        run: |
-          cp -fr build/linux/x64/release/bundle linux/packaging/deb/usr/share/photon
-          mkdir linux/packaging/deb/usr/bin
-          ln -sr linux/packaging/deb/usr/share/photon/photon linux/packaging/deb/usr/bin/photon
-          sed -i "s:cp -rf :cp -rf $(pwd)/:" linux/packaging/rpm/photon.spec
-          cd linux/packaging/deb
-          sed -i "s:FILES_HERE:$(find usr \( -type l -o -type f \) -follow -print | awk '{printf "/%s\\n", $0}'):" ../rpm/photon.spec
-          cd ../../../
-          rpmbuild -bb linux/packaging/rpm/photon.spec -D "_topdir $(pwd)/rpmbuild"
-          cp rpmbuild/RPMS/x86_64/*.rpm photon-linux-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}-x86_64.rpm
-          rm -rf linux/packaging/rpm
       - name: Build DEB Package
         run: |
           dpkg-deb --build --root-owner-group linux/packaging/deb
           cp linux/packaging/*.deb photon-linux-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}-x86_64.deb
+
       - name: Build Tarball
         run: |
           mkdir -p AppDir/
@@ -91,7 +74,7 @@ jobs:
       - run: |
           flutter pub get
           flutter build apk
-          make apk
+          
       - name: rename
         if: ${{ github.event_name != 'release' }}
         run: mv build/app/outputs/apk/release/app-* build/app/outputs/apk/release/photon-android-nightly.apk
