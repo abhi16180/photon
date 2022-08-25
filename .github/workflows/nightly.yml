@@ -155,12 +155,16 @@ jobs:
       - run: du -sh build/macos/Build/Products/Release/photon.app
       - run: npm install -g appdmg
       - run: appdmg photondmg.json build/photon-macos-x86_64.dmg
-      - uses: actions/upload-artifact@v2
+ 
+      - uses: svenstaro/upload-release-action@latest
         with:
-          name: Photon-Macos-Bundle
-          token: ${{secrets.TOKEN}}
-          path: |
-            build/photon-macos-x86_64.dmg
+          repo_token: ${{ secrets.TOKEN }}
+          file: build/photon-macos-x86_64.dmg
+          file_glob: true
+          prerelease: ${{ github.event_name != 'release' }}
+          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+          overwrite: true
 
   build_ios:
     runs-on: macos-latest
