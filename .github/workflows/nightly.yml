@@ -123,6 +123,6 @@ jobs:
         name: Photon-iOS-Bundle
         token: ${{secrets.TOKEN}}
         path: |
-          build/ios/iphoneos/Runner.app
+          build/ios/ipa/*.ipa
 
     
