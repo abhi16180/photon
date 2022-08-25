@@ -100,7 +100,7 @@ jobs:
       - run: flutter build macos
       - run: du -sh build/macos/Build/Products/Release/photon.app
       - run: npm install -g appdmg
-      - run: appdmg appdmg.json build/photon-macos-x86_64.dmg
+      - run: appdmg photondmg.json build/photon-macos-x86_64.dmg
       - uses: actions/upload-artifact@v2
         with:
           name: Photon-Macos-Bundle
