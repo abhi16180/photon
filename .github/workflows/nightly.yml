@@ -31,10 +31,7 @@ jobs:
           dart pub global activate flutter_distributor
           flutter_distributor package --platform=linux --targets=deb,appimage --skip-clean
           make tar
-      - run: |
-          mv build/photon-linux-x86_64.tar.xz dist/
-          mv dist/**/photon-*-linux.deb dist/photon-linux-x86_64.deb
-          mv dist/**/photon-*-linux.AppImage dist/photon-linux-x86_64.AppImage
+ 
       - uses: actions/upload-artifact@v3
         with:
           token: ${{secrets.TOKEN}}
