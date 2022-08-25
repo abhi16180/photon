@@ -27,11 +27,8 @@ jobs:
 
       - run: |
           flutter config --enable-linux-desktop
-          flutter pub get
-          dart pub global activate flutter_distributor
-          flutter_distributor package --platform=linux --targets=appimage --skip-clean
+          flutter build linux --release
           
- 
       - uses: actions/upload-artifact@v3
         with:
           token: ${{secrets.TOKEN}}
@@ -117,7 +114,7 @@ jobs:
         channel: 'stable'
         architecture: x64
     - run: flutter pub get
-    - run: flutter build ipa --release --export-options-plist=ios/Runner/ExportOptions.plist
+    - run: flutter build ipa --release
     - uses: actions/upload-artifact@v2 
       with:
         name: Photon-iOS-Bundle
