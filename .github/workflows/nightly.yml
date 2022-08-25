@@ -53,7 +53,7 @@ jobs:
           make apk
       - name: rename
         if: ${{ github.event_name != 'release' }}
-        run: mv build/app/outputs/apk/release/pstube-* build/app/outputs/apk/release/photon-android-nightly.apk
+        run: mv build/app/outputs/apk/release/photon-* build/app/outputs/apk/release/photon-android-nightly.apk
       - uses: svenstaro/upload-release-action@latest
         with:
           repo_token: ${{ secrets.TOKEN }}
