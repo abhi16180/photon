@@ -30,13 +30,13 @@ jobs:
           flutter pub get
           dart pub global activate flutter_distributor
           flutter_distributor package --platform=linux --targets=appimage --skip-clean
-          make tar
+          
  
       - uses: actions/upload-artifact@v3
         with:
           token: ${{secrets.TOKEN}}
           name: Photon-Linux-Bundle
-          path: dist/
+          path: build/linux/x64/release/bundle
 
   build_android:
     runs-on: ubuntu-latest
@@ -85,7 +85,7 @@ jobs:
         with:
           name: Photon-Windows-Bundle
           token: ${{secrets.TOKEN}}
-          path: dist/
+          path: dist/*.exe
 
   build_macos:
     runs-on: macos-11
@@ -117,7 +117,7 @@ jobs:
         channel: 'stable'
         architecture: x64
     - run: flutter pub get
-    - run: flutter build ios --release --no-codesign
+    - run: flutter build ipa --release --export-options-plist=ios/Runner/ExportOptions.plist
     - uses: actions/upload-artifact@v2 
       with:
         name: Photon-iOS-Bundle
