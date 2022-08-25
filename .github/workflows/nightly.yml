@@ -29,7 +29,7 @@ jobs:
           flutter config --enable-linux-desktop
           flutter pub get
           dart pub global activate flutter_distributor
-          flutter_distributor package --platform=linux --targets=deb,appimage --skip-clean
+          flutter_distributor package --platform=linux --targets=appimage --skip-clean
           make tar
  
       - uses: actions/upload-artifact@v3
@@ -107,3 +107,23 @@ jobs:
           token: ${{secrets.TOKEN}}
           path: |
             build/photon-macos-x86_64.dmg
+
+  build_ios:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        architecture: x64
+    - run: flutter pub get
+    - run: flutter test
+    - run: flutter build ios --release --no-codesign
+    - uses: actions/upload-artifact@v2 
+      with:
+        name: Photon-iOS-Bundle
+        token: ${{secrets.TOKEN}}
+        path: |
+          build/photon-ios-
+
+    
