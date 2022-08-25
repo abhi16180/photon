@@ -6,34 +6,75 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_ubuntu:
+  build-linux-all:
+    name: Linux
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          cache: true
-          token: ${{secrets.TOKEN}}
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-      - run: |
-          sudo apt-get update -y
-          sudo apt-get install -y tar clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
-      - run: |
-          wget -O appimage-builder-x86_64.AppImage https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.0-beta.1/appimage-builder-1.0.0-677acbd-x86_64.AppImage
-          chmod +x appimage-builder-x86_64.AppImage
-          mv appimage-builder-x86_64.AppImage /usr/local/bin/appimage-builder
 
-      - run: |
-          flutter config --enable-linux-desktop
-          flutter build linux --release
-          
-      - uses: actions/upload-artifact@v3
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@master
         with:
-          token: ${{secrets.TOKEN}}
-          name: Photon-Linux-Bundle
-          path: build/linux/x64/release/bundle
+          channel: stable
+
+      - name: Installing dependencies
+        run: sudo apt-get update -y && sudo apt-get install -y libvlc-dev ninja-build libgtk-3-dev dpkg-dev pkg-config rpm
+
+      - name: Enable desktop support
+        run: flutter config --enable-linux-desktop
+
+      - name: Build Flutter app
+        run: flutter build linux
+
+      - name: Bump versions
+        run: |
+          version=$(grep "^version" pubspec.yaml | awk '{print $2}')
+          sed -i "s:VERSION:$(echo $version):" linux/packaging/rpm/photon.spec
+          sed -i "s:VERSION:$(echo $version):" linux/packaging/deb/DEBIAN/control
+ 
+      - name: Build RPM Package
+        run: |
+          cp -fr build/linux/x64/release/bundle linux/packaging/deb/usr/share/photon
+          mkdir linux/packaging/deb/usr/bin
+          ln -sr linux/packaging/deb/usr/share/photon/photon linux/packaging/deb/usr/bin/photon
+          sed -i "s:cp -rf :cp -rf $(pwd)/:" linux/packaging/rpm/photon.spec
+          cd linux/packaging/deb
+          sed -i "s:FILES_HERE:$(find usr \( -type l -o -type f \) -follow -print | awk '{printf "/%s\\n", $0}'):" ../rpm/photon.spec
+          cd ../../../
+          rpmbuild -bb linux/packaging/rpm/photon.spec -D "_topdir $(pwd)/rpmbuild"
+          cp rpmbuild/RPMS/x86_64/*.rpm photon-linux-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}-x86_64.rpm
+          rm -rf linux/packaging/rpm
+      - name: Build DEB Package
+        run: |
+          dpkg-deb --build --root-owner-group linux/packaging/deb
+          cp linux/packaging/*.deb photon-linux-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}-x86_64.deb
+      - name: Build Tarball
+        run: |
+          mkdir -p AppDir/
+          cp -r linux/packaging/deb/usr AppDir/
+          ln -sr AppDir/usr/share/photon/photon AppDir/photon
+          tar czf photon-linux-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}-x86_64.tar.gz -C AppDir/ .
+      - name: Build AppImage
+        run: |
+          echo '#!/bin/sh
+          cd "$(dirname "$0")"
+          exec ./photon' > AppDir/AppRun
+          chmod +x AppDir/AppRun
+          ln -sr AppDir/usr/share/icons/hicolor/128x128/apps/photon.png AppDir/photon.png
+          cp AppDir/usr/share/applications/photon.desktop AppDir/photon.desktop
+          curl -L https://github.com/AppImage/AppImageKit/releases/download/nightly/appimagetool-x86_64.AppImage -o appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir/ photon-linux-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}-x86_64.AppImage
+      - uses: svenstaro/upload-release-action@latest
+        with:
+          repo_token: ${{ secrets.TOKEN }}
+          file: photon-linux-*
+          file_glob: true
+          prerelease: ${{ github.event_name != 'release' }}
+          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+          overwrite: true
 
   build_android:
     runs-on: ubuntu-latest
@@ -53,7 +94,7 @@ jobs:
           make apk
       - name: rename
         if: ${{ github.event_name != 'release' }}
-        run: mv build/app/outputs/apk/release/photon-* build/app/outputs/apk/release/photon-android-nightly.apk
+        run: mv build/app/outputs/apk/release/app-* build/app/outputs/apk/release/photon-android-nightly.apk
       - uses: svenstaro/upload-release-action@latest
         with:
           repo_token: ${{ secrets.TOKEN }}
@@ -130,7 +171,7 @@ jobs:
         channel: 'stable'
         architecture: x64
     - run: flutter pub get
-    - run: flutter build ipa --release 
+    - run: flutter build ipa --release --no-codesign
     - uses: actions/upload-artifact@v2 
       with:
         name: Photon-iOS-Bundle
