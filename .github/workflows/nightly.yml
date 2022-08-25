@@ -27,17 +27,6 @@ jobs:
       - name: Build Flutter app
         run: flutter build linux
 
-      - name: Build DEB Package
-        run: |
-          dpkg-deb --build --root-owner-group linux/packaging/deb
-          cp linux/packaging/*.deb photon-linux-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}-x86_64.deb
-
-      - name: Build Tarball
-        run: |
-          mkdir -p AppDir/
-          cp -r linux/packaging/deb/usr AppDir/
-          ln -sr AppDir/usr/share/photon/photon AppDir/photon
-          tar czf photon-linux-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}-x86_64.tar.gz -C AppDir/ .
       - name: Build AppImage
         run: |
           echo '#!/bin/sh
@@ -74,7 +63,7 @@ jobs:
       - run: |
           flutter pub get
           flutter build apk
-          
+
       - name: rename
         if: ${{ github.event_name != 'release' }}
         run: mv build/app/outputs/apk/release/app-* build/app/outputs/apk/release/photon-android-nightly.apk
