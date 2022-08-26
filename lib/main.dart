@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:photon/views/history.dart';
 import 'package:photon/views/intro_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:photon/controllers/controllers.dart';
@@ -64,7 +65,8 @@ void main() async {
             ),
         '/home': (context) => const App(),
         '/sharepage': (context) => const SharePage(),
-        '/receivepage': (context) => const ReceivePage()
+        '/receivepage': (context) => const ReceivePage(),
+        '/history': (context) => const HistoryPage()
       },
     ),
   );
