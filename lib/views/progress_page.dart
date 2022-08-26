@@ -125,7 +125,9 @@ class _ProgressPageState extends State<ProgressPage> {
                                         child: Text(getInstance
                                                 .isCancelled[item].value
                                             ? 'Cancelled'
-                                            : '${(getInstance.percentage[item] as RxDouble)} %'),
+                                            : getInstance.isReceived[item].value
+                                                ? "Completed"
+                                                : '${(getInstance.percentage[item] as RxDouble)} %'),
                                       ),
                                     ],
                                   ),
