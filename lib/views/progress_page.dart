@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:photon/components/snackbar.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'package:photon/services/photon_receiver.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -154,7 +155,8 @@ class _ProgressPageState extends State<ProgressPage> {
                                         );
                                       },
                                     )
-                                  } else ...{
+                                  } else if (!getInstance
+                                      .isReceived[item].value) ...{
                                     IconButton(
                                       icon: const Padding(
                                         padding: EdgeInsets.all(0.0),
@@ -207,27 +209,27 @@ class _ProgressPageState extends State<ProgressPage> {
   }
 
   openFile(String filepath, SenderModel senderModel) async {
-    try {
-      String path = (await FileMethods.getSavePath(filepath, senderModel))
-          .replaceAll(r'\', '/');
-      if (Platform.isAndroid || Platform.isIOS) {
+    String path = (await FileMethods.getSavePath(filepath, senderModel))
+        .replaceAll(r'\', '/');
+    if (Platform.isAndroid || Platform.isIOS) {
+      try {
         OpenFile.open(path);
-      } else {
-        print(path);
-        try {
-          launchUrl(
-            Uri.parse(
-              path,
-            ),
-          );
-        } catch (e) {
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Unable to open the file')));
-        }
+      } catch (_) {
+        // ignore: use_build_context_synchronously
+        showSnackBar(context, 'No corresponding app found');
       }
-    } catch (_) {
-      print('Error');
+    } else {
+      try {
+        launchUrl(
+          Uri.parse(
+            path,
+          ),
+        );
+      } catch (e) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Unable to open the file')));
+      }
     }
   }
 }
