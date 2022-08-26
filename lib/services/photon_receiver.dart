@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
 
@@ -108,7 +109,11 @@ class PhotonReceiver {
       String filePath, int fileIndex, SenderModel senderModel) async {
     Dio dio = Dio();
     var getInstance = GetIt.I<PercentageController>();
+    //creates instance of cancelToken and inserts it to list
     getInstance.cancelTokenList.insert(fileIndex, CancelToken());
+
+    ///inserts [false] into list
+    getInstance.isReceived.insert(fileIndex, RxBool(false));
     String savePath = await FileMethods.getSavePath(filePath, senderModel);
     try {
       await dio.download(
@@ -123,6 +128,8 @@ class PhotonReceiver {
           }
         },
       );
+      //after completion of download mark it as true
+      getInstance.isReceived[fileIndex].value = true;
     } catch (e) {
       if (!CancelToken.isCancel(e as DioError)) {
         debugPrint(e.toString());
