@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
 import 'package:photon/components/snackbar.dart';
 
 import '../controllers/controllers.dart';
@@ -62,6 +63,9 @@ generatePercentageList(len) {
   getInstance.isCancelled = RxList.generate(len, (index) {
     return RxBool(false);
   });
+  getInstance.isReceived = RxList.generate(len, (index) {
+    return RxBool(false);
+  });
 }
 
 Widget getFileIcon(String extn) {
@@ -98,4 +102,31 @@ Widget getFileIcon(String extn) {
         size: 30,
       );
   }
+}
+
+storeHistory(Box box, String savePath) {
+  if (box.get('fileInfo') == null) {
+    box.put('fileInfo', []);
+  }
+  List fileInfo = box.get('fileInfo') as List;
+  fileInfo.add(
+    {
+      'fileName': savePath.split(Platform.pathSeparator).last,
+      'date': DateTime.now(),
+      'filePath': savePath
+    },
+  );
+
+  box.put('fileInfo', fileInfo);
+}
+
+getHistory() async {
+  var box = await Hive.openBox('history');
+  return box.get('fileInfo');
+}
+
+clearHistory() async {
+  Hive.openBox('history').then((box) => box.delete('fileInfo')).catchError((e) {
+    debugPrint(e.toString());
+  });
 }
