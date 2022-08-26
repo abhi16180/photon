@@ -7,6 +7,7 @@ import 'package:photon/views/widescreen_home.dart';
 import 'package:unicons/unicons.dart';
 
 import 'controllers/intents.dart';
+import 'views/history.dart';
 import 'views/mobile_home.dart';
 
 class App extends StatefulWidget {
@@ -67,6 +68,16 @@ class _AppState extends State<App> {
                         const Text('Photon')
                       ],
                     ),
+                  ),
+                  ListTile(
+                    leading: const Icon(UniconsSolid.history),
+                    title: const Text('Share-history'),
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return const HistoryPage();
+                      }));
+                    },
                   ),
                   ListTile(
                     leading: SvgPicture.asset(
