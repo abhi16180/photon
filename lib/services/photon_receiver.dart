@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:hive/hive.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
 
@@ -15,6 +15,8 @@ import 'package:http/http.dart' as http;
 class PhotonReceiver {
   static late int _secretCode;
   static late Map<String, dynamic> filePathMap;
+  static final Future<Box> _futureHive = Hive.openBox('history');
+  static late Box _box;
 
   ///to get network address [assumes class C address]
   static List<String> getNetAddress(List<String> ipList) {
@@ -92,6 +94,8 @@ class PhotonReceiver {
   }
 
   static receive(SenderModel senderModel, int secretCode) async {
+    //getting hiveObj
+    _box = await _futureHive;
     try {
       var resp = await Dio()
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
@@ -106,15 +110,16 @@ class PhotonReceiver {
   }
 
   static getFile(
-      String filePath, int fileIndex, SenderModel senderModel) async {
+    String filePath,
+    int fileIndex,
+    SenderModel senderModel,
+  ) async {
     Dio dio = Dio();
-    var getInstance = GetIt.I<PercentageController>();
+    PercentageController getInstance = GetIt.I<PercentageController>();
     //creates instance of cancelToken and inserts it to list
     getInstance.cancelTokenList.insert(fileIndex, CancelToken());
-
-    ///inserts [false] into list
-    getInstance.isReceived.insert(fileIndex, RxBool(false));
     String savePath = await FileMethods.getSavePath(filePath, senderModel);
+
     try {
       await dio.download(
         'http://${senderModel.ip}:4040/${_secretCode.toString()}/${fileIndex.toString()}',
@@ -130,6 +135,7 @@ class PhotonReceiver {
       );
       //after completion of download mark it as true
       getInstance.isReceived[fileIndex].value = true;
+      storeHistory(_box, savePath);
     } catch (e) {
       if (!CancelToken.isCancel(e as DioError)) {
         debugPrint(e.toString());

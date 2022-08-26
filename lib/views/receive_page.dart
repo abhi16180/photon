@@ -20,7 +20,7 @@ class ReceivePage extends StatefulWidget {
 
 class _ReceivePageState extends State<ReceivePage> {
   late Directory dir;
-  @override
+
   Future<List<SenderModel>> _scan() async {
     dir = await FileMethods.getSaveDirectory();
     try {

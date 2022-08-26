@@ -59,6 +59,7 @@ dependencies:
   open_file:
     git:
       url: https://github.com/abhi16180/open_file.git
+  hive: ^2.2.3
 
  
 

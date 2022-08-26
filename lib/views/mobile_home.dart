@@ -57,11 +57,11 @@ class _MobileHomeState extends State<MobileHome> {
           const SizedBox(
             height: 32,
           ),
-          Card(
-            child: MaterialButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/receivepage');
-              },
+          MaterialButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/receivepage');
+            },
+            child: Card(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
