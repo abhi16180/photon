@@ -109,7 +109,8 @@ storeHistory(Box box, String savePath) {
     box.put('fileInfo', []);
   }
   List fileInfo = box.get('fileInfo') as List;
-  fileInfo.add(
+  fileInfo.insert(
+    0,
     {
       'fileName': savePath.split(Platform.pathSeparator).last,
       'date': DateTime.now(),
@@ -129,4 +130,15 @@ clearHistory() async {
   Hive.openBox('history').then((box) => box.delete('fileInfo')).catchError((e) {
     debugPrint(e.toString());
   });
+}
+
+String getDateString(DateTime date) {
+  String day = "${date.day}".padLeft(2, '0');
+  String month = "${date.month}";
+  String year = "${date.year}";
+  String hour = date.hour > 12 ? "${date.hour - 12}" : "${date.hour}";
+  String period = TimeOfDay.fromDateTime(date).period.name;
+  String minute = "${date.minute}".padLeft(2, '0');
+  String dateString = "$day-$month-$year " "$hour-$minute$period";
+  return dateString;
 }

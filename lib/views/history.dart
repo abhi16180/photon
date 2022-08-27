@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:photon/components/snackbar.dart';
 import 'package:photon/methods/methods.dart';
+import 'package:photon/models/share_history_model.dart';
 import 'package:url_launcher/url_launcher.dart' as ulaunch;
 
 class HistoryPage extends StatefulWidget {
@@ -36,8 +37,12 @@ class _HistoryPageState extends State<HistoryPage> {
         future: getHistory(),
         builder: (context, AsyncSnapshot snap) {
           if (snap.connectionState == ConnectionState.done) {
-            late List data;
-            snap.data == null ? data = [] : data = snap.data;
+            late List<ShareHistory> data;
+
+            snap.data == null
+                ? data = []
+                : data = HistoryList.formData(snap.data).historyList;
+
             return snap.data == null
                 ? const Center(
                     child: Text('File sharing history will appear here'),
@@ -47,22 +52,30 @@ class _HistoryPageState extends State<HistoryPage> {
                     itemBuilder: (context, item) {
                       return ListTile(
                         leading:
-                            getFileIcon(data[item]['fileName'].split('.').last),
+                            getFileIcon(data[item].fileName.split('.').last),
                         onTap: () async {
                           try {
-                            await ulaunch.launchUrl(Uri.parse(data[item]
-                                    ['filePath']
-                                .toString()
-                                .replaceAll(r'\', '/')));
+                            // var uri = Uri(
+                            //     path:
+                            //         data[item].filePath.replaceAll(r'\', '/'));
+                            var uri = Uri.parse(data[item].filePath);
+                            var encode = Uri.encodeFull(data[item].filePath)
+                                .replaceAll("%20", " ")
+                                .replaceAll(r"\", "/");
+                            print(Uri.parse(
+                                data[item].filePath.replaceAll(r"\", '/')));
+                            print(encode);
+                            await ulaunch.launchUrl(Uri.parse(encode));
                           } catch (_) {
+                            print(_);
                             showSnackBar(context, 'Unable to open the file');
                           }
                         },
                         title: Text(
-                          data[item]['fileName'],
+                          data[item].fileName,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        subtitle: Text(data[item]['date'].toString()),
+                        subtitle: Text(getDateString(data[item].date)),
                       );
                     });
           } else {
