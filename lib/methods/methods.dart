@@ -109,7 +109,8 @@ storeHistory(Box box, String savePath) {
     box.put('fileInfo', []);
   }
   List fileInfo = box.get('fileInfo') as List;
-  fileInfo.add(
+  fileInfo.insert(
+    0,
     {
       'fileName': savePath.split(Platform.pathSeparator).last,
       'date': DateTime.now(),
