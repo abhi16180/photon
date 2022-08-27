@@ -87,7 +87,7 @@ class _AppState extends State<App> {
                     onTap: () {
                       showLicensePage(
                           context: context,
-                          applicationLegalese: 'MIT license',
+                          applicationLegalese: 'GPL3 license',
                           applicationVersion: 'v1.0.1',
                           applicationIcon: Image.asset(
                             'assets/images/splash.png',
