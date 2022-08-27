@@ -131,3 +131,14 @@ clearHistory() async {
     debugPrint(e.toString());
   });
 }
+
+String getDateString(DateTime date) {
+  String day = "${date.day}".padLeft(2, '0');
+  String month = "${date.month}";
+  String year = "${date.year}";
+  String hour = date.hour > 12 ? "${date.hour - 12}" : "${date.hour}";
+  String period = TimeOfDay.fromDateTime(date).period.name;
+  String minute = "${date.minute}".padLeft(2, '0');
+  String dateString = "$day-$month-$year " "$hour-$minute$period";
+  return dateString;
+}

@@ -55,9 +55,19 @@ class _HistoryPageState extends State<HistoryPage> {
                             getFileIcon(data[item].fileName.split('.').last),
                         onTap: () async {
                           try {
-                            await ulaunch
-                                .launchUrl(Uri.parse(data[item].filePath));
+                            // var uri = Uri(
+                            //     path:
+                            //         data[item].filePath.replaceAll(r'\', '/'));
+                            var uri = Uri.parse(data[item].filePath);
+                            var encode = Uri.encodeFull(data[item].filePath)
+                                .replaceAll("%20", " ")
+                                .replaceAll(r"\", "/");
+                            print(Uri.parse(
+                                data[item].filePath.replaceAll(r"\", '/')));
+                            print(encode);
+                            await ulaunch.launchUrl(Uri.parse(encode));
                           } catch (_) {
+                            print(_);
                             showSnackBar(context, 'Unable to open the file');
                           }
                         },
@@ -65,7 +75,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           data[item].fileName,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        subtitle: Text(data[item].date.toString()),
+                        subtitle: Text(getDateString(data[item].date)),
                       );
                     });
           } else {
