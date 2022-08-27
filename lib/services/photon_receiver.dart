@@ -102,6 +102,7 @@ class PhotonReceiver {
       for (int i = 0; i < filePathMap['paths']!.length; i++) {
         await getFile(filePathMap['paths'][i], i, senderModel);
       }
+      GetIt.instance.get<PercentageController>().isCompleted.value = true;
     } catch (e) {
       debugPrint('$e');
     }

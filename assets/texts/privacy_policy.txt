@@ -1,6 +1,6 @@
 **Privacy Policy**
 
-Photon app is built as  an Open Source application. This SERVICE is provided by the developer at no cost and is intended for use as is. If you choose to use my Service, then you agree to the privacy policy.
+Photon app is built as  an Open Source application. This SERVICE is provided by the developer at no cost and is intended for use as is. If you choose to use my Service, then you agree to the privacy policy.This SERVICE is provided by the developer at no cost and is intended for use as is. If you choose to use my Service, then you agree to the privacy policy.*Make sure that you have downloaded app from github/"https://apt.izzysoft.de/fdroid/" for security reasons.*
 
 
 

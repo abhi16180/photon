@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart' as ulaunch;
 
 import '../app.dart';
@@ -11,6 +10,7 @@ void privacyPolicyDialog(BuildContext context, String data) {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 27, 32, 35),
           title: const Text('Privacy policy'),
           content: SizedBox(
               height: MediaQuery.of(context).size.height / 2,
@@ -41,6 +41,7 @@ progressPageAlertDialog(BuildContext context) {
     context: context,
     builder: (context) {
       return AlertDialog(
+        backgroundColor: const Color.fromARGB(255, 27, 32, 35),
         title: const Text('Alert'),
         content: const Text('Make sure that transfer is completed !'),
         actions: [
@@ -69,6 +70,7 @@ progressPageWillPopDialog(context) async {
     context: context,
     builder: (context) {
       return AlertDialog(
+        backgroundColor: const Color.fromARGB(255, 27, 32, 35),
         title: const Text('Alert'),
         content: const Text('Make sure that download is completed !'),
         actions: [
@@ -99,6 +101,7 @@ sharePageAlertDialog(BuildContext context) {
     context: context,
     builder: (context) {
       return AlertDialog(
+        backgroundColor: const Color.fromARGB(255, 27, 32, 35),
         title: const Text('Server alert'),
         content: const Text('Would you like to terminate the current session'),
         actions: [
@@ -127,6 +130,7 @@ sharePageWillPopDialog(context) async {
     context: context,
     builder: (context) {
       return AlertDialog(
+        backgroundColor: const Color.fromARGB(255, 27, 32, 35),
         title: const Text('Server alert'),
         content:
             const Text('Would you like to terminate the current session ?'),
@@ -162,6 +166,7 @@ senderRequestDialog(BuildContext context, String username, String os) async {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 27, 32, 35),
           title: const Text('Request from receiver'),
           content: Text(
               "$username ($os) is requesting for files. Would you like to share with them ?"),
@@ -187,65 +192,12 @@ senderRequestDialog(BuildContext context, String username, String os) async {
   return allowRequest;
 }
 
-about(context) {
-  showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('About'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text(
-                'App designed and developed\nby\nAbhilash Hegde,',
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          actionsAlignment: MainAxisAlignment.center,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                onPressed: () async {
-                  await ulaunch
-                      .launchUrl(Uri.parse('https://github.com/abhi16180'));
-                },
-                icon: const Icon(
-                  UniconsLine.github,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                onPressed: () async {
-                  await ulaunch.launchUrl(
-                      Uri.parse('https://twitter.com/AbhilashHegde9'));
-                },
-                icon: const Icon(
-                  UniconsLine.twitter,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.close),
-            )
-          ],
-        );
-      });
-}
-
 credits(context) {
   showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 27, 32, 35),
           title: const Text('Credits'),
           content: SizedBox(
             width: MediaQuery.of(context).size.width / 2,

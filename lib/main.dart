@@ -62,6 +62,7 @@ void main() async {
               splashTransition: SplashTransition.fadeTransition,
               pageTransitionType: PageTransitionType.fade,
               backgroundColor: const Color.fromARGB(255, 0, 4, 7),
+              
             ),
         '/home': (context) => const App(),
         '/sharepage': (context) => const SharePage(),
