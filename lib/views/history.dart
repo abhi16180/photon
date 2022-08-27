@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:photon/components/snackbar.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/share_history_model.dart';
-import 'package:url_launcher/url_launcher.dart' as ulaunch;
+import 'package:url_launcher/url_launcher.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({Key? key}) : super(key: key);
@@ -15,23 +18,28 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 27, 32, 35),
       appBar: AppBar(
+        backgroundColor: Colors.blueGrey.shade900,
         title: const Text('History'),
         flexibleSpace: Container(
-          alignment: Alignment.centerRight,
+          alignment: Alignment.bottomRight,
           child: Padding(
             padding: const EdgeInsets.only(right: 18.0),
             child: IconButton(
+              icon: const Icon(Icons.delete_forever_rounded),
               onPressed: () {
                 setState(() {
                   clearHistory();
                 });
                 showSnackBar(context, 'History cleared');
               },
-              icon: const Icon(Icons.delete_rounded),
             ),
           ),
         ),
+        leading: BackButton(onPressed: () {
+          Navigator.of(context).pop();
+        }),
       ),
       body: FutureBuilder(
         future: getHistory(),
@@ -54,21 +62,30 @@ class _HistoryPageState extends State<HistoryPage> {
                         leading:
                             getFileIcon(data[item].fileName.split('.').last),
                         onTap: () async {
-                          try {
-                            // var uri = Uri(
-                            //     path:
-                            //         data[item].filePath.replaceAll(r'\', '/'));
-                            var uri = Uri.parse(data[item].filePath);
-                            var encode = Uri.encodeFull(data[item].filePath)
-                                .replaceAll("%20", " ")
-                                .replaceAll(r"\", "/");
-                            print(Uri.parse(
-                                data[item].filePath.replaceAll(r"\", '/')));
-                            print(encode);
-                            await ulaunch.launchUrl(Uri.parse(encode));
-                          } catch (_) {
-                            print(_);
-                            showSnackBar(context, 'Unable to open the file');
+                          String path =
+                              data[item].filePath.replaceAll(r"\", "/");
+                          if (Platform.isAndroid || Platform.isIOS) {
+                            try {
+                              OpenFile.open(path);
+                            } catch (_) {
+                              // ignore: use_build_context_synchronously
+                              showSnackBar(
+                                  context, 'No corresponding app found');
+                            }
+                          } else {
+                            try {
+                              launchUrl(
+                                Uri.parse(
+                                  path,
+                                ),
+                              );
+                            } catch (e) {
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('Unable to open the file')));
+                            }
                           }
                         },
                         title: Text(

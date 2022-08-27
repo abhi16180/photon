@@ -25,7 +25,7 @@ class _SharePageState extends State<SharePage> {
     height = MediaQuery.of(context).size.height;
     return WillPopScope(
       child: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 13, 16, 18),
+          backgroundColor: const Color.fromARGB(255, 27, 32, 35),
           appBar: AppBar(
             backgroundColor: Colors.blueGrey.shade900,
             title: const Text('Share'),
@@ -50,10 +50,10 @@ class _SharePageState extends State<SharePage> {
                 ),
                 Card(
                   clipBehavior: Clip.antiAlias,
-                  elevation: 5,
+                  elevation: 8,
                   // color: Platform.isWindows ? Colors.grey.shade300 : null,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                      borderRadius: BorderRadius.circular(24)),
                   child: SizedBox(
                     height: width > 720 ? 200 : 128,
                     width: width > 720 ? width / 2 : width / 1.25,

@@ -15,7 +15,6 @@ import 'package:http/http.dart' as http;
 class PhotonReceiver {
   static late int _secretCode;
   static late Map<String, dynamic> filePathMap;
-  static final Future<Box> _futureHive = Hive.openBox('history');
   static late Box _box;
 
   ///to get network address [assumes class C address]
@@ -89,13 +88,12 @@ class PhotonReceiver {
           'os': Platform.operatingSystem,
         });
     var senderRespData = jsonDecode(resp.body);
-
     return senderRespData;
   }
 
   static receive(SenderModel senderModel, int secretCode) async {
     //getting hiveObj
-    _box = await _futureHive;
+    _box = Hive.box('history');
     try {
       var resp = await Dio()
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');

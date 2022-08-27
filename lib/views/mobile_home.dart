@@ -23,23 +23,26 @@ class _MobileHomeState extends State<MobileHome> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (!isloading) ...{
-          MaterialButton(
-            onPressed: () async {
-              setState(() {
-                isloading = true;
-              });
-              await handleSharing(context);
-              setState(() {
-                isloading = false;
-              });
-            },
-            child: Card(
+          Card(
+            color: const Color.fromARGB(255, 18, 23, 26),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            child: InkWell(
+              onTap: () async {
+                setState(() {
+                  isloading = true;
+                });
+                await handleSharing(context);
+                setState(() {
+                  isloading = false;
+                });
+              },
               child: Column(
                 children: [
                   Lottie.asset(
                     'assets/lottie/rocket-send.json',
-                    width: size.width / 2,
-                    height: size.height / 5,
+                    width: size.width / 1.6,
+                    height: size.height / 6,
                   ),
                   const Padding(
                     padding: EdgeInsets.all(8.0),
@@ -57,18 +60,21 @@ class _MobileHomeState extends State<MobileHome> {
           const SizedBox(
             height: 32,
           ),
-          MaterialButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/receivepage');
-            },
-            child: Card(
+          Card(
+            color: const Color.fromARGB(255, 18, 23, 26),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).pushNamed('/receivepage');
+              },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Lottie.asset(
                     'assets/lottie/receive-file.json',
-                    width: size.width / 2,
-                    height: size.height / 5,
+                    width: size.width / 1.6,
+                    height: size.height / 6,
                   ),
                   const Padding(
                     padding: EdgeInsets.all(8.0),

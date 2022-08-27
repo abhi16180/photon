@@ -50,11 +50,15 @@ class _ReceivePageState extends State<ReceivePage> {
           })
         },
         child: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 13, 16, 18),
+          backgroundColor: const Color.fromARGB(255, 27, 32, 35),
           appBar: AppBar(
             backgroundColor: Colors.blueGrey.shade900,
             title: const Text('Scan'),
+            leading: BackButton(onPressed: () {
+              Navigator.of(context).pop();
+            }),
           ),
+
           body: FutureBuilder(
             future: _scan(),
             builder: (context, AsyncSnapshot snap) {
@@ -153,51 +157,49 @@ class _ReceivePageState extends State<ReceivePage> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   clipBehavior: Clip.antiAlias,
-                                  child: InkWell(
-                                    onTap: () async {
-                                      //only rebuild the column
-                                      sts(() {
-                                        isRequestSent = true;
-                                      });
-
-                                      var resp = await PhotonReceiver
-                                          .isRequestAccepted(
-                                        snap.data[index] as SenderModel,
-                                      );
-
-                                      if (resp['accepted']) {
-                                        // ignore: use_build_context_synchronously
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return ProgressPage(
-                                                senderModel: snap.data[index]
-                                                    as SenderModel,
-                                                secretCode: resp['code'],
-                                              );
-                                            },
-                                          ),
-                                        );
-                                      } else {
+                                  child: Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    elevation: 5,
+                                    color: const Color.fromARGB(255, 5, 6, 6),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: InkWell(
+                                      onTap: () async {
+                                        //only rebuild the column
                                         sts(() {
-                                          isRequestSent = false;
+                                          isRequestSent = true;
                                         });
-                                        // ignore: use_build_context_synchronously
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
-                                                content: Text(
-                                                    'Access denied by the sender')));
-                                      }
-                                    },
-                                    child: Card(
-                                      clipBehavior: Clip.antiAlias,
-                                      elevation: 5,
-                                      // color: Platform.isWindows
-                                      //     ? Colors.grey.shade300
-                                      //     : null,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
+
+                                        var resp = await PhotonReceiver
+                                            .isRequestAccepted(
+                                          snap.data[index] as SenderModel,
+                                        );
+
+                                        if (resp['accepted']) {
+                                          // ignore: use_build_context_synchronously
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return ProgressPage(
+                                                  senderModel: snap.data[index]
+                                                      as SenderModel,
+                                                  secretCode: resp['code'],
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        } else {
+                                          sts(() {
+                                            isRequestSent = false;
+                                          });
+                                          // ignore: use_build_context_synchronously
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                                  content: Text(
+                                                      'Access denied by the sender')));
+                                        }
+                                      },
                                       child: SizedBox(
                                         height: width > 720 ? 200 : 128,
                                         width: width > 720

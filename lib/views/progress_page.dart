@@ -255,7 +255,7 @@ class ProgressLine extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     // double i = -0.0;
-    //to animate
+    // to animate
     // while (i != pos) {
     //   i = i + 1;
     //   canvas.drawLine(const Offset(0, 0), Offset(i, 0), paint);

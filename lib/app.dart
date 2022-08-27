@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:photon/components/dialogs.dart';
-import 'package:photon/views/contact_page.dart';
+import 'package:photon/views/about_page.dart';
 import 'package:photon/views/widescreen_home.dart';
 import 'package:unicons/unicons.dart';
 
@@ -88,7 +88,7 @@ class _AppState extends State<App> {
                       showLicensePage(
                           context: context,
                           applicationLegalese: 'GPL3 license',
-                          applicationVersion: 'v1.0.1',
+                          applicationVersion: 'v1.0.2',
                           applicationIcon: Image.asset(
                             'assets/images/splash.png',
                             width: 60,
@@ -107,29 +107,12 @@ class _AppState extends State<App> {
                     title: const Text('Privacy policy'),
                   ),
                   ListTile(
-                    title: const Text('Credits'),
-                    leading: SvgPicture.asset('assets/icons/credits.svg',
-                        color: Colors.white),
-                    onTap: () {
-                      credits(context);
-                    },
-                  ),
-                  ListTile(
                     title: const Text('About'),
                     leading: const Icon(UniconsLine.info_circle),
                     onTap: () {
-                      about(context);
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Contact Me'),
-                    leading: const Icon(
-                      UniconsLine.mailbox,
-                    ),
-                    onTap: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return const ContactPage();
+                        return const AboutPage();
                       }));
                     },
                   ),
