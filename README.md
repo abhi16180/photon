@@ -57,7 +57,7 @@
 
 
 ### Note:- 
->The source code doesn't have any platform specific dependencies.But I don't have machines to test app on iOS and macOS ,if you have the respective machine you can build and test it out.
+> LICENSE has been updated to GPL3 from MIT 
 
 ## To build app
 ```sh
