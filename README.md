@@ -8,7 +8,8 @@
   
   [![Github All Releases](https://img.shields.io/github/downloads/abhi16180/photon/total.svg)]()
   [![Github Latest Release (all)](https://img.shields.io/github/downloads/abhi16180/photon/v1.0.2/total)]()
-    [![Commits/week](  https://img.shields.io/github/commit-activity/w/abhi16180/photon)]()
+  [![Commits/week](  https://img.shields.io/github/commit-activity/w/abhi16180/photon)]()
+  [![CodeFactor](https://www.codefactor.io/repository/github/abhi16180/photon/badge)](https://www.codefactor.io/repository/github/abhi16180/photon)
 </p>
 
 > Photon is a cross-platform file-transfer application built using flutter. It uses http to transfer files between devices.You can transfer files between devices that run Photon.(*No wifi router is required ,you can use  hotspot*)
@@ -79,7 +80,7 @@ flutter run
 
 Give a ⭐️ if this project helped you!
 <br>
-You can also support me by,
+You can support me by,
 <br>
 <a href="https://www.buymeacoffee.com/abhi1.6180" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
