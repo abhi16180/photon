@@ -172,6 +172,10 @@ class _ProgressPageState extends State<ProgressPage> {
                                             .cancel();
                                       },
                                     )
+                                  } else ...{
+                                    const Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Icon(Icons.done_rounded))
                                   },
                                 ],
                               ),

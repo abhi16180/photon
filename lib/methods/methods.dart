@@ -79,27 +79,55 @@ Widget getFileIcon(String extn) {
     case 'html':
       return const Icon(
         Icons.html,
+        color: Colors.red,
         size: 30,
       );
     case 'mp3':
       return const Icon(
         Icons.audio_file,
+        color: Colors.deepPurple,
         size: 30,
       );
     case 'jpeg':
-      return const Icon(
-        Icons.image,
-        size: 30,
+      return SvgPicture.asset(
+        'assets/icons/jpeg.svg',
+        color: Colors.cyanAccent,
+        width: 30,
+        height: 30,
+      );
+    case 'png':
+      return SvgPicture.asset(
+        'assets/icons/png.svg',
+        width: 30,
+        height: 30,
+      );
+    case 'exe':
+      return SvgPicture.asset(
+        'assets/icons/exe.svg',
+        color: Colors.blueAccent,
+        width: 30,
+        height: 30,
+      );
+
+    case 'dart':
+      return SvgPicture.asset(
+        'assets/icons/dart.svg',
+        width: 30,
+        height: 30,
       );
     case 'mp4':
       return const Icon(
         Icons.video_collection_rounded,
         size: 30,
+        color: Colors.orangeAccent,
       );
+
     default:
-      return const Icon(
-        Icons.file_present,
-        size: 30,
+      return SvgPicture.asset(
+        'assets/icons/file.svg',
+        color: Colors.green.shade400,
+        width: 30,
+        height: 30,
       );
   }
 }
