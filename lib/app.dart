@@ -71,7 +71,7 @@ class _AppState extends State<App> {
                   ),
                   ListTile(
                     leading: const Icon(UniconsSolid.history),
-                    title: const Text('Share-history'),
+                    title: const Text('Received-history'),
                     onTap: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {

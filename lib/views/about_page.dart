@@ -12,7 +12,9 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 27, 32, 35),
       appBar: AppBar(
+        backgroundColor: Colors.blueGrey.shade900,
         title: const Text('About'),
       ),
       body: ListView(

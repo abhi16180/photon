@@ -108,9 +108,10 @@ Widget getFileIcon(String extn) {
         width: 30,
         height: 30,
       );
-    case "apk":
+    case 'apk':
       return SvgPicture.asset(
-        'assets/icons/apk.svg',
+        'assets/icons/android.svg',
+        color: Colors.greenAccent.shade400,
         width: 30,
         height: 30,
       );
