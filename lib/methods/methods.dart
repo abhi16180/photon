@@ -108,7 +108,12 @@ Widget getFileIcon(String extn) {
         width: 30,
         height: 30,
       );
-
+    case "apk":
+      return SvgPicture.asset(
+        'assets/icons/apk.svg',
+        width: 30,
+        height: 30,
+      );
     case 'dart':
       return SvgPicture.asset(
         'assets/icons/dart.svg',
@@ -125,7 +130,6 @@ Widget getFileIcon(String extn) {
     default:
       return SvgPicture.asset(
         'assets/icons/file.svg',
-        color: Colors.green.shade400,
         width: 30,
         height: 30,
       );
@@ -167,6 +171,6 @@ String getDateString(DateTime date) {
   String hour = date.hour > 12 ? "${date.hour - 12}" : "${date.hour}";
   String period = TimeOfDay.fromDateTime(date).period.name;
   String minute = "${date.minute}".padLeft(2, '0');
-  String dateString = "$day-$month-$year " "$hour-$minute$period";
+  String dateString = "$day-$month-$year " "$hour-$minute $period";
   return dateString;
 }
