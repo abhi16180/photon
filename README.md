@@ -41,11 +41,11 @@
 - Android
 - Windows 
 - Linux
-
+- macOS   
+  - *Not tested*
 - iOS     
   - *Coming soon*
-- macOS   
-  - *Coming soon*
+
 
 ## Downloads
 <a href="https://github.com/abhi16180/photon/releases/">All releases</a><br>
