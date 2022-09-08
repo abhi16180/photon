@@ -52,16 +52,6 @@ void main() async {
           useMaterial3: true,
           fontFamily: 'ytf'),
       themeMode: ThemeMode.dark,
-      builder: (context, child) => ResponsiveWrapper.builder(child,
-          maxWidth: 1200,
-          minWidth: 480,
-          defaultScale: true,
-          breakpoints: [
-            ResponsiveBreakpoint.resize(480, name: MOBILE),
-            ResponsiveBreakpoint.autoScale(800, name: TABLET),
-          ],
-          background: Container(color: Color(0xFFF5F5F5))),
-      initialRoute: '/',
       routes: {
         '/': (context) => AnimatedSplashScreen(
               splash: 'assets/images/splash.png',
