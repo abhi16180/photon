@@ -49,6 +49,7 @@ dependencies:
   introduction_screen: ^3.0.2
   flutter_markdown: ^0.6.1
   mailto: ^2.0.0
+  responsive_framework: 
   http:
   # This is modified version of file_picker it is faster and doesn't cache files unnecessarily
   file_picker:
