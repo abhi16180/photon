@@ -34,38 +34,43 @@ class _SharePageState extends State<SharePage> {
             }),
           ),
           body: Center(
-            child: Column(
-              children: [
-                Lottie.asset('assets/lottie/share.json'),
-                Text(
-                  '${photonSender.hasMultipleFiles ? 'Your files are ready to be shared' : 'Your file is ready to be shared'}\nAsk receiver to tap on receive button',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: width > 720 ? 18 : 14,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Lottie.asset(
+                    'assets/lottie/share.json',
+                    width: width > 720 ? 200 : 128,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  elevation: 8,
-                  // color: Platform.isWindows ? Colors.grey.shade300 : null,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24)),
-                  child: SizedBox(
-                    height: width > 720 ? 200 : 128,
-                    width: width > 720 ? width / 2 : width / 1.25,
-                    child: Center(
-                      child: Wrap(
-                        direction: Axis.vertical,
-                        children: infoList(senderModel, width, height, true),
+                  Text(
+                    '${photonSender.hasMultipleFiles ? 'Your files are ready to be shared' : 'Your file is ready to be shared'}\nAsk receiver to tap on receive button',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: width > 720 ? 18 : 14,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    elevation: 8,
+                    // color: Platform.isWindows ? Colors.grey.shade300 : null,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24)),
+                    child: SizedBox(
+                      height: width > 720 ? 200 : 128,
+                      width: width > 720 ? width / 2 : width / 1.25,
+                      child: Center(
+                        child: Wrap(
+                          direction: Axis.vertical,
+                          children: infoList(senderModel, width, height, true),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           )),
       onWillPop: () async {
