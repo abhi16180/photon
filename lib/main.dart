@@ -10,7 +10,7 @@ import 'package:photon/views/history.dart';
 import 'package:photon/views/intro_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:photon/controllers/controllers.dart';
-
+import 'package:responsive_framework/responsive_framework.dart';
 import 'app.dart';
 import 'views/receive_page.dart';
 import 'views/share_page.dart';
@@ -23,7 +23,7 @@ void main() async {
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
   getIt.registerSingleton<PercentageController>(PercentageController());
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -52,6 +52,15 @@ void main() async {
           useMaterial3: true,
           fontFamily: 'ytf'),
       themeMode: ThemeMode.dark,
+      builder: (context, child) => ResponsiveWrapper.builder(child,
+          maxWidth: 1200,
+          minWidth: 480,
+          defaultScale: true,
+          breakpoints: [
+            ResponsiveBreakpoint.resize(480, name: MOBILE),
+            ResponsiveBreakpoint.autoScale(800, name: TABLET),
+          ],
+          background: Container(color: Color(0xFFF5F5F5))),
       initialRoute: '/',
       routes: {
         '/': (context) => AnimatedSplashScreen(
