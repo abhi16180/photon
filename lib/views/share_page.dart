@@ -37,10 +37,16 @@ class _SharePageState extends State<SharePage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Lottie.asset(
-                    'assets/lottie/share.json',
-                    width: width > 720 ? 200 : 128,
-                  ),
+                  if (width > 720) ...{
+                    Lottie.asset(
+                      'assets/lottie/share.json',
+                      width: 240,
+                    ),
+                  } else ...{
+                    Lottie.asset(
+                      'assets/lottie/share.json',
+                    ),
+                  },
                   Text(
                     '${photonSender.hasMultipleFiles ? 'Your files are ready to be shared' : 'Your file is ready to be shared'}\nAsk receiver to tap on receive button',
                     style: TextStyle(
