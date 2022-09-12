@@ -1,32 +1,32 @@
+import 'dart:io';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:photon/methods/methods.dart';
 import 'package:photon/methods/share_intent.dart';
 import 'package:photon/views/handle_intent_ui.dart';
 import 'package:photon/views/history.dart';
 import 'package:photon/views/intro_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:photon/controllers/controllers.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'app.dart';
 import 'views/receive_page.dart';
 import 'views/share_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   Hive.init((await getApplicationDocumentsDirectory()).path);
   await Hive.openBox('history');
   GetIt getIt = GetIt.instance;
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
   getIt.registerSingleton<PercentageController>(PercentageController());
-  var externalIntent = await handleSharingIntent();
+  bool externalIntent = false;
+  if (Platform.isAndroid) {
+    externalIntent = await handleSharingIntent();
+  }
 
   // await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
@@ -61,13 +61,13 @@ void main() async {
         '/': (context) => AnimatedSplashScreen(
               splash: 'assets/images/splash.png',
               nextScreen: prefInst.getBool('isIntroRead') == true
-                  ? (externalIntent ? HandleIntentUI() : App())
+                  ? (externalIntent ? const HandleIntentUI() : const App())
                   : const IntroPage(),
               splashTransition: SplashTransition.fadeTransition,
               pageTransitionType: PageTransitionType.fade,
               backgroundColor: const Color.fromARGB(255, 0, 4, 7),
             ),
-        '/home': (context) => App(),
+        '/home': (context) => const App(),
         '/sharepage': (context) => const SharePage(),
         '/receivepage': (context) => const ReceivePage(),
         '/history': (context) => const HistoryPage()
