@@ -17,6 +17,7 @@ import 'views/receive_page.dart';
 import 'views/share_page.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Hive.init((await getApplicationDocumentsDirectory()).path);
   await Hive.openBox('history');
   GetIt getIt = GetIt.instance;
