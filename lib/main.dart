@@ -6,6 +6,9 @@ import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:photon/methods/methods.dart';
+import 'package:photon/methods/share_intent.dart';
+import 'package:photon/views/handle_intent_ui.dart';
 import 'package:photon/views/history.dart';
 import 'package:photon/views/intro_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +26,8 @@ void main() async {
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
   getIt.registerSingleton<PercentageController>(PercentageController());
+  var externalIntent = await handleSharingIntent();
+
   // await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
     MaterialApp(
@@ -56,13 +61,13 @@ void main() async {
         '/': (context) => AnimatedSplashScreen(
               splash: 'assets/images/splash.png',
               nextScreen: prefInst.getBool('isIntroRead') == true
-                  ? const App()
+                  ? (externalIntent ? HandleIntentUI() : App())
                   : const IntroPage(),
               splashTransition: SplashTransition.fadeTransition,
               pageTransitionType: PageTransitionType.fade,
               backgroundColor: const Color.fromARGB(255, 0, 4, 7),
             ),
-        '/home': (context) => const App(),
+        '/home': (context) => App(),
         '/sharepage': (context) => const SharePage(),
         '/receivepage': (context) => const ReceivePage(),
         '/history': (context) => const HistoryPage()
