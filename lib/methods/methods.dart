@@ -11,8 +11,9 @@ import 'package:photon/components/snackbar.dart';
 import '../controllers/controllers.dart';
 import '../services/photon_sender.dart';
 
-handleSharing(BuildContext context) async {
-  if ((await PhotonSender.share(context) == true)) {
+handleSharing(BuildContext context, {bool externalIntent = false}) async {
+  if ((await PhotonSender.share(context, externalIntent: externalIntent) ==
+      true)) {
     Navigator.pushNamed(context, '/sharepage');
   } else {
     showSnackBar(context, 'No file chosen');
