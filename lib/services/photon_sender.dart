@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 import '../components/dialogs.dart';
 import '../components/snackbar.dart';
@@ -130,13 +131,22 @@ class PhotonSender {
     return true;
   }
 
-  static share(context) async {
-    if (await getFilesPath()) {
+  static share(context, {bool externalIntent = false}) async {
+    if (externalIntent) {
+      print('object');
+      var sharedMediaFiles = await ReceiveSharingIntent.getInitialMedia();
+      _fileList = sharedMediaFiles.map((e) => e.path).toList();
       await assignIP();
       var res = _startServer(_fileList, context);
       return await res;
     } else {
-      return null;
+      if (await getFilesPath()) {
+        await assignIP();
+        var res = _startServer(_fileList, context);
+        return await res;
+      } else {
+        return null;
+      }
     }
   }
 
