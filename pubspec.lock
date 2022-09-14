@@ -8,6 +8,62 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+  app_package_maker:
+    dependency: transitive
+    description:
+      name: app_package_maker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  app_package_maker_aab:
+    dependency: transitive
+    description:
+      name: app_package_maker_aab
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  app_package_maker_apk:
+    dependency: transitive
+    description:
+      name: app_package_maker_apk
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  app_package_maker_deb:
+    dependency: transitive
+    description:
+      name: app_package_maker_deb
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  app_package_maker_dmg:
+    dependency: transitive
+    description:
+      name: app_package_maker_dmg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  app_package_maker_exe:
+    dependency: transitive
+    description:
+      name: app_package_maker_exe
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  app_package_maker_ipa:
+    dependency: transitive
+    description:
+      name: app_package_maker_ipa
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  app_package_maker_zip:
+    dependency: transitive
+    description:
+      name: app_package_maker_zip
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
   archive:
     dependency: transitive
     description:
@@ -50,6 +106,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.1"
+  checked_yaml:
+    dependency: transitive
+    description:
+      name: checked_yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   cli_dialog:
     dependency: transitive
     description:
@@ -155,6 +218,27 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_app_builder:
+    dependency: transitive
+    description:
+      name: flutter_app_builder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  flutter_app_packager:
+    dependency: transitive
+    description:
+      name: flutter_app_packager
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  flutter_distributor:
+    dependency: "direct dev"
+    description:
+      name: flutter_distributor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -256,6 +340,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.6.0"
   lints:
     dependency: transitive
     description:
@@ -440,6 +531,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  pubspec_parse:
+    dependency: transitive
+    description:
+      name: pubspec_parse
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   receive_sharing_intent:
     dependency: "direct main"
     description:
