@@ -26,13 +26,24 @@ jobs:
       - run: |
           flutter config --enable-linux-desktop
           flutter pub get
-          flutter build linux --release
 
-      
+          dart pub global activate flutter_distributor
+          flutter_distributor package --platform=linux --targets=appimage --skip-clean
+          
+    
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Photon-Linux-Bundle
+          path: dist/
+      - name: Setup upterm session
+        if: ${{ failure() }}
+        uses: lhotari/action-upterm@v1
+        with:
+          limit-access-to-actor: true
       - uses: svenstaro/upload-release-action@latest
         with:
           repo_token: ${{ secrets.TOKEN }}
-          file: build/linux/x64/release/bundle
+          file: Photon-Linux-Bundle
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
