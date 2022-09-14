@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.github.abhi16180.photon</id>
+  <name>photon</name>
+  <summary>
+Photon is cross-platform file transfer application built using flutter.
+  </summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL3</project_license>
+  <recommends>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </recommends>
+  <developer_name>Abhilash Hegdes</developer_name>
+  <url type="homepage">https://github.com/abhi16180/photon</url>
+  <description>
+    <p> Photon is a cross-platform file-transfer application built using flutter. It uses http to transfer files between devices.You can transfer files between devices that run Photon.(No wifi router is required ,you can use hotspot)</p>
+    <p>Features</p>
+    <ul>
+      <li>Cross-platform support</li>
+      <li>Multiple files support</li>
+      <li>Pick files faster</li>
+      <li>Material You design.</li>
+      <li>Works between the devices connected via mobile-hotspot / between the devices connected to same router (same local area network)</li>
+      <li>Uses cryptographically secure secret code generation for authentication (internally).</li>
+      <li>Supports high-speed data transfer</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">com.github.abhi16180.photon.desktop</launchable>
+  <update_contact>photondev@gmail.com</update_contact>
+</component>
