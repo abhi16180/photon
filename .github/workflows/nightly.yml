@@ -50,111 +50,111 @@ jobs:
           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
           overwrite: true
 
-  build_android:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          cache: true
-          token: ${{secrets.TOKEN}} 
-      - run: |
-          sudo apt-get update -y
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse
+  # build_android:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         cache: true
+  #         token: ${{secrets.TOKEN}} 
+  #     - run: |
+  #         sudo apt-get update -y
+  #         sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse
 
-      - run: |
-          flutter pub get
-          flutter build apk
+  #     - run: |
+  #         flutter pub get
+  #         flutter build apk
 
-      - name: rename
-        if: ${{ github.event_name != 'release' }}
-        run: mv build/app/outputs/apk/release/app-* build/app/outputs/apk/release/photon-android-nightly.apk
-      - uses: svenstaro/upload-release-action@latest
-        with:
-          repo_token: ${{ secrets.TOKEN }}
-          file: build/app/outputs/apk/release/photon-*
-          file_glob: true
-          prerelease: ${{ github.event_name != 'release' }}
-          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-          overwrite: true
+  #     - name: rename
+  #       if: ${{ github.event_name != 'release' }}
+  #       run: mv build/app/outputs/apk/release/app-* build/app/outputs/apk/release/photon-android-nightly.apk
+  #     - uses: svenstaro/upload-release-action@latest
+  #       with:
+  #         repo_token: ${{ secrets.TOKEN }}
+  #         file: build/app/outputs/apk/release/photon-*
+  #         file_glob: true
+  #         prerelease: ${{ github.event_name != 'release' }}
+  #         release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+  #         tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+  #         overwrite: true
 
-  build_windows:
-    name: Windows
-    runs-on: windows-latest
+  # build_windows:
+  #   name: Windows
+  #   runs-on: windows-latest
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Setup flutter
-        uses: subosito/flutter-action@master
-        with:
-          channel: stable
+  #     - name: Setup flutter
+  #       uses: subosito/flutter-action@master
+  #       with:
+  #         channel: stable
 
-      - name: Enable desktop support
-        run: flutter config --enable-windows-desktop
+  #     - name: Enable desktop support
+  #       run: flutter config --enable-windows-desktop
 
-      - name: Build Flutter app
-        run: flutter build windows
+  #     - name: Build Flutter app
+  #       run: flutter build windows
 
-      - run: cp -r build/windows/runner/Release photon-windows-exe
-      - run: tar.exe -a -c -f photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.zip photon-windows-exe
+  #     - run: cp -r build/windows/runner/Release photon-windows-exe
+  #     - run: tar.exe -a -c -f photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.zip photon-windows-exe
 
-      - run: |
-          "%programfiles(x86)%\Inno Setup 6\iscc.exe" "photon_inst.iss"
-        shell: cmd
-      - run: cp Output/* ./photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.exe
+  #     - run: |
+  #         "%programfiles(x86)%\Inno Setup 6\iscc.exe" "photon_inst.iss"
+  #       shell: cmd
+  #     - run: cp Output/* ./photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.exe
 
-      - uses: svenstaro/upload-release-action@latest
-        with:
-          repo_token: ${{ secrets.TOKEN }}
-          file: photon-windows-*
-          file_glob: true
-          prerelease: ${{ github.event_name != 'release' }}
-          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-          overwrite: true
+  #     - uses: svenstaro/upload-release-action@latest
+  #       with:
+  #         repo_token: ${{ secrets.TOKEN }}
+  #         file: photon-windows-*
+  #         file_glob: true
+  #         prerelease: ${{ github.event_name != 'release' }}
+  #         release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+  #         tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+  #         overwrite: true
 
-  build_macos:
-    runs-on: macos-11
-    steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v2
-        with:
-          cache: true
-          token: ${{secrets.TOKEN}} 
-      - run: flutter config --enable-macos-desktop
-      - run: flutter pub get
-      - run: flutter build macos
-      - run: du -sh build/macos/Build/Products/Release/photon.app
-      - run: npm install -g appdmg
-      - run: appdmg photondmg.json build/photon-macos-x86_64.dmg
+  # build_macos:
+  #   runs-on: macos-11
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         cache: true
+  #         token: ${{secrets.TOKEN}} 
+  #     - run: flutter config --enable-macos-desktop
+  #     - run: flutter pub get
+  #     - run: flutter build macos
+  #     - run: du -sh build/macos/Build/Products/Release/photon.app
+  #     - run: npm install -g appdmg
+  #     - run: appdmg photondmg.json build/photon-macos-x86_64.dmg
  
-      - uses: svenstaro/upload-release-action@latest
-        with:
-          repo_token: ${{ secrets.TOKEN }}
-          file: build/photon-macos-x86_64.dmg
-          file_glob: true
-          prerelease: ${{ github.event_name != 'release' }}
-          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-          overwrite: true
+  #     - uses: svenstaro/upload-release-action@latest
+  #       with:
+  #         repo_token: ${{ secrets.TOKEN }}
+  #         file: build/photon-macos-x86_64.dmg
+  #         file_glob: true
+  #         prerelease: ${{ github.event_name != 'release' }}
+  #         release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+  #         tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+  #         overwrite: true
 
-  build_ios:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable'
-        architecture: x64
-    - run: flutter pub get
-    - run: flutter build ipa --release --no-codesign
-    - uses: actions/upload-artifact@v2 
-      with:
-        name: Photon-iOS-Bundle
-        token: ${{secrets.TOKEN}}
-        path: |
-          build/ios/ipa/*.ipa
+  # build_ios:
+  #   runs-on: macos-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: subosito/flutter-action@v2
+  #     with:
+  #       channel: 'stable'
+  #       architecture: x64
+  #   - run: flutter pub get
+  #   - run: flutter build ipa --release --no-codesign
+  #   - uses: actions/upload-artifact@v2 
+  #     with:
+  #       name: Photon-iOS-Bundle
+  #       token: ${{secrets.TOKEN}}
+  #       path: |
+  #         build/ios/ipa/*.ipa
 
     
