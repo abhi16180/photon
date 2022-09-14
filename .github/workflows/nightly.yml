@@ -32,7 +32,7 @@ jobs:
       - uses: svenstaro/upload-release-action@latest
         with:
           repo_token: ${{ secrets.TOKEN }}
-          file: build/linux/x64/release/bundle/*
+          file: build/linux/x64/release/bundle
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
