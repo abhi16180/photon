@@ -43,7 +43,7 @@ jobs:
       - uses: svenstaro/upload-release-action@latest
         with:
           repo_token: ${{ secrets.TOKEN }}
-          file: Photon-Linux-Bundle
+          file: dist/1.0.2+3/photon-1.0.2+3-linux.appimage
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
