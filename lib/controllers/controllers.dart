@@ -5,6 +5,8 @@ class PercentageController extends GetxController {
   var percentage = [].obs;
   var isCancelled = [].obs;
   var isReceived = [].obs;
-  var isCompleted = false.obs;
+  var speed = 0.0.obs;
+  var minSpeed = 0.0.obs;
+  var maxSpeed = 0.0.obs;
   List<CancelToken> cancelTokenList = [];
 }

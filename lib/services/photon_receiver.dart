@@ -102,7 +102,6 @@ class PhotonReceiver {
       for (int i = 0; i < filePathMap['paths']!.length; i++) {
         await getFile(filePathMap['paths'][i], i, senderModel);
       }
-      GetIt.instance.get<PercentageController>().isCompleted.value = true;
     } catch (e) {
       debugPrint('$e');
     }
@@ -118,8 +117,14 @@ class PhotonReceiver {
     //creates instance of cancelToken and inserts it to list
     getInstance.cancelTokenList.insert(fileIndex, CancelToken());
     String savePath = await FileMethods.getSavePath(filePath, senderModel);
+    Stopwatch s = Stopwatch();
+    int? prevBytes;
+    int? prevDuration;
+    //for handling speed update frequency
+    int count = 0;
 
     try {
+      s.start();
       await dio.download(
         'http://${senderModel.ip}:4040/${_secretCode.toString()}/${fileIndex.toString()}',
         savePath,
@@ -127,15 +132,38 @@ class PhotonReceiver {
         cancelToken: getInstance.cancelTokenList[fileIndex],
         onReceiveProgress: (received, total) {
           if (total != -1) {
+            count++;
             getInstance.percentage[fileIndex].value =
                 (double.parse((received / total * 100).toStringAsFixed(0)));
+            if (prevBytes == null) {
+              prevBytes = received;
+              prevDuration = s.elapsedMicroseconds;
+              getInstance.minSpeed.value = getInstance.maxSpeed.value =
+                  ((prevBytes! * 8) / prevDuration!);
+            } else {
+              prevBytes = received - prevBytes!;
+              prevDuration = s.elapsedMicroseconds - prevDuration!;
+            }
+          }
+          //used for reducing speed update frequency
+          if (count % 10 == 0) {
+            getInstance.speed.value = (prevBytes! * 8) / prevDuration!;
+            //calculate min and max speeds
+            if (getInstance.speed.value > getInstance.maxSpeed.value) {
+              getInstance.maxSpeed.value = getInstance.speed.value;
+            } else if (getInstance.speed.value < getInstance.minSpeed.value) {
+              getInstance.minSpeed.value = getInstance.speed.value;
+            }
           }
         },
       );
+      s.reset();
+      getInstance.speed.value = 0.0;
       //after completion of download mark it as true
       getInstance.isReceived[fileIndex].value = true;
       storeHistory(_box, savePath);
     } catch (e) {
+      getInstance.speed.value = 0;
       if (!CancelToken.isCancel(e as DioError)) {
         debugPrint(e.toString());
       } else {
