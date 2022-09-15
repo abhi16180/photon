@@ -55,7 +55,12 @@ class _HistoryPageState extends State<HistoryPage> {
                 ? const Center(
                     child: Text('File sharing history will appear here'),
                   )
-                : ListView.builder(
+                : ListView.separated(
+                    separatorBuilder: (context, i) {
+                      return const Divider(
+                        color: Color.fromARGB(255, 70, 69, 69),
+                      );
+                    },
                     itemCount: data.length,
                     itemBuilder: (context, item) {
                       return ListTile(
