@@ -12,7 +12,7 @@ Photon is cross-platform file transfer application built using flutter.
     <control>keyboard</control>
     <control>touch</control>
   </recommends>
-  <developer_name>Abhilash Hegdes</developer_name>
+  <developer_name>Abhilash Hegde</developer_name>
   <url type="homepage">https://github.com/abhi16180/photon</url>
   <description>
     <p> Photon is a cross-platform file-transfer application built using flutter. It uses http to transfer files between devices.You can transfer files between devices that run Photon.(No wifi router is required ,you can use hotspot)</p>
