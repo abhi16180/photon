@@ -120,6 +120,7 @@ class PhotonReceiver {
     Stopwatch s = Stopwatch();
     int? prevBytes;
     int? prevDuration;
+    //for handling speed update frequency
     int count = 0;
 
     try {
@@ -147,6 +148,7 @@ class PhotonReceiver {
           //used for reducing speed update frequency
           if (count % 10 == 0) {
             getInstance.speed.value = (prevBytes! * 8) / prevDuration!;
+            //calculate min and max speeds
             if (getInstance.speed.value > getInstance.maxSpeed.value) {
               getInstance.maxSpeed.value = getInstance.speed.value;
             } else if (getInstance.speed.value < getInstance.minSpeed.value) {
@@ -161,6 +163,7 @@ class PhotonReceiver {
       getInstance.isReceived[fileIndex].value = true;
       storeHistory(_box, savePath);
     } catch (e) {
+      getInstance.speed.value = 0;
       if (!CancelToken.isCancel(e as DioError)) {
         debugPrint(e.toString());
       } else {

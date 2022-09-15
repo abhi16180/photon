@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -61,178 +62,196 @@ class _ProgressPageState extends State<ProgressPage> {
           future: FileMethods.getFileNames(widget.senderModel!),
           builder: (context, AsyncSnapshot snap) {
             if (snap.connectionState == ConnectionState.done) {
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                    child: Card(
-                      color: Color.fromARGB(255, 25, 24, 24),
-                      child: SizedBox(
-                        height: 180,
-                        width: width + 60,
-                        child: Obx(
-                          () => Center(
-                              child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Current speed"),
-                              Text(
-                                "${(getInstance.speed.value).toStringAsFixed(2)} mbps",
-                                style: TextStyle(
-                                    fontSize:
-                                        MediaQuery.of(context).size.width > 720
-                                            ? 32
-                                            : 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 102, 245, 107)),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                      "Min ${(getInstance.minSpeed.value).toStringAsFixed(2)}  mbps"),
-                                  Text(
-                                      "Max ${(getInstance.maxSpeed.value).toStringAsFixed(2)}  mbps")
-                                ],
-                              )
-                            ],
-                          )),
+              return SingleChildScrollView(
+                physics: const ScrollPhysics(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                      child: Card(
+                        elevation: 6,
+                        color: const Color.fromARGB(255, 25, 24, 24),
+                        child: SizedBox(
+                          height: 180,
+                          width: width + 60,
+                          child: Obx(
+                            () => Center(
+                                child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Current speed",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "${(getInstance.speed.value).toStringAsFixed(2)} mbps",
+                                  style: const TextStyle(
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          Color.fromARGB(255, 102, 245, 107)),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      "Min ${(getInstance.minSpeed.value).toStringAsFixed(2)}  mbps",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      "Max ${(getInstance.maxSpeed.value).toStringAsFixed(2)}  mbps",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snap.data.length,
-                    itemBuilder: (context, item) {
-                      return Obx(
-                        () {
-                          double progressLineWidth = ((width - 80) *
-                              (getInstance.percentage[item] as RxDouble).value /
-                              100);
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: snap.data.length,
+                      itemBuilder: (context, item) {
+                        return Obx(
+                          () {
+                            double progressLineWidth = ((width - 80) *
+                                (getInstance.percentage[item] as RxDouble)
+                                    .value /
+                                100);
 
-                          return UnconstrainedBox(
-                              child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () async {
-                                openFile(snap.data[item], widget.senderModel!);
-                              },
-                              child: Card(
-                                // color: Colors.blue.shade100,
-                                clipBehavior: Clip.antiAlias,
-                                child: SizedBox(
-                                  width: width + 60,
-                                  height: 100,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      getFileIcon(snap.data[item]
-                                          .toString()
-                                          .split('.')
-                                          .last),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0, top: 8.0),
-                                            child: SizedBox(
-                                              width: width / 1.4,
-                                              child: Text(
-                                                snap.data![item],
-                                                overflow: TextOverflow.ellipsis,
+                            return UnconstrainedBox(
+                                child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  openFile(
+                                      snap.data[item], widget.senderModel!);
+                                },
+                                child: Card(
+                                  // color: Colors.blue.shade100,
+                                  elevation: 2,
+                                  clipBehavior: Clip.antiAlias,
+                                  child: SizedBox(
+                                    width: width + 60,
+                                    height: 100,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        getFileIcon(snap.data[item]
+                                            .toString()
+                                            .split('.')
+                                            .last),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0, top: 8.0),
+                                              child: SizedBox(
+                                                width: width / 1.4,
+                                                child: Text(
+                                                  snap.data![item],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            width: width - 80,
-                                            child: CustomPaint(
-                                              painter: ProgressLine(
-                                                pos: progressLineWidth,
+                                            SizedBox(
+                                              width: width - 80,
+                                              child: CustomPaint(
+                                                painter: ProgressLine(
+                                                  pos: progressLineWidth,
+                                                ),
+                                                child: Container(),
                                               ),
-                                              child: Container(),
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 40,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(0.0),
-                                            child: Text(getInstance
-                                                    .isCancelled[item].value
-                                                ? 'Cancelled'
-                                                : getInstance
-                                                        .isReceived[item].value
-                                                    ? "Completed"
-                                                    : '${(getInstance.percentage[item] as RxDouble)} %'),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      if (getInstance
-                                          .isCancelled[item].value) ...{
-                                        IconButton(
-                                          icon: const Padding(
-                                            padding: EdgeInsets.all(0),
-                                            child: Icon(
-                                              Icons.refresh,
-                                              semanticLabel: 'Restart',
+                                            const SizedBox(
+                                              height: 40,
                                             ),
-                                          ),
-                                          onPressed: () {
-                                            //restart download
-                                            getInstance.isCancelled[item]
-                                                .value = false;
-                                            PhotonReceiver.getFile(
-                                              snap.data[item],
-                                              item,
-                                              widget.senderModel!,
-                                            );
-                                          },
-                                        )
-                                      } else if (!getInstance
-                                          .isReceived[item].value) ...{
-                                        IconButton(
-                                          icon: const Padding(
-                                            padding: EdgeInsets.all(0.0),
-                                            child: Icon(
-                                              Icons.cancel,
-                                              semanticLabel: 'Cancel receive',
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
+                                              child: Text(getInstance
+                                                      .isCancelled[item].value
+                                                  ? 'Cancelled'
+                                                  : getInstance.isReceived[item]
+                                                          .value
+                                                      ? "Completed"
+                                                      : '${(getInstance.percentage[item] as RxDouble)} %'),
                                             ),
-                                          ),
-                                          onPressed: () {
-                                            getInstance
-                                                .isCancelled[item].value = true;
-                                            getInstance.cancelTokenList[item]
-                                                .cancel();
-                                          },
-                                        )
-                                      } else ...{
-                                        const Padding(
-                                            padding: EdgeInsets.all(8),
-                                            child: Icon(Icons.done_rounded))
-                                      },
-                                    ],
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        if (getInstance
+                                            .isCancelled[item].value) ...{
+                                          IconButton(
+                                            icon: const Padding(
+                                              padding: EdgeInsets.all(0),
+                                              child: Icon(
+                                                Icons.refresh,
+                                                semanticLabel: 'Restart',
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              //restart download
+                                              getInstance.isCancelled[item]
+                                                  .value = false;
+                                              PhotonReceiver.getFile(
+                                                snap.data[item],
+                                                item,
+                                                widget.senderModel!,
+                                              );
+                                            },
+                                          )
+                                        } else if (!getInstance
+                                            .isReceived[item].value) ...{
+                                          IconButton(
+                                            icon: const Padding(
+                                              padding: EdgeInsets.all(0.0),
+                                              child: Icon(
+                                                Icons.cancel,
+                                                semanticLabel: 'Cancel receive',
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              getInstance.isCancelled[item]
+                                                  .value = true;
+                                              getInstance.cancelTokenList[item]
+                                                  .cancel();
+                                            },
+                                          )
+                                        } else ...{
+                                          const Padding(
+                                              padding: EdgeInsets.all(8),
+                                              child: Icon(Icons.done_rounded))
+                                        },
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ));
-                        },
-                      );
-                    },
-                  )
-                ],
+                            ));
+                          },
+                        );
+                      },
+                    )
+                  ],
+                ),
               );
             } else if (snap.connectionState == ConnectionState.waiting) {
               return const Center(
