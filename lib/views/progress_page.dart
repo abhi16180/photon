@@ -67,9 +67,9 @@ class _ProgressPageState extends State<ProgressPage> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                      padding: const EdgeInsets.only(left: 16, right: 16),
                       child: Card(
-                        elevation: 6,
+                        elevation: 5,
                         color: const Color.fromARGB(255, 25, 24, 24),
                         child: SizedBox(
                           height: 180,
@@ -83,20 +83,33 @@ class _ProgressPageState extends State<ProgressPage> {
                                   "Current speed",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text(
-                                  "${(getInstance.speed.value).toStringAsFixed(2)} mbps",
-                                  style: const TextStyle(
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          Color.fromARGB(255, 102, 245, 107)),
+                                RichText(
+                                  text: TextSpan(
+                                    style: const TextStyle(
+                                        fontSize: 48,
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            Color.fromARGB(255, 102, 245, 107)),
+                                    children: [
+                                      TextSpan(
+                                        text: getInstance.speed.value
+                                            .toStringAsFixed(2),
+                                      ),
+                                      const TextSpan(
+                                        text: ' mbps',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
-                                      "Min ${(getInstance.minSpeed.value).toStringAsFixed(2)}  mbps",
+                                      "Min ${(getInstance.minSpeed.value).toStringAsFixed(2)} mbps",
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
