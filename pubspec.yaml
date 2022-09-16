@@ -78,7 +78,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_distributor: 
   build_runner:
-  msix: ^3.6.3
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
