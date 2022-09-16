@@ -197,13 +197,60 @@ class _ProgressPageState extends State<ProgressPage> {
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(0.0),
-                                              child: Text(getInstance
-                                                      .isCancelled[item].value
-                                                  ? 'Cancelled'
-                                                  : getInstance.isReceived[item]
-                                                          .value
-                                                      ? "Completed"
-                                                      : '${(getInstance.percentage[item] as RxDouble)} %'),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 2.5),
+                                                    child: Text(getInstance
+                                                            .isCancelled[item]
+                                                            .value
+                                                        ? 'Cancelled'
+                                                        : getInstance
+                                                                .isReceived[
+                                                                    item]
+                                                                .value
+                                                            ? "Completed"
+                                                            : '${(getInstance.percentage[item] as RxDouble)} %'),
+                                                  ),
+                                                  if (getInstance
+                                                              .isCancelled[item]
+                                                              .value ==
+                                                          false &&
+                                                      getInstance
+                                                              .isReceived[item]
+                                                              .value ==
+                                                          false) ...{
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10),
+                                                      child: SizedBox(
+                                                        width: width / 1.8,
+                                                        child: Text(
+                                                          getInstance
+                                                              .estimatedTime
+                                                              .value,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width >
+                                                                    720
+                                                                ? 16
+                                                                : 12.5,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  }
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),

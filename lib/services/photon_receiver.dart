@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
@@ -118,7 +119,7 @@ class PhotonReceiver {
     getInstance.cancelTokenList.insert(fileIndex, CancelToken());
     String savePath = await FileMethods.getSavePath(filePath, senderModel);
     Stopwatch s = Stopwatch();
-    int? prevBytes;
+    int? prevBits;
     int? prevDuration;
     //for handling speed update frequency
     int count = 0;
@@ -135,25 +136,29 @@ class PhotonReceiver {
             count++;
             getInstance.percentage[fileIndex].value =
                 (double.parse((received / total * 100).toStringAsFixed(0)));
-            if (prevBytes == null) {
-              prevBytes = received;
+            if (prevBits == null) {
+              prevBits = received;
               prevDuration = s.elapsedMicroseconds;
               getInstance.minSpeed.value = getInstance.maxSpeed.value =
-                  ((prevBytes! * 8) / prevDuration!);
+                  ((prevBits! * 8) / prevDuration!);
             } else {
-              prevBytes = received - prevBytes!;
+              prevBits = received - prevBits!;
               prevDuration = s.elapsedMicroseconds - prevDuration!;
             }
           }
           //used for reducing speed update frequency
           if (count % 10 == 0) {
-            getInstance.speed.value = (prevBytes! * 8) / prevDuration!;
+            getInstance.speed.value = (prevBits! * 8) / prevDuration!;
             //calculate min and max speeds
             if (getInstance.speed.value > getInstance.maxSpeed.value) {
               getInstance.maxSpeed.value = getInstance.speed.value;
             } else if (getInstance.speed.value < getInstance.minSpeed.value) {
               getInstance.minSpeed.value = getInstance.speed.value;
             }
+
+            // update estimated time
+            getInstance.estimatedTime.value = getEstimatedTime(
+                received * 8, total * 8, getInstance.speed.value);
           }
         },
       );
@@ -171,4 +176,24 @@ class PhotonReceiver {
       }
     }
   }
+}
+
+getEstimatedTime(receivedBits, totalBits, currentSpeed) {
+  ///speed in [mega bits  x * 10^6 bits ]
+  double estBits = (totalBits - receivedBits) / 1000000;
+  int estTimeInInt = (estBits ~/ currentSpeed);
+  int mins = 0;
+  int seconds = 0;
+  int hours = 0;
+  hours = estTimeInInt ~/ 3600;
+  mins = (estTimeInInt % 3600) ~/ 60;
+  seconds = ((estTimeInInt % 3600) % 60);
+  print(estTimeInInt);
+  if (hours == 0) {
+    if (mins == 0) {
+      return 'About $seconds seconds left';
+    }
+    return 'About $mins m and $seconds s left';
+  }
+  return 'About $hours h $mins m $seconds s left';
 }
