@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,7 +5,6 @@ import 'package:photon/components/dialogs.dart';
 import 'package:photon/views/about_page.dart';
 import 'package:photon/views/widescreen_home.dart';
 import 'package:unicons/unicons.dart';
-import "package:receive_sharing_intent/receive_sharing_intent.dart";
 import 'controllers/intents.dart';
 import 'views/history.dart';
 import 'views/mobile_home.dart';
@@ -95,7 +91,7 @@ class _AppState extends State<App> {
                       showLicensePage(
                           context: context,
                           applicationLegalese: 'GPL3 license',
-                          applicationVersion: 'v1.0.2',
+                          applicationVersion: "1.1.0",
                           applicationIcon: Image.asset(
                             'assets/images/splash.png',
                             width: 60,
