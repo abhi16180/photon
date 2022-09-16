@@ -1,4 +1,4 @@
-package com.example.photon
+package dev.abhi.photon
 
 import android.content.Intent
 import androidx.annotation.NonNull;
