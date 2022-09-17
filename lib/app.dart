@@ -133,6 +133,7 @@ class _AppState extends State<App> {
         child: size.width > 720 ? const WidescreenHome() : const MobileHome(),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.blueGrey.shade900,
         onPressed: () {
           showDialog(
               context: context,
