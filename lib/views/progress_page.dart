@@ -205,25 +205,15 @@ class _ProgressPageState extends State<ProgressPage> {
                                                     padding:
                                                         const EdgeInsets.only(
                                                             left: 2.5),
-                                                    child: Text(getInstance
-                                                            .isCancelled[item]
-                                                            .value
-                                                        ? 'Cancelled'
-                                                        : getInstance
-                                                                .isReceived[
-                                                                    item]
-                                                                .value
-                                                            ? "Completed"
-                                                            : '${(getInstance.percentage[item] as RxDouble)} %'),
+                                                    child: getStatusWidget(
+                                                        getInstance
+                                                            .fileStatus[item],
+                                                        item),
                                                   ),
                                                   if (getInstance
-                                                              .isCancelled[item]
-                                                              .value ==
-                                                          false &&
-                                                      getInstance
-                                                              .isReceived[item]
-                                                              .value ==
-                                                          false) ...{
+                                                          .fileStatus[item]
+                                                          .value ==
+                                                      "downloading") ...{
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
@@ -360,6 +350,22 @@ class _ProgressPageState extends State<ProgressPage> {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Unable to open the file')));
       }
+    }
+  }
+
+  getStatusWidget(RxString status, idx) {
+    switch (status.value) {
+      case "waiting":
+        return const Text("Waiting");
+      case "downloading":
+        return Text(
+            '${GetIt.I.get<PercentageController>().percentage[idx].value}');
+      case "cancelled":
+        return const Text("Cancelled");
+      case "error":
+        return const Text("Error");
+      case "downloaded":
+        return const Text("Completed");
     }
   }
 }

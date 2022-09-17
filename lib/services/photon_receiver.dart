@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
@@ -94,14 +93,22 @@ class PhotonReceiver {
 
   static receive(SenderModel senderModel, int secretCode) async {
     //getting hiveObj
+    var getInstance = GetIt.instance.get<PercentageController>();
     _box = Hive.box('history');
     try {
       var resp = await Dio()
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
       filePathMap = jsonDecode(resp.data);
       _secretCode = secretCode;
-      for (int i = 0; i < filePathMap['paths']!.length; i++) {
-        await getFile(filePathMap['paths'][i], i, senderModel);
+      for (int fileIndex = 0;
+          fileIndex < filePathMap['paths']!.length;
+          fileIndex++) {
+        //if a file is cancelled once ,it should not be automatically fetched without user action
+        if (getInstance.isCancelled[fileIndex].value == false) {
+          getInstance.fileStatus[fileIndex].value = Status.downloading.name;
+          await getFile(
+              filePathMap['paths'][fileIndex], fileIndex, senderModel);
+        }
       }
     } catch (e) {
       debugPrint('$e');
@@ -126,6 +133,7 @@ class PhotonReceiver {
 
     try {
       s.start();
+      getInstance.fileStatus[fileIndex].value = "downloading";
       await dio.download(
         'http://${senderModel.ip}:4040/${_secretCode.toString()}/${fileIndex.toString()}',
         savePath,
@@ -167,8 +175,11 @@ class PhotonReceiver {
       //after completion of download mark it as true
       getInstance.isReceived[fileIndex].value = true;
       storeHistory(_box, savePath);
+      getInstance.fileStatus[fileIndex].value = "downloaded";
     } catch (e) {
       getInstance.speed.value = 0;
+      getInstance.fileStatus[fileIndex].value = "cancelled";
+      getInstance.isCancelled[fileIndex].value = true;
       if (!CancelToken.isCancel(e as DioError)) {
         debugPrint(e.toString());
       } else {
@@ -188,7 +199,6 @@ getEstimatedTime(receivedBits, totalBits, currentSpeed) {
   hours = estTimeInInt ~/ 3600;
   mins = (estTimeInInt % 3600) ~/ 60;
   seconds = ((estTimeInInt % 3600) % 60);
-  print(estTimeInInt);
   if (hours == 0) {
     if (mins == 0) {
       return 'About $seconds seconds left';

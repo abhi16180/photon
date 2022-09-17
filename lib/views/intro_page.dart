@@ -25,16 +25,18 @@ class _IntroPageState extends State<IntroPage> {
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushReplacementNamed('/home');
         },
-        onSkip: () async {
-          SharedPreferences prefInst = await SharedPreferences.getInstance();
-          prefInst.setBool('isIntroRead', true);
-          // ignore: use_build_context_synchronously
-          Navigator.of(context).pushReplacementNamed('/home');
-        },
-        showSkipButton: true,
+        // onSkip: () async {
+        //   SharedPreferences prefInst = await SharedPreferences.getInstance();
+        //   prefInst.setBool('isIntroRead', true);
+        //   // ignore: use_build_context_synchronously
+        //   Navigator.of(context).pushReplacementNamed('/home');
+        // },
+        showSkipButton: false,
         skipOrBackFlex: 0,
         nextFlex: 0,
-        showBackButton: false,
+        showBackButton: true,
+        back: const Icon(Icons.arrow_back_ios),
+
         skip: const Text('Skip', style: TextStyle(fontWeight: FontWeight.w600)),
         next: const Icon(Icons.arrow_forward),
         done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
