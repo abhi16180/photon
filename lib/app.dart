@@ -107,7 +107,9 @@ class _AppState extends State<App> {
                       //     .loadString('assets/texts/privacy_policy.txt');
                       // ignore: use_build_context_synchronously
                       // privacyPolicyDialog(context, privacyPolicy);
-                      launchUrl(Uri.parse("https://photondev.netlify.app"),
+                      launchUrl(
+                          Uri.parse(
+                              "https://photondev.netlify.app/privacy-policy-page"),
                           mode: LaunchMode.externalApplication);
                     },
                     title: const Text('Privacy policy'),

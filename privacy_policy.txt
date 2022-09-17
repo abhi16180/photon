@@ -1,12 +1,21 @@
-**Privacy Policy**
 
-Photon app is built as  an Open Source application. This SERVICE is provided by the developer at no cost and is intended for use as is. If you choose to use my Service, then you agree to the privacy policy.*Make sure that you have downloaded app from github/"https://apt.izzysoft.de/fdroid/" for security reasons.*
+**Privacy Policy -Photon**
+
+Photon app is built as  an Open Source application. This SERVICE is provided by the developer at no cost and is intended for use as is. If you choose to use my Service, then you agree to the privacy policy.
+
+*Make sure that you have downloaded app from one of the following sources*
+- Google Play-store
+- https://www.github.com/abhi16180/photon
+- https://apt.izzysoft.de/fdroid/
 
 
 
 **Information Collection and Use**
 
-No user information is collected and stored by the developer. However to provide file-transfer service , information like ip-address, operating system(to identify the sender / receiver),etc will be *temporarily* stored locally in your device. But all these information will be cleared from app every time sharing process is terminated. 
+- No user information is collected and stored by the developer.
+- To provide file-transfer functionality, information like ip-address, operating system(to identify the sender / receiver) etc will be *temporarily* stored locally on your device with your consent i.e when you choose to share or receive files. But all these information will be cleared from app every time sharing process is terminated.
+- User can also clear the locally stored data by deleting cache / app-data
+- Any information displayed inside the app is stored locally on your device. Developer has no access to user data. It is up-to the user to share or receive files.
 *No information is stored by the developer.*
 
 **Log Data**
@@ -37,9 +46,10 @@ I do not knowingly collect personally identifiable information from any user inc
 
 I may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page.
 
-This policy is effective as of 2022-08-28
+This policy is effective as of 2022-09-17
 
 **Contact Me**
 
 If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at photon19dev@gmail.com
+
 
