@@ -5,6 +5,7 @@ import 'package:photon/components/dialogs.dart';
 import 'package:photon/views/about_page.dart';
 import 'package:photon/views/widescreen_home.dart';
 import 'package:unicons/unicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'controllers/intents.dart';
 import 'views/history.dart';
 import 'views/mobile_home.dart';
@@ -102,10 +103,12 @@ class _AppState extends State<App> {
                   ListTile(
                     leading: const Icon(Icons.privacy_tip_rounded),
                     onTap: () async {
-                      String privacyPolicy = await rootBundle
-                          .loadString('assets/texts/privacy_policy.txt');
+                      // String privacyPolicy = await rootBundle
+                      //     .loadString('assets/texts/privacy_policy.txt');
                       // ignore: use_build_context_synchronously
-                      privacyPolicyDialog(context, privacyPolicy);
+                      // privacyPolicyDialog(context, privacyPolicy);
+                      launchUrl(Uri.parse("https://www.photondev.netlify.app"),
+                          mode: LaunchMode.externalApplication);
                     },
                     title: const Text('Privacy policy'),
                   ),
