@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -75,8 +76,9 @@ class FileMethods {
       var file = await File(savePath!).create();
     } catch (_) {
       //renaming the path
+      var rnd = Random();
       List newPath = savePath!.split('.');
-      newPath[0] = newPath[0] + "1";
+      newPath[0] = newPath[0] + "${rnd.nextInt(1000)}";
       savePath = newPath.join('.');
     }
     return savePath;

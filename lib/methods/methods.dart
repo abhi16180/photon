@@ -67,6 +67,8 @@ generatePercentageList(len) {
   getInstance.isReceived = RxList.generate(len, (index) {
     return RxBool(false);
   });
+  getInstance.fileStatus =
+      RxList.generate(len, (index) => RxString(Status.waiting.name));
 }
 
 Widget getFileIcon(String extn) {
