@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Photon"
-#define MyAppVersion "1.0.2"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "photon.dev"
 #define MyAppURL "https://github.com/abhi16180/photon"
 #define MyAppExeName "photon.exe"
