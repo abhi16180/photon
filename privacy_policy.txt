@@ -32,7 +32,7 @@ I want to inform users that all third-party flutter packages used in this applic
 
 **Security**
 
-I do not store or posses any kind of information ,so handling data completely depends upon the user. Make sure that you are connected to trusted wifi. Remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
+I do not store or possess any kind of information ,so handling data completely depends upon the user. Make sure that you are connected to trusted wifi. Remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
 
 **Links to Other Sites**
 
