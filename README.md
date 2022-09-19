@@ -7,7 +7,7 @@
   </a>
   
   [![Github All Releases](https://img.shields.io/github/downloads/abhi16180/photon/total.svg)]()
-  [![Github Latest Release (all)](https://img.shields.io/github/downloads/abhi16180/photon/v1.0.2/total)]()
+  [![Github Latest Release (all)](https://img.shields.io/github/downloads/abhi16180/photon/v1.1.0/total)]()
   [![Commits/week](  https://img.shields.io/github/commit-activity/w/abhi16180/photon)]()
   [![CodeFactor](https://www.codefactor.io/repository/github/abhi16180/photon/badge)](https://www.codefactor.io/repository/github/abhi16180/photon)
 </p>
