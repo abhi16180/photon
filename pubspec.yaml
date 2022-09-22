@@ -81,11 +81,20 @@ dev_dependencies:
   flutter_distributor: 
   build_runner:
   change_app_package_name: 
+  msix: ^2.8.18
 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+msix_config:
+  display_name: Photon
+  publisher_display_name: N/A
+  identity_name: dev.abhi.photon
+  msix_version: 1.1.0.0
+  logo_path: assets\images\icon.png
+  capabilities: internetClient, internetServer
+  certificate_path: thekeystore.pfx
+  certificate_password: abhi16180
 # The following section is specific to Flutter packages.
 flutter:
   # The following line ensures that the Material Icons font is

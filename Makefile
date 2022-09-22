@@ -36,3 +36,5 @@ choco:
 
 
 
+msix:
+	flutter pub run msix:create
