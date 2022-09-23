@@ -45,7 +45,6 @@
 - Windows 
 - Linux
 - macOS   
-  - *Not tested*
 - iOS     
   - *Coming soon*
 
@@ -53,12 +52,18 @@
 ## Downloads
 <a href="https://github.com/abhi16180/photon/releases/">All releases</a><br>
 
-*External sites*
+
 - Android 
 <br>
 <a href='https://play.google.com/store/apps/details?id=dev.abhi.photon&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1' ><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=240px/></a>
 <br>
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.example.photon"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width=240px> </a>
+
+- <a title="Microsoft Corporation, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons" href="https://github.com/abhi16180/photon/releases/download/v1.1.0/photon-windows-signed.v1.1.0.msix"><img width="240" alt="Windows 10x Icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Windows_10x_Icon.png/512px-Windows_10x_Icon.png">Windows</a>
+
+- <a title="Apple Inc., Public domain, via Wikimedia Commons" href="https://github.com/abhi16180/photon/releases/download/v1.1.0/photon-macos-x86_64-v1.1.0.dmg"><img width="240" alt="Finder Icon macOS Big Sur" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Finder_Icon_macOS_Big_Sur.png/512px-Finder_Icon_macOS_Big_Sur.png"></a> 
+
+- <a title="https://github.com/icons8/flat-color-icons/graphs/contributors, MIT &lt;http://opensource.org/licenses/mit-license.php&gt;, via Wikimedia Commons" href="https://github.com/abhi16180/photon/releases/download/v1.1.0/Photon-Linux-Bundle-v1.1.0.zip"><img width="512" alt="Icons8 flat linux" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Icons8_flat_linux.svg/512px-Icons8_flat_linux.svg.png">Linux</a>
 
 
 ### Note:- 
@@ -86,4 +91,10 @@ You can support me by,
 <br>
 <a href="https://www.buymeacoffee.com/abhi1.6180" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
+
+### Icon credits 
+
+<p>Microsoft Corporation, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons</p>
+<p>Apple Inc., Public domain,<https://commons.wikimedia.org/wiki/File:Finder_Icon_macOS_Big_Sur.png> via Wikimedia Commons</p>
+<p>https://github.com/icons8/flat-color-icons/graphs/contributors, MIT <http://opensource.org/licenses/mit-license.php>, via Wikimedia Commons</p>
 
