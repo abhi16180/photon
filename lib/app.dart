@@ -92,7 +92,7 @@ class _AppState extends State<App> {
                     showLicensePage(
                         context: context,
                         applicationLegalese: 'GPL3 license',
-                        applicationVersion: "1.1.0",
+                        applicationVersion: "1.1.1",
                         applicationIcon: Image.asset(
                           'assets/images/splash.png',
                           width: 60,
