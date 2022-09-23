@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:photon/components/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import "package:permission_handler/permission_handler.dart";
 
 class IntroPage extends StatefulWidget {
   const IntroPage({Key? key}) : super(key: key);
@@ -20,10 +24,25 @@ class _IntroPageState extends State<IntroPage> {
         globalBackgroundColor: Colors.black,
         pages: getPages(),
         onDone: () async {
-          SharedPreferences prefInst = await SharedPreferences.getInstance();
-          prefInst.setBool('isIntroRead', true);
-          // ignore: use_build_context_synchronously
-          Navigator.of(context).pushReplacementNamed('/home');
+          if (Platform.isWindows || Platform.isAndroid || Platform.isIOS) {
+            var status = await Permission.storage.request();
+            if (status.isGranted) {
+              SharedPreferences prefInst =
+                  await SharedPreferences.getInstance();
+              prefInst.setBool('isIntroRead', true);
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pushReplacementNamed('/home');
+            } else {
+              // ignore: use_build_context_synchronously
+              showSnackBar(
+                  context, "Cannot use the app without storage permission");
+            }
+          } else {
+            SharedPreferences prefInst = await SharedPreferences.getInstance();
+            prefInst.setBool('isIntroRead', true);
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pushReplacementNamed('/home');
+          }
         },
         // onSkip: () async {
         //   SharedPreferences prefInst = await SharedPreferences.getInstance();
