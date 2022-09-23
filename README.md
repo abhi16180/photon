@@ -1,7 +1,7 @@
 <h1 >Welcome to Photon👋</h1><br>
 <p align="center"> <img style="border-radius:20px" src="photon.png" width="400px"></p>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.2-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.1.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://twitter.com/AbhilashHegde9" target="_blank">
     <img alt="Twitter: AbhilashHegde9" src="https://img.shields.io/twitter/follow/AbhilashHegde9.svg?style=social" />
   </a>
@@ -62,11 +62,11 @@
 <br>
 <a title="Microsoft Corporation, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons" href="https://github.com/abhi16180/photon/releases/download/v1.1.0/photon-windows-signed.v1.1.0.msix"><img width="128" alt="Windows 10x Icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Windows_10x_Icon.png/512px-Windows_10x_Icon.png" width=128px></a>
 <br>
-
+<br>
 - macOS
-
 <br>
 <a title="Apple Inc., Public domain, via Wikimedia Commons" href="https://github.com/abhi16180/photon/releases/download/v1.1.0/photon-macos-x86_64-v1.1.0.dmg"><img width="128" alt="Finder Icon macOS Big Sur" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Finder_Icon_macOS_Big_Sur.png/512px-Finder_Icon_macOS_Big_Sur.png" width=240px></a> 
+<br>
 <br>
 - Linux (appImage)
 <br>
@@ -103,6 +103,8 @@ You can support me by,
 ### Icon credits 
 
 <a href="https://creativecommons.org/licenses/by-sa/4.0">Windows icon - Microsoft Corporation, CC BY-SA 4.0, via Wikimedia Commons</a>
+<br>
 <a href="https://commons.wikimedia.org/wiki/File:Finder_Icon_macOS_Big_Sur.png">Apple Icon - Apple Inc., Public domain, via Wikimedia Commons</a>
+<br>
 <a href="http://opensource.org/licenses/mit-license.php">Linux Icon - https://github.com/icons8/flat-color-icons/graphs/contributors, MIT , via Wikimedia Commons</a>
 
