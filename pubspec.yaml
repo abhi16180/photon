@@ -51,6 +51,7 @@ dependencies:
   mailto: ^2.0.0
   responsive_framework: 
   receive_sharing_intent: ^1.4.5
+  permission_handler: 
   
   
   http:
