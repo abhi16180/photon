@@ -133,7 +133,6 @@ class PhotonSender {
 
   static share(context, {bool externalIntent = false}) async {
     if (externalIntent) {
-      print('object');
       var sharedMediaFiles = await ReceiveSharingIntent.getInitialMedia();
       _fileList = sharedMediaFiles.map((e) => e.path).toList();
       await assignIP();
