@@ -51,39 +51,18 @@ class FileMethods {
     //extract filename from filepath send by the sender
     String fileName =
         filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
+    directory = await getSaveDirectory();
+    savePath = p.join(directory.path, fileName);
 
-    switch (Platform.operatingSystem) {
-      case "android":
-        var temp = Directory('/storage/emulated/0/Download/');
-        (await temp.exists())
-            ? directory = temp
-            : directory = await getApplicationDocumentsDirectory();
-        savePath = p.join(directory.path, fileName);
-        break;
-      case "ios":
-        directory = await path.getApplicationDocumentsDirectory();
-        break;
-      case "windows":
-        directory = await path.getDownloadsDirectory();
-        savePath = p.join(directory!.path, fileName);
-        break;
-      case "linux":
-      case "macos":
-        directory = await path.getDownloadsDirectory();
-        savePath = p.join(directory!.path, fileName);
-        break;
-      default:
-        debugPrint("Error");
-    }
     //checking if file can be created at savePath
     try {
       // ignore: unused_local_variable
-      var file = await File(savePath!).create();
+      var file = await File(savePath).create();
     } catch (_) {
       //renaming the path
 
       var rnd = Random();
-      List newPath = savePath!.split('.');
+      List newPath = savePath.split('.');
       newPath[0] = newPath[0] + "${rnd.nextInt(1000)}";
       savePath = newPath.join('.');
     }
@@ -110,22 +89,20 @@ class FileMethods {
         (await temp.exists())
             ? directory = temp
             : directory = await getApplicationDocumentsDirectory();
-
         break;
+
       case "ios":
         directory = await path.getApplicationDocumentsDirectory();
         break;
-      case "windows":
-        directory = (await path.getDownloadsDirectory())!;
 
-        break;
+      case "windows":
       case "linux":
       case "macos":
         directory = (await path.getDownloadsDirectory())!;
-
         break;
+
       default:
-        debugPrint("Error");
+        debugPrint("Unable to get file-save path");
     }
 
     return directory;
