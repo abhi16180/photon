@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:photon/components/snackbar.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
 
@@ -135,7 +136,7 @@ class PhotonReceiver {
       s.start();
       getInstance.fileStatus[fileIndex].value = "downloading";
       await dio.download(
-        'http://${senderModel.ip}:4040/${_secretCode.toString()}/${fileIndex.toString()}',
+        'http://${senderModel.ip}:4040/$_secretCode/$fileIndex',
         savePath,
         deleteOnError: true,
         cancelToken: getInstance.cancelTokenList[fileIndex],

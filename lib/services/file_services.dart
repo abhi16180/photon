@@ -7,6 +7,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:photon/components/snackbar.dart';
 
 import 'package:photon/models/file_model.dart';
 
@@ -52,7 +54,10 @@ class FileMethods {
 
     switch (Platform.operatingSystem) {
       case "android":
-        directory = Directory('/storage/emulated/0/Download/');
+        var temp = Directory('/storage/emulated/0/Download/');
+        (await temp.exists())
+            ? directory = temp
+            : directory = await getApplicationDocumentsDirectory();
         savePath = p.join(directory.path, fileName);
         break;
       case "ios":
@@ -76,6 +81,7 @@ class FileMethods {
       var file = await File(savePath!).create();
     } catch (_) {
       //renaming the path
+
       var rnd = Random();
       List newPath = savePath!.split('.');
       newPath[0] = newPath[0] + "${rnd.nextInt(1000)}";
@@ -100,7 +106,10 @@ class FileMethods {
     Directory directory = Directory('');
     switch (Platform.operatingSystem) {
       case "android":
-        directory = Directory('/storage/emulated/0/Download/');
+        var temp = Directory('/storage/emulated/0/Download/');
+        (await temp.exists())
+            ? directory = temp
+            : directory = await getApplicationDocumentsDirectory();
 
         break;
       case "ios":
