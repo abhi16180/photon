@@ -62,6 +62,7 @@ class FileMethods {
       //renaming the path
 
       var rnd = Random();
+
       List newPath = savePath.split('.');
       newPath[0] = newPath[0] + "${rnd.nextInt(1000)}";
       savePath = newPath.join('.');
@@ -82,7 +83,7 @@ class FileMethods {
   }
 
   static Future<Directory> getSaveDirectory() async {
-    Directory directory = Directory('');
+    late Directory directory;
     switch (Platform.operatingSystem) {
       case "android":
         var temp = Directory('/storage/emulated/0/Download/');
@@ -103,6 +104,16 @@ class FileMethods {
 
       default:
         debugPrint("Unable to get file-save path");
+    }
+
+    var temp = directory;
+    directory = Directory("${directory.path}${Platform.pathSeparator}Photon");
+
+    try {
+      await directory.create();
+    } catch (e) {
+      debugPrint("Unable to create directory at ${directory.path}");
+      return temp;
     }
 
     return directory;
