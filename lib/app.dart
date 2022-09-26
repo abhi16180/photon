@@ -77,11 +77,19 @@ class _AppState extends State<App> {
                   leading: const Icon(UniconsSolid.history),
                   title: const Text('Received-history'),
                   onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return const HistoryPage();
-                    }));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const HistoryPage();
+                        },
+                      ),
+                    );
                   },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text("Settings"),
+                  onTap: () {},
                 ),
                 ListTile(
                   leading: SvgPicture.asset(
@@ -103,10 +111,6 @@ class _AppState extends State<App> {
                 ListTile(
                   leading: const Icon(Icons.privacy_tip_rounded),
                   onTap: () async {
-                    // String privacyPolicy = await rootBundle
-                    //     .loadString('assets/texts/privacy_policy.txt');
-                    // ignore: use_build_context_synchronously
-                    // privacyPolicyDialog(context, privacyPolicy);
                     launchUrl(
                         Uri.parse(
                             "https://photondev.netlify.app/privacy-policy-page"),
@@ -118,10 +122,13 @@ class _AppState extends State<App> {
                   title: const Text('About'),
                   leading: const Icon(UniconsLine.info_circle),
                   onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return const AboutPage();
-                    }));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const AboutPage();
+                        },
+                      ),
+                    );
                   },
                 ),
               ],
