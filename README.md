@@ -60,7 +60,7 @@
 
 - Windows
 <br>
-<a title="Microsoft Corporation, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons" href="https://github.com/abhi16180/photon/releases/download/v1.1.0/photon-windows-signed.v1.1.0.msix"><img width="128" alt="Windows 10x Icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Windows_10x_Icon.png/512px-Windows_10x_Icon.png" width=128px></a>
+<a title="Microsoft Corporation, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons" href="https://github.com/abhi16180/photon/releases/download/v1.1.0/photon-windows-signed-v1.1.0.msix"><img width="128" alt="Windows 10x Icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Windows_10x_Icon.png/512px-Windows_10x_Icon.png" width=128px></a>
 <br>
 <br>
 - macOS
