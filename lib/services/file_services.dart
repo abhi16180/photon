@@ -107,7 +107,7 @@ class FileMethods {
     }
 
     var temp = directory;
-    directory = Directory("${directory.path}${Platform.pathSeparator}Photon");
+    directory = Directory("${directory.path}Photon");
 
     try {
       await directory.create();
