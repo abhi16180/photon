@@ -81,10 +81,11 @@ flutter pub get packages
 flutter run
 ```
 
-### Notes: 
-- The LICENSE has been updated to GPL3 from MIT 
-- File transfer location: Currently the app doesn't allow users to set a file-location. But before the sharing process starts, it will show the file-storing location (see image below). I have set downloads folder as file-storing location.
+### FAQ / Notes: 
+- The **LICENSE** has been updated to GPL3 from MIT 
+- **File transfer location:** Currently the app doesn't allow users to set a file-location. But before the sharing process starts, it will show the file-storing location (see image below). I have set downloads folder as file-storing location.
 ![image](https://user-images.githubusercontent.com/63426722/191982511-b5d6fab2-7fb9-4588-b014-7957c4b1829d.png)
+- If you run the program with `flutter run` and **if you see a blank application window instead of the UI**, try running `flutter run --enable-software-rendering` instead. 
 
 
 
