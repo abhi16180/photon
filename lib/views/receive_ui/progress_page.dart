@@ -8,10 +8,10 @@ import 'package:photon/components/snackbar.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'package:photon/services/photon_receiver.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../components/dialogs.dart';
-import '../methods/methods.dart';
-import '../models/sender_model.dart';
-import '../services/file_services.dart';
+import '../../components/dialogs.dart';
+import '../../methods/methods.dart';
+import '../../models/sender_model.dart';
+import '../../services/file_services.dart';
 import 'package:open_file/open_file.dart';
 
 class ProgressPage extends StatefulWidget {
