@@ -5,10 +5,10 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:photon/components/snackbar.dart';
 
 import 'package:photon/models/file_model.dart';
 
@@ -82,38 +82,53 @@ class FileMethods {
     return fileNames;
   }
 
+  static editDirectoryPath(String path) {
+    var box = Hive.box('appData');
+    box.put('directoryPath', path);
+  }
+
   static Future<Directory> getSaveDirectory() async {
     late Directory directory;
-    switch (Platform.operatingSystem) {
-      case "android":
-        var temp = Directory('/storage/emulated/0/Download/');
-        (await temp.exists())
-            ? directory = temp
-            : directory = await getApplicationDocumentsDirectory();
-        break;
+    var box = Hive.box('appData');
+    if (box.get('directoryPath') == null) {
+      switch (Platform.operatingSystem) {
+        case "android":
+          var temp = Directory('/storage/emulated/0/Download/');
+          (await temp.exists())
+              ? directory = temp
+              : directory = await getApplicationDocumentsDirectory();
+          break;
 
-      case "ios":
-        directory = await path.getApplicationDocumentsDirectory();
-        break;
+        case "ios":
+          directory = await path.getApplicationDocumentsDirectory();
+          break;
 
-      case "windows":
-      case "linux":
-      case "macos":
-        directory = (await path.getDownloadsDirectory())!;
-        break;
+        case "windows":
+        case "linux":
+        case "macos":
+          directory = (await path.getDownloadsDirectory())!;
+          break;
 
-      default:
-        debugPrint("Unable to get file-save path");
+        default:
+          debugPrint("Unable to get file-save path");
+      }
+    } else {
+      directory = Directory(box.get('directoryPath'));
     }
 
-    var temp = directory;
-    directory = Directory("${directory.path}Photon");
+    var tempDir = directory;
+    //check if ends with / or \
+    if (directory.path.endsWith(Platform.pathSeparator)) {
+      directory = Directory("${directory.path}Photon");
+    } else {
+      directory = Directory("${directory.path}${Platform.pathSeparator}Photon");
+    }
 
     try {
       await directory.create();
     } catch (e) {
       debugPrint("Unable to create directory at ${directory.path}");
-      return temp;
+      return tempDir;
     }
 
     return directory;

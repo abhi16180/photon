@@ -7,9 +7,9 @@ import 'package:lottie/lottie.dart';
 import 'package:photon/components/components.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/services/file_services.dart';
-import 'package:photon/views/progress_page.dart';
-import '../controllers/intents.dart';
-import '../services/photon_receiver.dart';
+import 'package:photon/views/receive_ui/progress_page.dart';
+import '../../controllers/intents.dart';
+import '../../services/photon_receiver.dart';
 
 class ReceivePage extends StatefulWidget {
   const ReceivePage({Key? key}) : super(key: key);

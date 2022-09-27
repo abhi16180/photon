@@ -158,12 +158,12 @@ storeHistory(Box box, String savePath) {
 }
 
 getHistory() async {
-  var box = await Hive.openBox('history');
+  var box = await Hive.openBox('appData');
   return box.get('fileInfo');
 }
 
 clearHistory() async {
-  Hive.openBox('history').then((box) => box.delete('fileInfo')).catchError((e) {
+  Hive.openBox('appData').then((box) => box.delete('fileInfo')).catchError((e) {
     debugPrint(e.toString());
   });
 }

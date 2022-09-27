@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
-import 'package:photon/components/snackbar.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
 
@@ -95,7 +94,7 @@ class PhotonReceiver {
   static receive(SenderModel senderModel, int secretCode) async {
     //getting hiveObj
     var getInstance = GetIt.instance.get<PercentageController>();
-    _box = Hive.box('history');
+    _box = Hive.box('appData');
     try {
       var resp = await Dio()
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');

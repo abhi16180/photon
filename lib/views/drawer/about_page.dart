@@ -4,7 +4,7 @@ import 'package:mailto/mailto.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../components/dialogs.dart';
+import '../../components/dialogs.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({Key? key}) : super(key: key);

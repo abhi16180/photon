@@ -4,7 +4,7 @@ import 'package:photon/components/dialogs.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/services/photon_sender.dart';
 
-import '../components/components.dart';
+import '../../components/components.dart';
 
 class SharePage extends StatefulWidget {
   const SharePage({Key? key}) : super(key: key);
