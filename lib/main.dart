@@ -8,18 +8,18 @@ import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photon/methods/share_intent.dart';
 import 'package:photon/views/handle_intent_ui.dart';
-import 'package:photon/views/history.dart';
+import 'package:photon/views/drawer/history.dart';
 import 'package:photon/views/intro_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'app.dart';
-import 'views/receive_page.dart';
-import 'views/share_page.dart';
+import 'views/receive_ui/receive_page.dart';
+import 'views/share_ui/share_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Hive.init((await getApplicationDocumentsDirectory()).path);
-  await Hive.openBox('history');
+  await Hive.openBox('appData');
   GetIt getIt = GetIt.instance;
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);

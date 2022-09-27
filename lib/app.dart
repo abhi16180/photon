@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:photon/components/dialogs.dart';
-import 'package:photon/views/about_page.dart';
-import 'package:photon/views/widescreen_home.dart';
+import 'package:photon/views/drawer/about_page.dart';
+import 'package:photon/views/drawer/settings.dart';
+import 'package:photon/views/home/widescreen_home.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'controllers/intents.dart';
-import 'views/history.dart';
-import 'views/mobile_home.dart';
+import 'views/drawer/history.dart';
+import 'views/home/mobile_home.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -89,7 +90,12 @@ class _AppState extends State<App> {
                 ListTile(
                   leading: const Icon(Icons.settings),
                   title: const Text("Settings"),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return SettingsPage();
+                    }));
+                  },
                 ),
                 ListTile(
                   leading: SvgPicture.asset(
