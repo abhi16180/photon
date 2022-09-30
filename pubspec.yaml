@@ -95,7 +95,7 @@ msix_config:
   logo_path: assets\images\icon.png
   capabilities: internetClient, internetServer
   certificate_path: thekeystore.pfx
-  certificate_password: abhi16180
+  certificate_password: 
 # The following section is specific to Flutter packages.
 flutter:
   # The following line ensures that the Material Icons font is
