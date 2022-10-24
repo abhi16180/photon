@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:lottie/lottie.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/services/photon_sender.dart';
 
 import '../../methods/methods.dart';
@@ -65,8 +66,32 @@ class _MobileHomeState extends State<MobileHome> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             child: InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed('/receivepage');
+              onTap: () async {
+                var status = await Permission.storage.status;
+                if (status.isGranted) {
+                  Navigator.of(context).pushNamed('/receivepage');
+
+                  print('1');
+                } else if (status.isDenied) {
+                  var resp = await Permission.storage.request();
+                  if (resp.isGranted) {
+                    Navigator.of(context).pushNamed('/receivepage');
+                  } else {
+                    print('2');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Permission denied'),
+                      ),
+                    );
+                  }
+                } else {
+                  print('3');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Permission denied forever'),
+                    ),
+                  );
+                }
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

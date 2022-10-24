@@ -181,7 +181,7 @@ class PhotonReceiver {
       getInstance.fileStatus[fileIndex].value = "cancelled";
       getInstance.isCancelled[fileIndex].value = true;
       if (!CancelToken.isCancel(e as DioError)) {
-        debugPrint(e.toString());
+        debugPrint("Dio error");
       } else {
         debugPrint('error');
       }
