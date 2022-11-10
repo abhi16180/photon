@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../methods/methods.dart';
+import '../receive_ui/qr_receive_page.dart';
 
 class WidescreenHome extends StatefulWidget {
   const WidescreenHome({Key? key}) : super(key: key);
@@ -64,7 +68,45 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                   borderRadius: BorderRadius.circular(28)),
               child: InkWell(
                 onTap: () {
-                  Navigator.of(context).pushNamed('/receivepage');
+                  if (Platform.isAndroid || Platform.isIOS) {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Center(
+                            child: Container(
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pushNamed('/receivepage');
+                                      },
+                                      child: const Text('Normal mode'),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return const QrReceivePage();
+                                        }));
+                                      },
+                                      child: const Text('QR Code mode'),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        });
+                  } else {
+                    Navigator.of(context).pushNamed('/receivepage');
+                  }
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

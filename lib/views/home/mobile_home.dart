@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:lottie/lottie.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:photon/services/photon_sender.dart';
 
+import 'package:photon/services/photon_sender.dart';
+import 'package:photon/views/receive_ui/qr_receive_page.dart';
 import '../../methods/methods.dart';
 
 class MobileHome extends StatefulWidget {
@@ -15,7 +17,8 @@ class MobileHome extends StatefulWidget {
 
 class _MobileHomeState extends State<MobileHome> {
   PhotonSender photonSePhotonSender = PhotonSender();
-  bool isloading = false;
+  bool isLoading = false; // Create a controller to send instructions to scanner
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -23,7 +26,7 @@ class _MobileHomeState extends State<MobileHome> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (!isloading) ...{
+        if (!isLoading) ...{
           Card(
             color: const Color.fromARGB(255, 18, 23, 26),
             shape:
@@ -31,11 +34,11 @@ class _MobileHomeState extends State<MobileHome> {
             child: InkWell(
               onTap: () async {
                 setState(() {
-                  isloading = true;
+                  isLoading = true;
                 });
                 await handleSharing(context);
                 setState(() {
-                  isloading = false;
+                  isLoading = false;
                 });
               },
               child: Column(
@@ -66,31 +69,44 @@ class _MobileHomeState extends State<MobileHome> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             child: InkWell(
-              onTap: () async {
-                var status = await Permission.storage.status;
-                if (status.isGranted) {
-                  Navigator.of(context).pushNamed('/receivepage');
-
-                  print('1');
-                } else if (status.isDenied) {
-                  var resp = await Permission.storage.request();
-                  if (resp.isGranted) {
-                    Navigator.of(context).pushNamed('/receivepage');
-                  } else {
-                    print('2');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Permission denied'),
-                      ),
-                    );
-                  }
+              onTap: () {
+                if (Platform.isAndroid || Platform.isIOS) {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Center(
+                          child: Container(
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pushNamed('/receivepage');
+                                    },
+                                    child: const Text('Normal mode'),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (context) {
+                                        return const QrReceivePage();
+                                      }));
+                                    },
+                                    child: const Text('QR Code mode'),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      });
                 } else {
-                  print('3');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Permission denied forever'),
-                    ),
-                  );
+                  Navigator.of(context).pushNamed('/receivepage');
                 }
               },
               child: Column(

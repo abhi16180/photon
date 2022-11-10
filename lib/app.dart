@@ -93,7 +93,7 @@ class _AppState extends State<App> {
                   onTap: () {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return SettingsPage();
+                      return const SettingsPage();
                     }));
                   },
                 ),

@@ -18,7 +18,9 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 27, 32, 35),
         appBar: AppBar(
+          backgroundColor: Colors.blueGrey.shade900,
           title: const Text("Settings"),
         ),
         body: FutureBuilder(
@@ -27,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
             if (snap.connectionState == ConnectionState.done) {
               return Center(
                 child: Container(
-                  color: Colors.grey.shade900,
+                  color: w > 720 ? Colors.grey.shade900 : null,
                   width: w > 720 ? w / 1.4 : w,
                   child: Center(
                     child: ListView(

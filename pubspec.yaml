@@ -51,6 +51,7 @@ dependencies:
   mailto: ^2.0.0
   responsive_framework: 
   receive_sharing_intent: ^1.4.5
+  modal_bottom_sheet: 
  
   
   http:
@@ -65,6 +66,8 @@ dependencies:
       url: https://github.com/abhi16180/open_file.git
   hive: ^2.2.3
   permission_handler: ^10.0.1
+  mobile_scanner: ^2.0.0
+  qr_flutter: ^4.0.0
 
  
 

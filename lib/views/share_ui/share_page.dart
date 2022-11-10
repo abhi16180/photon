@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:photon/components/dialogs.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/services/photon_sender.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../components/components.dart';
 
@@ -38,14 +39,40 @@ class _SharePageState extends State<SharePage> {
               child: Column(
                 children: [
                   if (width > 720) ...{
-                    Lottie.asset(
-                      'assets/lottie/share.json',
-                      width: 240,
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          'assets/lottie/share.json',
+                          width: 240,
+                        ),
+                        SizedBox(
+                          width: width / 8,
+                        ),
+                        Container(
+                          width: width > 720 ? 200 : 100,
+                          height: width > 720 ? 200 : 100,
+                          child: QrImage(
+                              size: 150,
+                              foregroundColor: Colors.black,
+                              data: PhotonSender.getPhotonLink,
+                              backgroundColor: Colors.white),
+                        )
+                      ],
+                    )
                   } else ...{
                     Lottie.asset(
                       'assets/lottie/share.json',
                     ),
+                    SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: QrImage(
+                        foregroundColor: Colors.white,
+                        data: PhotonSender.getPhotonLink,
+                        backgroundColor: Colors.black,
+                      ),
+                    )
                   },
                   Text(
                     '${photonSender.hasMultipleFiles ? 'Your files are ready to be shared' : 'Your file is ready to be shared'}\nAsk receiver to tap on receive button',

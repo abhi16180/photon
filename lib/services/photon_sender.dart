@@ -15,6 +15,7 @@ class PhotonSender {
   static late String _address;
   static late List<String?> _fileList;
   static late int _randomSecretCode;
+  static late String photonLink;
 
   static getFilesPath() async {
     //flutter specific package
@@ -59,6 +60,7 @@ class PhotonSender {
       return false;
     }
     bool? allowRequest;
+    photonLink = 'http://$_address:4040/photon-server';
     _server.listen(
       (HttpRequest request) async {
         if (request.requestedUri.toString() ==
@@ -173,4 +175,5 @@ class PhotonSender {
   }
 
   bool get hasMultipleFiles => _fileList.length > 1;
+  static String get getPhotonLink => photonLink;
 }
