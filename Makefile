@@ -23,6 +23,7 @@ appimage:
 
 #windows
 
+
 innoinstall:
 						powershell curl -o build\installer.exe http://files.jrsoftware.org/is/6/innosetup-${INNO_VERSION}.exe
 		 				powershell build\installer.exe /verysilent /allusers /dir=build\iscc
