@@ -1,4 +1,5 @@
 name: Photon Nightly
+
 on:
   push:
     branches:
