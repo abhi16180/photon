@@ -15,6 +15,7 @@ import 'package:photon/controllers/controllers.dart';
 import 'app.dart';
 import 'views/receive_ui/receive_page.dart';
 import 'views/share_ui/share_page.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,9 @@ void main() async {
   bool externalIntent = false;
   if (Platform.isAndroid) {
     externalIntent = await handleSharingIntent();
+    try {
+      await FlutterDisplayMode.setHighRefreshRate();
+    } catch (_) {}
   }
 
   // await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
