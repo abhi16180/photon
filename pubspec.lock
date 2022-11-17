@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "48.0.0"
+  adaptive_theme:
+    dependency: "direct main"
+    description:
+      name: adaptive_theme
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.1"
   analyzer:
     dependency: transitive
     description:
@@ -557,6 +564,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.18"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   open_file:
     dependency: "direct main"
     description:
@@ -720,6 +734,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.4"
   pub_semver:
     dependency: transitive
     description:

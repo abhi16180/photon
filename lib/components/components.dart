@@ -84,10 +84,9 @@ infoList(SenderModel senderModel, double width, double height, bool sender) {
               text: width > 720
                   ? serverDataList[i]['type']
                   : serverDataList[i]['type'] + ' : ',
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  color:
-                      const Color.fromARGB(255, 255, 255, 255).withAlpha(200),
+                  color: Colors.black,
                   overflow: TextOverflow.ellipsis),
               children: [
                 TextSpan(
@@ -107,9 +106,10 @@ infoList(SenderModel senderModel, double width, double height, bool sender) {
     data.insert(
       0,
       Text(
-        'Receiver can discover you as,',
+        ' Receiver can discover you as,',
         style: TextStyle(fontSize: width > 720 ? 20 : 16),
         textAlign: TextAlign.center,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

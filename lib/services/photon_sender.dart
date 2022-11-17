@@ -90,7 +90,7 @@ class PhotonSender {
             'http://$_address:4040/favicon.ico') {
           request.response.close();
         } else {
-//uri should be in format http://ip:port/secrecode/file-index
+          //uri should be in format http://ip:port/secretcode/file-index
           List requriToList = request.requestedUri.toString().split('/');
           if (int.parse(requriToList[requriToList.length - 2]) ==
               _randomSecretCode) {
