@@ -68,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                               ),
                               ListTile(
-                                title: Text('Switch Theme'),
+                                title: const Text('Switch theme'),
                                 trailing: Switch(
                                   value: pref.getBool('isDarkTheme')!,
                                   onChanged: (val) {
