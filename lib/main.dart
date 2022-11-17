@@ -35,7 +35,8 @@ void main() async {
     } catch (_) {}
   }
   // await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(AdaptiveTheme(
+  runApp(
+    AdaptiveTheme(
       light: FlexThemeData.light(
           scheme: FlexScheme.aquaBlue,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
@@ -65,7 +66,7 @@ void main() async {
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
           fontFamily: 'ytf'),
-      initial: AdaptiveThemeMode.system,
+      initial: AdaptiveThemeMode.light,
       builder: (theme, dark) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -87,5 +88,7 @@ void main() async {
             '/history': (context) => const HistoryPage()
           },
         );
-      }));
+      },
+    ),
+  );
 }

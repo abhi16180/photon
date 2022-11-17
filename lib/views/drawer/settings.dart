@@ -39,8 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     return Center(
                       child: Container(
                         color: w > 720
-                            ? AdaptiveTheme.getThemeMode() ==
-                                    AdaptiveThemeMode.dark
+                            ? mode.isDark
                                 ? Colors.grey.shade900
                                 : null
                             : null,
