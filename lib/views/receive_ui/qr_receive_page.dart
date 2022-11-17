@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:photon/components/snackbar.dart';
 import 'package:photon/models/sender_model.dart';
@@ -28,51 +29,57 @@ class _QrReceivePageState extends State<QrReceivePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueGrey.shade900,
-        title: const Text(" QR - receive"),
-      ),
-      body: isCameraStopped
-          ? isDenied
-              ? const Center(
-                  child: Text("Access denied by sender. Please try again"))
-              : const Center(
-                  child: Text(
-                    "Waiting for sender to approve.\n Ask sender to accept your request",
-                    textAlign: TextAlign.center,
-                  ),
-                )
-          : MobileScanner(
-              controller: msController,
-              onDetect: (code, _) {
-                if (code.rawValue != null) {
-                  msController.stop();
-                  setState(() {
-                    isCameraStopped = true;
-                  });
-                  actions(code.rawValue);
-                }
-              },
+    return ValueListenableBuilder(
+        valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
+        builder: (_, AdaptiveThemeMode mode, __) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
+              title: const Text(" QR - receive"),
             ),
-      floatingActionButton: isCameraStopped
-          ? FloatingActionButton.extended(
-              backgroundColor: Colors.blueGrey.shade900,
-              onPressed: () async {
-                setState(() {
-                  isCameraStopped = false;
-                  isDenied = false;
-                  msController = MobileScannerController();
-                });
-              },
-              label: const Text('Retry'),
-              icon: const Icon(
-                Icons.refresh,
-                color: Color.fromARGB(255, 75, 231, 81),
-              ),
-            )
-          : null,
-    );
+            body: isCameraStopped
+                ? isDenied
+                    ? const Center(
+                        child:
+                            Text("Access denied by sender. Please try again"))
+                    : const Center(
+                        child: Text(
+                          "Waiting for sender to approve.\n Ask sender to accept your request",
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                : MobileScanner(
+                    controller: msController,
+                    onDetect: (code, _) {
+                      if (code.rawValue != null) {
+                        msController.stop();
+                        setState(() {
+                          isCameraStopped = true;
+                        });
+                        actions(code.rawValue);
+                      }
+                    },
+                  ),
+            floatingActionButton: isCameraStopped
+                ? FloatingActionButton.extended(
+                    backgroundColor:
+                        mode.isDark ? Colors.blueGrey.shade900 : null,
+                    onPressed: () async {
+                      setState(() {
+                        isCameraStopped = false;
+                        isDenied = false;
+                        msController = MobileScannerController();
+                      });
+                    },
+                    label: const Text('Retry'),
+                    icon: const Icon(
+                      Icons.refresh,
+                      color: Color.fromARGB(255, 75, 231, 81),
+                    ),
+                  )
+                : null,
+          );
+        });
   }
 
   actions(link) async {

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ void main() async {
   GetIt getIt = GetIt.instance;
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
+  prefInst.get('isDarkTheme') ?? prefInst.setBool('isDarkTheme', false);
   getIt.registerSingleton<PercentageController>(PercentageController());
   bool externalIntent = false;
   if (Platform.isAndroid) {
@@ -32,24 +34,26 @@ void main() async {
       await FlutterDisplayMode.setHighRefreshRate();
     } catch (_) {}
   }
-
   // await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: FlexThemeData.light(
-          scheme: FlexScheme.hippieBlue,
+  runApp(AdaptiveTheme(
+      light: FlexThemeData.light(
+          scheme: FlexScheme.aquaBlue,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
           blendLevel: 20,
           appBarOpacity: 0.95,
+          swapColors: true,
           subThemesData: const FlexSubThemesData(
             blendOnLevel: 20,
             blendOnColors: false,
+            toggleButtonsRadius: 10.0,
+            fabSchemeColor: SchemeColor.inversePrimary,
+            chipRadius: 4.0,
+            tabBarItemSchemeColor: SchemeColor.onPrimary,
           ),
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
           fontFamily: 'ytf'),
-      darkTheme: FlexThemeData.dark(
+      dark: FlexThemeData.dark(
           scheme: FlexScheme.hippieBlue,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
           blendLevel: 15,
@@ -61,22 +65,27 @@ void main() async {
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
           fontFamily: 'ytf'),
-      themeMode: ThemeMode.dark,
-      routes: {
-        '/': (context) => AnimatedSplashScreen(
-              splash: 'assets/images/splash.png',
-              nextScreen: prefInst.getBool('isIntroRead') == true
-                  ? (externalIntent ? const HandleIntentUI() : const App())
-                  : const IntroPage(),
-              splashTransition: SplashTransition.fadeTransition,
-              pageTransitionType: PageTransitionType.fade,
-              backgroundColor: const Color.fromARGB(255, 0, 4, 7),
-            ),
-        '/home': (context) => const App(),
-        '/sharepage': (context) => const SharePage(),
-        '/receivepage': (context) => const ReceivePage(),
-        '/history': (context) => const HistoryPage()
-      },
-    ),
-  );
+      initial: AdaptiveThemeMode.system,
+      builder: (theme, dark) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          darkTheme: dark,
+          routes: {
+            '/': (context) => AnimatedSplashScreen(
+                  splash: 'assets/images/splash.png',
+                  nextScreen: prefInst.getBool('isIntroRead') == true
+                      ? (externalIntent ? const HandleIntentUI() : const App())
+                      : const IntroPage(),
+                  splashTransition: SplashTransition.fadeTransition,
+                  pageTransitionType: PageTransitionType.fade,
+                  backgroundColor: const Color.fromARGB(255, 0, 4, 7),
+                ),
+            '/home': (context) => const App(),
+            '/sharepage': (context) => const SharePage(),
+            '/receivepage': (context) => const ReceivePage(),
+            '/history': (context) => const HistoryPage()
+          },
+        );
+      }));
 }

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';

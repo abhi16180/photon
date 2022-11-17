@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:lottie/lottie.dart';
@@ -28,7 +29,9 @@ class _MobileHomeState extends State<MobileHome> {
       children: [
         if (!isLoading) ...{
           Card(
-            color: const Color.fromARGB(255, 18, 23, 26),
+            color: AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark
+                ? const Color.fromARGB(255, 18, 23, 26)
+                : null,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             child: InkWell(
@@ -65,7 +68,9 @@ class _MobileHomeState extends State<MobileHome> {
             height: 32,
           ),
           Card(
-            color: const Color.fromARGB(255, 18, 23, 26),
+            color: AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark
+                ? const Color.fromARGB(255, 18, 23, 26)
+                : null,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             child: InkWell(

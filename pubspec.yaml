@@ -54,6 +54,8 @@ dependencies:
   receive_sharing_intent: ^1.4.5
   modal_bottom_sheet: 
   flutter_displaymode: ^0.4.1
+  provider: 
+  adaptive_theme: 
  
   
   http:
