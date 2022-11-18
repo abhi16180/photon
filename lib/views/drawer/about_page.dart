@@ -17,8 +17,9 @@ class AboutPage extends StatelessWidget {
         valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
         builder: (_, AdaptiveThemeMode mode, __) {
           return Scaffold(
-            backgroundColor:
-                mode.isDark ? const Color.fromARGB(255, 27, 32, 35) : null,
+            backgroundColor: mode.isDark
+                ? const Color.fromARGB(255, 27, 32, 35)
+                : Colors.white,
             appBar: AppBar(
               backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
               title: const Text('About'),

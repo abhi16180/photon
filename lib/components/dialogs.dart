@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart' as ulaunch;
 
 import '../app.dart';
 import '../services/photon_sender.dart';
 
-void privacyPolicyDialog(BuildContext context, String data) {
+void privacyPolicyDialog(BuildContext context, String data) async {
+  SharedPreferences prefInst = await SharedPreferences.getInstance();
   showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: const Color.fromARGB(255, 27, 32, 35),
+          backgroundColor: prefInst.getBool('isDarkTheme') == true
+              ? const Color.fromARGB(255, 27, 32, 35)
+              : Colors.white,
           title: const Text('Privacy policy'),
           content: SizedBox(
               height: MediaQuery.of(context).size.height / 2,
@@ -36,12 +40,15 @@ void privacyPolicyDialog(BuildContext context, String data) {
       });
 }
 
-progressPageAlertDialog(BuildContext context) {
+progressPageAlertDialog(BuildContext context) async {
+  SharedPreferences prefInst = await SharedPreferences.getInstance();
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: const Color.fromARGB(255, 27, 32, 35),
+        backgroundColor: prefInst.getBool('isDarkTheme') == true
+            ? const Color.fromARGB(255, 27, 32, 35)
+            : Colors.white,
         title: const Text('Alert'),
         content: const Text('Make sure that transfer is completed !'),
         actions: [
@@ -65,12 +72,15 @@ progressPageAlertDialog(BuildContext context) {
 }
 
 progressPageWillPopDialog(context) async {
+  SharedPreferences prefInst = await SharedPreferences.getInstance();
   bool willPop = false;
   await showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: const Color.fromARGB(255, 27, 32, 35),
+        backgroundColor: prefInst.getBool('isDarkTheme') == true
+            ? const Color.fromARGB(255, 27, 32, 35)
+            : Colors.white,
         title: const Text('Alert'),
         content: const Text('Make sure that download is completed !'),
         actions: [
@@ -96,12 +106,15 @@ progressPageWillPopDialog(context) async {
   return willPop;
 }
 
-sharePageAlertDialog(BuildContext context) {
+sharePageAlertDialog(BuildContext context) async {
+  SharedPreferences prefInst = await SharedPreferences.getInstance();
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: const Color.fromARGB(255, 27, 32, 35),
+        backgroundColor: prefInst.getBool('isDarkTheme') == true
+            ? const Color.fromARGB(255, 27, 32, 35)
+            : Colors.white,
         title: const Text('Server alert'),
         content: const Text('Would you like to terminate the current session'),
         actions: [
@@ -126,11 +139,14 @@ sharePageAlertDialog(BuildContext context) {
 
 sharePageWillPopDialog(context) async {
   bool willPop = false;
+  SharedPreferences prefInst = await SharedPreferences.getInstance();
   await showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: const Color.fromARGB(255, 27, 32, 35),
+        backgroundColor: prefInst.getBool('isDarkTheme') == true
+            ? const Color.fromARGB(255, 27, 32, 35)
+            : Colors.white,
         title: const Text('Server alert'),
         content:
             const Text('Would you like to terminate the current session ?'),
@@ -162,11 +178,15 @@ sharePageWillPopDialog(context) async {
 
 senderRequestDialog(BuildContext context, String username, String os) async {
   bool allowRequest = false;
+  SharedPreferences prefInst = await SharedPreferences.getInstance();
+
   await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: const Color.fromARGB(255, 27, 32, 35),
+          backgroundColor: prefInst.getBool('isDarkTheme') == true
+              ? const Color.fromARGB(255, 27, 32, 35)
+              : Colors.white,
           title: const Text('Request from receiver'),
           content: Text(
               "$username ($os) is requesting for files. Would you like to share with them ?"),
@@ -192,12 +212,15 @@ senderRequestDialog(BuildContext context, String username, String os) async {
   return allowRequest;
 }
 
-credits(context) {
+credits(context) async {
+  SharedPreferences prefInst = await SharedPreferences.getInstance();
   showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: const Color.fromARGB(255, 27, 32, 35),
+          backgroundColor: prefInst.getBool('isDarkTheme') == true
+              ? const Color.fromARGB(255, 27, 32, 35)
+              : Colors.white,
           title: const Text('Credits'),
           content: SizedBox(
             width: MediaQuery.of(context).size.width / 2,

@@ -86,7 +86,10 @@ class _AppState extends State<App> {
                       ),
                     ),
                     ListTile(
-                      leading: const Icon(UniconsSolid.history),
+                      leading: Icon(
+                        UniconsSolid.history,
+                        color: mode.isDark ? null : Colors.black,
+                      ),
                       title: const Text('Received-history'),
                       onTap: () {
                         Navigator.of(context).push(
@@ -99,7 +102,10 @@ class _AppState extends State<App> {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.settings),
+                      leading: Icon(
+                        Icons.settings,
+                        color: mode.isDark ? null : Colors.black,
+                      ),
                       title: const Text("Settings"),
                       onTap: () {
                         Navigator.of(context)
@@ -111,7 +117,7 @@ class _AppState extends State<App> {
                     ListTile(
                       leading: SvgPicture.asset(
                         'assets/icons/licenses.svg',
-                        color: Colors.white,
+                        color: mode.isLight ? Colors.black : Colors.white,
                       ),
                       onTap: () {
                         showLicensePage(
@@ -126,7 +132,10 @@ class _AppState extends State<App> {
                       title: const Text('Licenses'),
                     ),
                     ListTile(
-                      leading: const Icon(Icons.privacy_tip_rounded),
+                      leading: Icon(
+                        Icons.privacy_tip_rounded,
+                        color: mode.isDark ? null : Colors.black,
+                      ),
                       onTap: () async {
                         launchUrl(
                             Uri.parse(
@@ -137,7 +146,8 @@ class _AppState extends State<App> {
                     ),
                     ListTile(
                       title: const Text('About'),
-                      leading: const Icon(UniconsLine.info_circle),
+                      leading: Icon(UniconsLine.info_circle,
+                          color: mode.isDark ? null : Colors.black),
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(

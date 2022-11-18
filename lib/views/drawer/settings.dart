@@ -26,8 +26,9 @@ class _SettingsPageState extends State<SettingsPage> {
         valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
         builder: (_, AdaptiveThemeMode mode, __) {
           return Scaffold(
-              backgroundColor:
-                  mode.isDark ? const Color.fromARGB(255, 27, 32, 35) : null,
+              backgroundColor: mode.isDark
+                  ? const Color.fromARGB(255, 27, 32, 35)
+                  : Colors.white,
               appBar: AppBar(
                 backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
                 title: const Text("Settings"),
@@ -76,9 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                               ),
                               ListTile(
-                                title: mode.isDark
-                                    ? const Text('Switch to light theme')
-                                    : const Text('Switch to dark theme'),
+                                title: Text('Toggle theme'),
                                 trailing: Switch(
                                   value: pref.getBool('isDarkTheme')!,
                                   onChanged: (val) {
