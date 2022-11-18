@@ -34,12 +34,13 @@ class _AppState extends State<App> {
       builder: (_, AdaptiveThemeMode mode, child) {
         return Scaffold(
           key: scaffoldKey,
-          backgroundColor:
-              mode.isDark ? const Color.fromARGB(255, 27, 32, 35) : null,
+          backgroundColor: mode.isDark
+              ? const Color.fromARGB(255, 27, 32, 35)
+              : Colors.white,
           appBar: AppBar(
             backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
-            title: Text(
-              'Photon ${mode.isDark}',
+            title: const Text(
+              'Photon',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
