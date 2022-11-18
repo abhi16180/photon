@@ -2,7 +2,6 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:file_picker/file_picker.dart';
 import "package:flutter/material.dart";
 import 'package:photon/services/file_services.dart';
-import 'package:photon/theme_config/theme_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -69,17 +68,21 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                               ),
                               ListTile(
-                                title: Text('Switch Theme'),
+                                title: mode.isDark
+                                    ? const Text('Switch to light theme')
+                                    : const Text('Switch to dark theme'),
                                 trailing: Switch(
                                   value: pref.getBool('isDarkTheme')!,
                                   onChanged: (val) {
                                     setState(() {
-                                      if (pref.getBool('isDarkTheme') == true) {
+                                      if (pref.getBool('isDarkTheme') ==
+                                          false) {
                                         AdaptiveTheme.of(context).setDark();
+                                        pref.setBool('isDarkTheme', true);
                                       } else {
                                         AdaptiveTheme.of(context).setLight();
+                                        pref.setBool('isDarkTheme', false);
                                       }
-                                      pref.setBool('isDarkTheme', val);
                                     });
                                   },
                                 ),

@@ -25,7 +25,7 @@ void main() async {
   GetIt getIt = GetIt.instance;
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
-  prefInst.get('isDarkTheme') ?? prefInst.setBool('isDarkTheme', false);
+  prefInst.get('isDarkTheme') ?? prefInst.setBool('isDarkTheme', true);
   getIt.registerSingleton<PercentageController>(PercentageController());
   bool externalIntent = false;
   if (Platform.isAndroid) {
@@ -65,7 +65,9 @@ void main() async {
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
           fontFamily: 'ytf'),
-      initial: AdaptiveThemeMode.system,
+      initial: prefInst.getBool('isDarkTheme') == true
+          ? AdaptiveThemeMode.dark
+          : AdaptiveThemeMode.light,
       builder: (theme, dark) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,

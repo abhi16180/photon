@@ -38,8 +38,8 @@ class _AppState extends State<App> {
               mode.isDark ? const Color.fromARGB(255, 27, 32, 35) : null,
           appBar: AppBar(
             backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
-            title: const Text(
-              'Photon',
+            title: Text(
+              'Photon ${mode.isDark}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
