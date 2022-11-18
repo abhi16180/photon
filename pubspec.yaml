@@ -145,6 +145,9 @@ flutter:
     - family: ytf
       fonts:
         - asset: assets/fonts/Yftoow-R.ttf
+    - family: quicksand
+      fonts:
+        - asset: assets/fonts/Quicksand-Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 

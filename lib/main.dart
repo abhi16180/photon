@@ -26,6 +26,7 @@ void main() async {
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
   prefInst.get('isDarkTheme') ?? prefInst.setBool('isDarkTheme', false);
+
   getIt.registerSingleton<PercentageController>(PercentageController());
   bool externalIntent = false;
   if (Platform.isAndroid) {
@@ -38,18 +39,13 @@ void main() async {
   runApp(
     AdaptiveTheme(
       light: FlexThemeData.light(
-          scheme: FlexScheme.aquaBlue,
+          scheme: FlexScheme.deepBlue,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
           blendLevel: 20,
           appBarOpacity: 0.95,
           swapColors: true,
           subThemesData: const FlexSubThemesData(
-            blendOnLevel: 20,
-            blendOnColors: false,
-            toggleButtonsRadius: 10.0,
-            fabSchemeColor: SchemeColor.inversePrimary,
-            chipRadius: 4.0,
-            tabBarItemSchemeColor: SchemeColor.onPrimary,
+            blendOnLevel: 30,
           ),
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
@@ -66,7 +62,7 @@ void main() async {
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
           fontFamily: 'ytf'),
-      initial: AdaptiveThemeMode.light,
+      initial: AdaptiveThemeMode.dark,
       builder: (theme, dark) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
