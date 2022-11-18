@@ -5,6 +5,7 @@ import 'package:photon/components/snackbar.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/views/receive_ui/progress_page.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import '../../components/constants.dart';
 import '../../services/photon_receiver.dart';
 
 class QrReceivePage extends StatefulWidget {
@@ -36,6 +37,17 @@ class _QrReceivePageState extends State<QrReceivePage> {
             appBar: AppBar(
               backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
               title: const Text(" QR - receive"),
+              leading: BackButton(
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              flexibleSpace: mode.isLight
+                  ? Container(
+                      decoration: appBarGradient,
+                    )
+                  : null,
             ),
             body: isCameraStopped
                 ? isDenied

@@ -7,6 +7,7 @@ import 'package:photon/views/drawer/settings.dart';
 import 'package:photon/views/home/widescreen_home.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'components/constants.dart';
 import 'controllers/intents.dart';
 import 'views/drawer/history.dart';
 import 'views/home/mobile_home.dart';
@@ -46,6 +47,11 @@ class _AppState extends State<App> {
                 fontSize: 20,
               ),
             ),
+            flexibleSpace: mode.isLight
+                ? Container(
+                    decoration: appBarGradient,
+                  )
+                : null,
           ),
           drawer: Shortcuts(
             shortcuts: {

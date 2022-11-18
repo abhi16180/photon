@@ -9,6 +9,7 @@ import 'package:photon/components/components.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/services/file_services.dart';
 import 'package:photon/views/receive_ui/progress_page.dart';
+import '../../components/constants.dart';
 import '../../controllers/intents.dart';
 import '../../services/photon_receiver.dart';
 
@@ -54,15 +55,23 @@ class _ReceivePageState extends State<ReceivePage> {
             valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
             builder: (_, AdaptiveThemeMode mode, __) {
               return Scaffold(
-                backgroundColor:
-                    mode.isDark ? const Color.fromARGB(255, 27, 32, 35) : null,
+                backgroundColor: mode.isDark
+                    ? const Color.fromARGB(255, 27, 32, 35)
+                    : Colors.white,
                 appBar: AppBar(
                   backgroundColor:
                       mode.isDark ? Colors.blueGrey.shade900 : null,
                   title: const Text('Scan'),
-                  leading: BackButton(onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
+                  leading: BackButton(
+                      color: Colors.white,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                  flexibleSpace: mode.isLight
+                      ? Container(
+                          decoration: appBarGradient,
+                        )
+                      : null,
                 ),
 
                 body: FutureBuilder(
@@ -171,8 +180,10 @@ class _ReceivePageState extends State<ReceivePage> {
                                         child: Card(
                                           clipBehavior: Clip.antiAlias,
                                           elevation: 5,
-                                          color: const Color.fromARGB(
-                                              255, 5, 6, 6),
+                                          color: mode.isDark
+                                              ? const Color.fromARGB(
+                                                  255, 5, 6, 6)
+                                              : null,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(20)),

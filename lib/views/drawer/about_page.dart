@@ -5,6 +5,7 @@ import 'package:mailto/mailto.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../components/constants.dart';
 import '../../components/dialogs.dart';
 
 class AboutPage extends StatelessWidget {
@@ -21,6 +22,17 @@ class AboutPage extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
               title: const Text('About'),
+              leading: BackButton(
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              flexibleSpace: mode.isLight
+                  ? Container(
+                      decoration: appBarGradient,
+                    )
+                  : null,
             ),
             body: ListView(
               children: [

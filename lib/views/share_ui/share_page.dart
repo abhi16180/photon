@@ -1,6 +1,7 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:photon/components/constants.dart';
 import 'package:photon/components/dialogs.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/services/photon_sender.dart';
@@ -30,15 +31,23 @@ class _SharePageState extends State<SharePage> {
           valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
           builder: (_, AdaptiveThemeMode mode, __) {
             return Scaffold(
-                backgroundColor:
-                    mode.isDark ? const Color.fromARGB(255, 27, 32, 35) : null,
+                backgroundColor: mode.isDark
+                    ? const Color.fromARGB(255, 27, 32, 35)
+                    : Colors.white,
                 appBar: AppBar(
                   backgroundColor:
                       mode.isDark ? Colors.blueGrey.shade900 : null,
                   title: const Text('Share'),
-                  leading: BackButton(onPressed: () {
-                    sharePageAlertDialog(context);
-                  }),
+                  leading: BackButton(
+                      color: Colors.white,
+                      onPressed: () {
+                        sharePageAlertDialog(context);
+                      }),
+                  flexibleSpace: mode.isLight
+                      ? Container(
+                          decoration: appBarGradient,
+                        )
+                      : null,
                 ),
                 body: Center(
                   child: SingleChildScrollView(
@@ -55,7 +64,7 @@ class _SharePageState extends State<SharePage> {
                               SizedBox(
                                 width: width / 8,
                               ),
-                              Container(
+                              SizedBox(
                                 width: width > 720 ? 200 : 100,
                                 height: width > 720 ? 200 : 100,
                                 child: QrImage(

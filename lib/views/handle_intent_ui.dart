@@ -16,7 +16,7 @@ class _HandleIntentUIState extends State<HandleIntentUI> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Share files"),
+        title: const Text("Share files"),
       ),
       body: FutureBuilder(
         future: ReceiveSharingIntent.getInitialMedia(),

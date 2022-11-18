@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
+import 'package:photon/components/constants.dart';
 import 'package:photon/components/snackbar.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/share_history_model.dart';
@@ -28,6 +29,7 @@ class _HistoryPageState extends State<HistoryPage> {
               backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
               title: const Text('History'),
               flexibleSpace: Container(
+                decoration: mode.isDark ? null : appBarGradient,
                 alignment: Alignment.bottomRight,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 18.0),
@@ -42,9 +44,11 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                 ),
               ),
-              leading: BackButton(onPressed: () {
-                Navigator.of(context).pop();
-              }),
+              leading: BackButton(
+                  color: Colors.white,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
             ),
             body: FutureBuilder(
               future: getHistory(),

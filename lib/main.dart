@@ -37,19 +37,15 @@ void main() async {
   // await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(AdaptiveTheme(
       light: FlexThemeData.light(
-          scheme: FlexScheme.aquaBlue,
+          scheme: FlexScheme.deepPurple,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-          blendLevel: 20,
+          blendLevel: 15,
           appBarOpacity: 0.95,
           swapColors: true,
           subThemesData: const FlexSubThemesData(
-            blendOnLevel: 20,
-            blendOnColors: false,
-            toggleButtonsRadius: 10.0,
-            fabSchemeColor: SchemeColor.inversePrimary,
-            chipRadius: 4.0,
-            tabBarItemSchemeColor: SchemeColor.onPrimary,
+            blendOnLevel: 30,
           ),
+          background: Colors.white,
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
           fontFamily: 'ytf'),

@@ -1,6 +1,7 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:file_picker/file_picker.dart';
 import "package:flutter/material.dart";
+import 'package:photon/components/constants.dart';
 import 'package:photon/services/file_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,6 +31,14 @@ class _SettingsPageState extends State<SettingsPage> {
               appBar: AppBar(
                 backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
                 title: const Text("Settings"),
+                leading: BackButton(
+                  color: Colors.white,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                flexibleSpace:
+                    mode.isLight ? Container(decoration: appBarGradient) : null,
               ),
               body: FutureBuilder(
                 future: _future(),
@@ -38,8 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     return Center(
                       child: Container(
                         color: w > 720
-                            ? AdaptiveTheme.getThemeMode() ==
-                                    AdaptiveThemeMode.dark
+                            ? mode.isDark
                                 ? Colors.grey.shade900
                                 : null
                             : null,

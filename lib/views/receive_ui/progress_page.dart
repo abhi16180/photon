@@ -9,6 +9,7 @@ import 'package:photon/components/snackbar.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'package:photon/services/photon_receiver.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../components/constants.dart';
 import '../../components/dialogs.dart';
 import '../../methods/methods.dart';
 import '../../models/sender_model.dart';
@@ -50,14 +51,21 @@ class _ProgressPageState extends State<ProgressPage> {
         valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
         builder: (_, AdaptiveThemeMode mode, __) {
           return Scaffold(
-            backgroundColor:
-                mode.isDark ? const Color.fromARGB(255, 13, 16, 18) : null,
+            backgroundColor: mode.isDark
+                ? const Color.fromARGB(255, 13, 16, 18)
+                : Colors.white,
             appBar: AppBar(
               backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
               title: const Text(
                 ' Receiving',
               ),
+              flexibleSpace: mode.isLight
+                  ? Container(
+                      decoration: appBarGradient,
+                    )
+                  : null,
               leading: BackButton(
+                color: Colors.white,
                 onPressed: () {
                   progressPageAlertDialog(context);
                 },
@@ -74,8 +82,10 @@ class _ProgressPageState extends State<ProgressPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16, right: 16),
                           child: Card(
-                            elevation: 5,
-                            color: const Color.fromARGB(255, 25, 24, 24),
+                            elevation: mode.isDark ? 5 : 10,
+                            color: mode.isDark
+                                ? const Color.fromARGB(255, 25, 24, 24)
+                                : Color.fromARGB(255, 255, 255, 255),
                             child: SizedBox(
                               height: 180,
                               width: width + 60,
