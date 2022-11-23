@@ -5,7 +5,7 @@
 import FlutterMacOS
 import Foundation
 
-import mobile_scanner
+
 import path_provider_macos
 import shared_preferences_macos
 import url_launcher_macos
