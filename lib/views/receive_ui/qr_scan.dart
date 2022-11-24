@@ -20,23 +20,17 @@ class QrReceivePage extends StatefulWidget {
 }
 
 class _QrReceivePageState extends State<QrReceivePage> {
-  late Directory dir;
-  bool isCameraStopped = false;
-  bool isDenied = false;
-  bool isError = false;
-  bool isRequestSent = false;
-
-  // MobileScannerController msController = MobileScannerController();
   _scan() async {
     await Permission.camera.request();
     var resp = await scan.scan();
     return resp;
   }
 
+  bool isDenied = false;
+  bool hasErr = false;
+  late StateSetter innerState;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return ValueListenableBuilder(
       valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
       builder: (_, AdaptiveThemeMode mode, __) {
@@ -61,8 +55,24 @@ class _QrReceivePageState extends State<QrReceivePage> {
               builder: (context, AsyncSnapshot snap) {
                 if (snap.connectionState == ConnectionState.done) {
                   handleQrReceive(snap.data);
-                  return const Center(
-                    child: Text('Waiting for sender to approve !'),
+                  return StatefulBuilder(
+                    builder: (BuildContext context, sts) {
+                      innerState = sts;
+                      return hasErr
+                          ? const Center(
+                              child: Text(
+                                'Wrong QR code or \n Devices are not connected to same network',
+                                textAlign: TextAlign.justify,
+                              ),
+                            )
+                          : isDenied
+                              ? const Center(
+                                  child: Text('Sender denied,please retry'),
+                                )
+                              : const Center(
+                                  child: Text("Waiting for sender to approve"),
+                                );
+                    },
                   );
                 } else {
                   return const Center(
@@ -74,7 +84,9 @@ class _QrReceivePageState extends State<QrReceivePage> {
             floatingActionButton: FloatingActionButton.extended(
               backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
               onPressed: () async {
-                setState(() {});
+                setState(() {
+                  hasErr = isDenied = false;
+                });
               },
               label: const Text('Retry'),
               icon: const Icon(
@@ -110,11 +122,14 @@ class _QrReceivePageState extends State<QrReceivePage> {
         );
       } else {
         // ignore: use_build_context_synchronously
-        showSnackBar(context, 'Sender denied');
+        innerState(() {
+          isDenied = true;
+        });
       }
     } catch (_) {
-      showSnackBar(
-          context, 'Wrong QR code / Devices are not connected to same network');
+      innerState(() {
+        hasErr = true;
+      });
     }
   }
 }
