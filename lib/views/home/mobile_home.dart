@@ -4,10 +4,17 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:lottie/lottie.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:photon/services/photon_sender.dart';
-import 'package:photon/views/receive_ui/qr_receive_page.dart';
+import 'package:photon/views/receive_ui/qr_scan.dart';
+import '../../components/snackbar.dart';
 import '../../methods/methods.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
+
+import '../../models/sender_model.dart';
+import '../../services/photon_receiver.dart';
+import '../receive_ui/progress_page.dart';
 
 class MobileHome extends StatefulWidget {
   const MobileHome({Key? key}) : super(key: key);
@@ -83,34 +90,34 @@ class _MobileHomeState extends State<MobileHome> {
                             context: context,
                             builder: (context) {
                               return Center(
-                                child: Container(
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pushNamed('/receivepage');
-                                          },
-                                          child: const Text('Normal mode'),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () async {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return const QrReceivePage();
-                                            }));
-                                          },
-                                          child: const Text('QR Code mode'),
-                                        )
-                                      ],
-                                    ),
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pushNamed('/receivepage');
+                                        },
+                                        child: const Text('Normal mode'),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          await Permission.camera.request();
+                                          var resp = await scanner.scan();
+                                          actions(resp);
+                                          // Navigator.of(context).push(
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) {
+                                          //   return const QrReceivePage();
+                                          // }));
+                                        },
+                                        child: const Text('QR Code mode'),
+                                      )
+                                    ],
                                   ),
                                 ),
                               );
@@ -165,5 +172,38 @@ class _MobileHomeState extends State<MobileHome> {
             ],
           );
         });
+  }
+
+  actions(link) async {
+    try {
+      String host = Uri.parse(link).host;
+      int port = Uri.parse(link).port;
+      SenderModel senderModel =
+          await PhotonReceiver.isPhotonServer(host, port.toString());
+
+      var resp = await PhotonReceiver.isRequestAccepted(
+        senderModel,
+      );
+      if (resp['accepted']) {
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return ProgressPage(
+                senderModel: senderModel,
+                secretCode: resp['code'],
+              );
+            },
+          ),
+        );
+      } else {
+        setState(() {
+          // isDenied = true;
+        });
+      }
+    } catch (_) {
+      showSnackBar(
+          context, 'Wrong QR code / Devices are not connected to same network');
+    }
   }
 }

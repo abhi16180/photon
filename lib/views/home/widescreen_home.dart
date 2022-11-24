@@ -6,7 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../methods/methods.dart';
-import '../receive_ui/qr_receive_page.dart';
+import '../receive_ui/qr_scan.dart';
 
 class WidescreenHome extends StatefulWidget {
   const WidescreenHome({Key? key}) : super(key: key);
@@ -102,11 +102,11 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                                           ),
                                           ElevatedButton(
                                             onPressed: () async {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return const QrReceivePage();
-                                              }));
+                                              // Navigator.of(context).push(
+                                              //     MaterialPageRoute(
+                                              //         builder: (context) {
+                                              //   return const QrReceivePage();
+                                              // }));
                                             },
                                             child: const Text('QR Code mode'),
                                           )

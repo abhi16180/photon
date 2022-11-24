@@ -11,10 +11,11 @@ import 'package:photon/methods/share_intent.dart';
 import 'package:photon/views/handle_intent_ui.dart';
 import 'package:photon/views/drawer/history.dart';
 import 'package:photon/views/intro_page.dart';
+import 'package:photon/views/receive_ui/manual_scan.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'app.dart';
-import 'views/receive_ui/receive_page.dart';
+
 import 'views/share_ui/share_page.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
