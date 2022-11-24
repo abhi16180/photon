@@ -106,14 +106,11 @@ class _MobileHomeState extends State<MobileHome> {
                                       ),
                                       ElevatedButton(
                                         onPressed: () async {
-                                          await Permission.camera.request();
-                                          var resp = await scanner.scan();
-                                          actions(resp);
-                                          // Navigator.of(context).push(
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) {
-                                          //   return const QrReceivePage();
-                                          // }));
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return const QrReceivePage();
+                                          }));
                                         },
                                         child: const Text('QR Code mode'),
                                       )
@@ -172,38 +169,5 @@ class _MobileHomeState extends State<MobileHome> {
             ],
           );
         });
-  }
-
-  actions(link) async {
-    try {
-      String host = Uri.parse(link).host;
-      int port = Uri.parse(link).port;
-      SenderModel senderModel =
-          await PhotonReceiver.isPhotonServer(host, port.toString());
-
-      var resp = await PhotonReceiver.isRequestAccepted(
-        senderModel,
-      );
-      if (resp['accepted']) {
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return ProgressPage(
-                senderModel: senderModel,
-                secretCode: resp['code'],
-              );
-            },
-          ),
-        );
-      } else {
-        setState(() {
-          // isDenied = true;
-        });
-      }
-    } catch (_) {
-      showSnackBar(
-          context, 'Wrong QR code / Devices are not connected to same network');
-    }
   }
 }
