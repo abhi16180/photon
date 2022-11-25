@@ -140,7 +140,7 @@ class _SharePageState extends State<SharePage> {
                                 width: width / 1.2,
                                 child: Card(
                                   color: mode.isDark
-                                      ? const Color.fromARGB(255, 29, 32, 34)
+                                      ? Color.fromARGB(255, 45, 56, 63)
                                       : const Color.fromARGB(
                                           255, 241, 241, 241),
                                   child: ListView.builder(
@@ -162,6 +162,16 @@ class _SharePageState extends State<SharePage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
+                                              const Center(
+                                                child: Text("Sharing status"),
+                                              ),
+                                              const Divider(
+                                                thickness: 2.4,
+                                                indent: 20,
+                                                endIndent: 20,
+                                                color: Color.fromARGB(
+                                                    255, 109, 228, 113),
+                                              ),
                                               Center(
                                                 child: Text(
                                                     "Receiver name : ${data[keys[item]]['os']}"),
