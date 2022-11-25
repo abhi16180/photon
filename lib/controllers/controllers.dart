@@ -16,5 +16,5 @@ class PercentageController extends GetxController {
 }
 
 class ReceiverDataController extends GetxController {
-  var receiverList = [].obs;
+  var receiverMap = {}.obs;
 }

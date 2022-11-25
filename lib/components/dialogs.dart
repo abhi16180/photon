@@ -127,7 +127,7 @@ sharePageAlertDialog(BuildContext context) async {
             onPressed: () async {
               await PhotonSender.closeServer(context);
               // ignore: use_build_context_synchronously
-              GetIt.I.get<ReceiverDataController>().receiverList.clear();
+              GetIt.I.get<ReceiverDataController>().receiverMap.clear();
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => const App()),
                   (route) => false);

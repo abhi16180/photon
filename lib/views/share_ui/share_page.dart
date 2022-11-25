@@ -105,37 +105,40 @@ class _SharePageState extends State<SharePage> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Card(
-                          clipBehavior: Clip.antiAlias,
-                          elevation: 8,
-                          // color: Platform.isWindows ? Colors.grey.shade300 : null,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24)),
-                          child: SizedBox(
-                            height: width > 720 ? 200 : 128,
-                            width: width > 720 ? width / 2 : width / 1.25,
-                            child: Center(
-                              child: Wrap(
-                                direction: Axis.vertical,
-                                children:
-                                    infoList(senderModel, width, height, true),
-                              ),
-                            ),
-                          ),
-                        ),
 
                         //receiver data
-                        Obx((() => ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: receiverDataInst.receiverList.length,
-                              itemBuilder: (context, item) {
-                                return ListTile(
-                                  title: Text(receiverDataInst
-                                      .receiverList[item]
-                                      .toString()),
-                                );
-                              },
-                            ))),
+                        Obx((() => receiverDataInst.receiverMap.length == 0
+                            ? Card(
+                                clipBehavior: Clip.antiAlias,
+                                elevation: 8,
+                                // color: Platform.isWindows ? Colors.grey.shade300 : null,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24)),
+                                child: SizedBox(
+                                  height: width > 720 ? 200 : 128,
+                                  width: width > 720 ? width / 2 : width / 1.25,
+                                  child: Center(
+                                    child: Wrap(
+                                      direction: Axis.vertical,
+                                      children: infoList(
+                                          senderModel, width, height, true),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: receiverDataInst.receiverMap.length,
+                                itemBuilder: (context, item) {
+                                  var keys = receiverDataInst.receiverMap.keys
+                                      .toList();
+                                  return ListTile(
+                                    title: Text(receiverDataInst
+                                        .receiverMap[keys[item]]
+                                        .toString()),
+                                  );
+                                },
+                              ))),
                       ],
                     ),
                   ),
@@ -143,7 +146,7 @@ class _SharePageState extends State<SharePage> {
           }),
       onWillPop: () async {
         willPop = await sharePageWillPopDialog(context);
-        GetIt.I.get<ReceiverDataController>().receiverList.clear();
+        GetIt.I.get<ReceiverDataController>().receiverMap.clear();
         return willPop;
       },
     );
