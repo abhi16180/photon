@@ -14,3 +14,7 @@ class PercentageController extends GetxController {
   var fileStatus = [].obs;
   List<CancelToken> cancelTokenList = [];
 }
+
+class ReceiverDataController extends GetxController {
+  var receiverList = [].obs;
+}

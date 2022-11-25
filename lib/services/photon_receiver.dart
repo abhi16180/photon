@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
@@ -16,6 +17,7 @@ class PhotonReceiver {
   static late int _secretCode;
   static late Map<String, dynamic> filePathMap;
   static late Box _box;
+  static late int senderID;
 
   ///to get network address [assumes class C address]
   static List<String> getNetAddress(List<String> ipList) {
@@ -87,6 +89,7 @@ class PhotonReceiver {
           'receiver-name': Platform.localHostname,
           'os': Platform.operatingSystem,
         });
+    senderID = Random().nextInt(10000);
     var senderRespData = jsonDecode(resp.body);
     return senderRespData;
   }
@@ -132,11 +135,21 @@ class PhotonReceiver {
     int count = 0;
 
     try {
+      http.post(
+        Uri.parse('http://${senderModel.ip}:4040/receiver-data'),
+        headers: {
+          "receiverID": senderID.toString(),
+          "os": Platform.operatingSystem,
+          "hostName": Platform.localHostname,
+          "fileCount": '$fileIndex'
+        },
+      );
       s.start();
       getInstance.fileStatus[fileIndex].value = "downloading";
       await dio.download(
         'http://${senderModel.ip}:4040/$_secretCode/$fileIndex',
         savePath,
+        data: jsonEncode({"ip": "ipAddR", "name": Platform.localHostname}),
         deleteOnError: true,
         cancelToken: getInstance.cancelTokenList[fileIndex],
         onReceiveProgress: (received, total) {

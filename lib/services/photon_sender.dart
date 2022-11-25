@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:photon/controllers/controllers.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
@@ -73,6 +75,8 @@ class PhotonSender {
           String username = request.headers['receiver-name']![0];
           allowRequest = await senderRequestDialog(context, username, os);
           if (allowRequest == true) {
+            //appending receiver data
+
             request.response.write(
                 jsonEncode({'code': _randomSecretCode, 'accepted': true}));
             request.response.close();
@@ -89,6 +93,15 @@ class PhotonSender {
         } else if (request.requestedUri.toString() ==
             'http://$_address:4040/favicon.ico') {
           request.response.close();
+        } else if (request.requestedUri.toString() ==
+            "http://$_address:4040/receiver-data") {
+          //process receiver data
+          processReceiversData({
+            "os": request.headers['os']![0],
+            "hostName": request.headers['hostName']![0],
+            'fileCount': request.headers['fileCount']![0],
+            "receiverID": request.headers['receiverID']![0]
+          });
         } else {
           //uri should be in format http://ip:port/secretcode/file-index
           List requriToList = request.requestedUri.toString().split('/');
@@ -112,8 +125,11 @@ class PhotonSender {
                 'attachment; filename=${fileModel.name}',
               );
 
+              //to send file size
               request.response.headers.add('Content-length', fileModel.size);
+
               try {
+                //to stream the file
                 await fileModel.file.openRead().pipe(request.response);
                 request.response.close();
               } catch (_) {}

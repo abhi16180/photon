@@ -1,8 +1,11 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/components/constants.dart';
 import 'package:photon/components/dialogs.dart';
+import 'package:photon/controllers/controllers.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/services/photon_sender.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -22,6 +25,7 @@ class _SharePageState extends State<SharePage> {
   late double width;
   late double height;
   bool willPop = false;
+  var receiverDataInst = GetIt.I.get<ReceiverDataController>();
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -119,6 +123,19 @@ class _SharePageState extends State<SharePage> {
                             ),
                           ),
                         ),
+
+                        //receiver data
+                        Obx((() => ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: receiverDataInst.receiverList.length,
+                              itemBuilder: (context, item) {
+                                return ListTile(
+                                  title: Text(receiverDataInst
+                                      .receiverList[item]
+                                      .toString()),
+                                );
+                              },
+                            ))),
                       ],
                     ),
                   ),
@@ -126,6 +143,7 @@ class _SharePageState extends State<SharePage> {
           }),
       onWillPop: () async {
         willPop = await sharePageWillPopDialog(context);
+        GetIt.I.get<ReceiverDataController>().receiverList.clear();
         return willPop;
       },
     );
