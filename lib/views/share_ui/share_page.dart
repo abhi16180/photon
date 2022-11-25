@@ -107,8 +107,14 @@ class _SharePageState extends State<SharePage> {
                         ),
 
                         //receiver data
-                        Obx((() => receiverDataInst.receiverMap.length == 0
+                        Obx((() => GetIt.I
+                                .get<ReceiverDataController>()
+                                .receiverMap
+                                .isEmpty
                             ? Card(
+                                color: mode.isDark
+                                    ? const Color.fromARGB(255, 29, 32, 34)
+                                    : const Color.fromARGB(255, 241, 241, 241),
                                 clipBehavior: Clip.antiAlias,
                                 elevation: 8,
                                 // color: Platform.isWindows ? Colors.grey.shade300 : null,
@@ -121,23 +127,65 @@ class _SharePageState extends State<SharePage> {
                                     child: Wrap(
                                       direction: Axis.vertical,
                                       children: infoList(
-                                          senderModel, width, height, true),
+                                          senderModel,
+                                          width,
+                                          height,
+                                          true,
+                                          mode.isDark ? "dark" : "bright"),
                                     ),
                                   ),
                                 ),
                               )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: receiverDataInst.receiverMap.length,
-                                itemBuilder: (context, item) {
-                                  var keys = receiverDataInst.receiverMap.keys
-                                      .toList();
-                                  return ListTile(
-                                    title: Text(receiverDataInst
-                                        .receiverMap[keys[item]]
-                                        .toString()),
-                                  );
-                                },
+                            : SizedBox(
+                                width: width / 1.2,
+                                child: Card(
+                                  color: mode.isDark
+                                      ? const Color.fromARGB(255, 29, 32, 34)
+                                      : const Color.fromARGB(
+                                          255, 241, 241, 241),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount:
+                                        receiverDataInst.receiverMap.length,
+                                    itemBuilder: (context, item) {
+                                      var keys = receiverDataInst
+                                          .receiverMap.keys
+                                          .toList();
+                                      var data = receiverDataInst.receiverMap;
+                                      return ListTile(
+                                        title: Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                    "Receiver name : ${data[keys[item]]['os']}"),
+                                              ),
+                                              data[keys[item]]['isCompleted'] ==
+                                                      'true'
+                                                  ? const Center(
+                                                      child: Text(
+                                                        "All files sent",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    )
+                                                  : Center(
+                                                      child: Text(
+                                                          "Sending '${data[keys[item]]['currentFileName']}' (${data[keys[item]]['currentFileNumber']} out of ${data[keys[item]]['filesCount']} files)"),
+                                                    )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
                               ))),
                       ],
                     ),

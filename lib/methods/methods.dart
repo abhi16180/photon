@@ -190,7 +190,10 @@ processReceiversData(Map<String, dynamic> newReceiverData) {
       "${newReceiverData["receiverID"]}": {
         "hostName": newReceiverData["hostName"],
         "os": newReceiverData["os"],
-        "fileCount": newReceiverData["fileCount"]
+        "currentFileName": newReceiverData["currentFileName"],
+        "currentFileNumber": newReceiverData["currentFileNumber"],
+        "filesCount": newReceiverData['filesCount'],
+        "isCompleted": newReceiverData["isCompleted"],
       }
     },
   );

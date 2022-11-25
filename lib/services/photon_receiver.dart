@@ -94,6 +94,20 @@ class PhotonReceiver {
     return senderRespData;
   }
 
+  static sendReceiverRealtimeData(SenderModel senderModel,
+      {fileIndex = -1, isCompleted = true}) {
+    http.post(
+      Uri.parse('http://${senderModel.ip}:4040/receiver-data'),
+      headers: {
+        "receiverID": senderID.toString(),
+        "os": Platform.operatingSystem,
+        "hostName": Platform.localHostname,
+        "currentFile": '${fileIndex + 1}',
+        "isCompleted": '$isCompleted',
+      },
+    );
+  }
+
   static receive(SenderModel senderModel, int secretCode) async {
     //getting hiveObj
     var getInstance = GetIt.instance.get<PercentageController>();
@@ -113,6 +127,7 @@ class PhotonReceiver {
               filePathMap['paths'][fileIndex], fileIndex, senderModel);
         }
       }
+      sendReceiverRealtimeData(senderModel);
     } catch (e) {
       debugPrint('$e');
     }
@@ -135,21 +150,14 @@ class PhotonReceiver {
     int count = 0;
 
     try {
-      http.post(
-        Uri.parse('http://${senderModel.ip}:4040/receiver-data'),
-        headers: {
-          "receiverID": senderID.toString(),
-          "os": Platform.operatingSystem,
-          "hostName": Platform.localHostname,
-          "fileCount": '$fileIndex'
-        },
-      );
+      //sends post request every time receiver requests for a file
+      sendReceiverRealtimeData(senderModel,
+          fileIndex: fileIndex, isCompleted: false);
       s.start();
       getInstance.fileStatus[fileIndex].value = "downloading";
       await dio.download(
         'http://${senderModel.ip}:4040/$_secretCode/$fileIndex',
         savePath,
-        data: jsonEncode({"ip": "ipAddR", "name": Platform.localHostname}),
         deleteOnError: true,
         cancelToken: getInstance.cancelTokenList[fileIndex],
         onReceiveProgress: (received, total) {
@@ -193,10 +201,11 @@ class PhotonReceiver {
       getInstance.speed.value = 0;
       getInstance.fileStatus[fileIndex].value = "cancelled";
       getInstance.isCancelled[fileIndex].value = true;
+
       if (!CancelToken.isCancel(e as DioError)) {
         debugPrint("Dio error");
       } else {
-        debugPrint('error');
+        debugPrint(e.toString());
       }
     }
   }

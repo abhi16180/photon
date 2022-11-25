@@ -97,10 +97,20 @@ class PhotonSender {
             "http://$_address:4040/receiver-data") {
           //process receiver data
           processReceiversData({
-            "os": request.headers['os']![0],
-            "hostName": request.headers['hostName']![0],
-            'fileCount': request.headers['fileCount']![0],
-            "receiverID": request.headers['receiverID']![0]
+            "os": request.headers['os']!.first,
+            "hostName": request.headers['hostName']!.first,
+            'currentFileName':
+                int.parse(request.headers['currentFile']!.first) == 0
+                    ? ''
+                    : fileList[
+                            int.parse(request.headers['currentFile']!.first) -
+                                1]!
+                        .split(Platform.pathSeparator)
+                        .last,
+            "currentFileNumber": request.headers['currentFile']!.first,
+            "receiverID": request.headers['receiverID']!.first,
+            "filesCount": fileList.length,
+            "isCompleted": request.headers['isCompleted']!.first
           });
         } else {
           //uri should be in format http://ip:port/secretcode/file-index

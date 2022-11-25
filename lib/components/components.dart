@@ -3,7 +3,8 @@ import 'package:unicons/unicons.dart';
 import '../models/sender_model.dart';
 import 'package:flutter/material.dart';
 
-infoList(SenderModel senderModel, double width, double height, bool sender) {
+infoList(
+    SenderModel senderModel, double width, double height, bool sender, theme) {
   var iconList = [
     Padding(
       padding: const EdgeInsets.only(left: 8.0),
@@ -84,9 +85,9 @@ infoList(SenderModel senderModel, double width, double height, bool sender) {
               text: width > 720
                   ? serverDataList[i]['type']
                   : serverDataList[i]['type'] + ' : ',
-              style: const TextStyle(
+              style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: theme == "dark" ? Colors.white : Colors.black,
                   overflow: TextOverflow.ellipsis),
               children: [
                 TextSpan(
