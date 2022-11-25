@@ -28,6 +28,7 @@ void main() async {
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
   prefInst.get('isDarkTheme') ?? prefInst.setBool('isDarkTheme', true);
   getIt.registerSingleton<PercentageController>(PercentageController());
+  getIt.registerSingleton<ReceiverDataController>(ReceiverDataController());
   bool externalIntent = false;
   if (Platform.isAndroid) {
     externalIntent = await handleSharingIntent();

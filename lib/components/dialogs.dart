@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart' as ulaunch;
 
 import '../app.dart';
+import '../controllers/controllers.dart';
 import '../services/photon_sender.dart';
 
 void privacyPolicyDialog(BuildContext context, String data) async {
@@ -125,6 +127,7 @@ sharePageAlertDialog(BuildContext context) async {
             onPressed: () async {
               await PhotonSender.closeServer(context);
               // ignore: use_build_context_synchronously
+              GetIt.I.get<ReceiverDataController>().receiverMap.clear();
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => const App()),
                   (route) => false);

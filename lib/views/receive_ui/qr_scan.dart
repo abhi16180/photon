@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photon/components/snackbar.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/views/receive_ui/progress_page.dart';
 // import 'package:mobile_scanner/mobile_scanner.dart';

@@ -234,10 +234,14 @@ class _ReceivePageState extends State<ReceivePage> {
                                                 child: Wrap(
                                                   direction: Axis.vertical,
                                                   children: infoList(
-                                                      snap.data[index],
-                                                      width,
-                                                      height,
-                                                      false),
+                                                    snap.data[index],
+                                                    width,
+                                                    height,
+                                                    false,
+                                                    mode.isDark
+                                                        ? "dark"
+                                                        : "bright",
+                                                  ),
                                                 ),
                                               ),
                                             ),

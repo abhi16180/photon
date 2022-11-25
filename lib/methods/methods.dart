@@ -46,6 +46,10 @@ Future<List<String>> getIP() async {
   return ipList;
 }
 
+getReceiverIP(ipList) {
+  return ipList[0];
+}
+
 int getRandomNumber() {
   Random rnd;
   try {
@@ -177,4 +181,20 @@ String getDateString(DateTime date) {
   String minute = "${date.minute}".padLeft(2, '0');
   String dateString = "$day-$month-$year " "$hour-$minute $period";
   return dateString;
+}
+
+processReceiversData(Map<String, dynamic> newReceiverData) {
+  var inst = GetIt.I.get<ReceiverDataController>();
+  inst.receiverMap.addAll(
+    {
+      "${newReceiverData["receiverID"]}": {
+        "hostName": newReceiverData["hostName"],
+        "os": newReceiverData["os"],
+        "currentFileName": newReceiverData["currentFileName"],
+        "currentFileNumber": newReceiverData["currentFileNumber"],
+        "filesCount": newReceiverData['filesCount'],
+        "isCompleted": newReceiverData["isCompleted"],
+      }
+    },
+  );
 }
