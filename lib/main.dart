@@ -39,32 +39,30 @@ void main() async {
   // await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(AdaptiveTheme(
       light: FlexThemeData.light(
-        scheme: FlexScheme.deepPurple,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 15,
-        appBarOpacity: 0.95,
-        swapColors: true,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 30,
-        ),
-        background: Colors.white,
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        fontFamily: 'poppins',
-      ),
+          scheme: FlexScheme.deepPurple,
+          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+          blendLevel: 15,
+          appBarOpacity: 0.95,
+          swapColors: true,
+          subThemesData: const FlexSubThemesData(
+            blendOnLevel: 30,
+          ),
+          background: Colors.white,
+          visualDensity: FlexColorScheme.comfortablePlatformDensity,
+          useMaterial3: true,
+          fontFamily: 'ytf'),
       dark: FlexThemeData.dark(
-        scheme: FlexScheme.hippieBlue,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 15,
-        appBarStyle: FlexAppBarStyle.background,
-        appBarOpacity: 0.90,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 30,
-        ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        fontFamily: 'poppins',
-      ),
+          scheme: FlexScheme.hippieBlue,
+          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+          blendLevel: 15,
+          appBarStyle: FlexAppBarStyle.background,
+          appBarOpacity: 0.90,
+          subThemesData: const FlexSubThemesData(
+            blendOnLevel: 30,
+          ),
+          visualDensity: FlexColorScheme.comfortablePlatformDensity,
+          useMaterial3: true,
+          fontFamily: 'ytf'),
       initial: prefInst.getBool('isDarkTheme') == true
           ? AdaptiveThemeMode.dark
           : AdaptiveThemeMode.light,

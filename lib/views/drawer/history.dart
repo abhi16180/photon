@@ -106,7 +106,6 @@ class _HistoryPageState extends State<HistoryPage> {
                               title: Text(
                                 data[item].fileName,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 15),
                               ),
                               subtitle: Text(getDateString(data[item].date)),
                             );

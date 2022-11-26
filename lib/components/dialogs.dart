@@ -264,14 +264,14 @@ credits(context) async {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text('Font\npoppins', textAlign: TextAlign.center),
+                const Text('Font\nYftoowhy', textAlign: TextAlign.center),
                 GestureDetector(
                   onTap: () {
-                    ulaunch.launchUrl(
-                        Uri.parse('https://fonts.google.com/specimen/Poppins'));
+                    ulaunch.launchUrl(Uri.parse(
+                        'https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL'));
                   },
                   child: const Text(
-                    """ Font link""",
+                    """ Font license""",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       decoration: TextDecoration.underline,
