@@ -50,7 +50,7 @@ void main() async {
           background: Colors.white,
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
-          fontFamily: 'ytf'),
+          fontFamily: 'questrial'),
       dark: FlexThemeData.dark(
           scheme: FlexScheme.hippieBlue,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
@@ -62,7 +62,7 @@ void main() async {
           ),
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
-          fontFamily: 'ytf'),
+          fontFamily: 'questrial'),
       initial: prefInst.getBool('isDarkTheme') == true
           ? AdaptiveThemeMode.dark
           : AdaptiveThemeMode.light,

@@ -146,6 +146,9 @@ flutter:
     - family: ytf
       fonts:
         - asset: assets/fonts/Yftoow-R.ttf
+    - family: questrial
+      fonts:  
+        - asset: assets/fonts/Questrial-Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
