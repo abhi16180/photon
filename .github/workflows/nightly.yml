@@ -150,12 +150,12 @@ jobs:
           cache: true
           architecture: arm64
           token: ${{secrets.TOKEN}} 
-      - run: flutter config --enable-macos-arm
+      - run: flutter config --enable-macos-desktop
       - run: flutter pub get
       - run: flutter build macos
       - run: du -sh build/macos/Build/Products/Release/photon.app
       - run: npm install -g appdmg
-      - run: appdmg photondmg.json build/photon-macos-x86_64.dmg
+      - run: appdmg photondmg.json build/photon-macos-ARM64.dmg
  
       - uses: svenstaro/upload-release-action@latest
         with:
