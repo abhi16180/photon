@@ -137,7 +137,6 @@ jobs:
           file: build/photon-macos-x86_64.dmg
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
-          architecture: x64
           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
           overwrite: true
@@ -160,7 +159,7 @@ jobs:
       - uses: svenstaro/upload-release-action@latest
         with:
           repo_token: ${{ secrets.TOKEN }}
-          file: build/photon-macos-x86_64.dmg
+          file: build/photon-macos-ARM64.dmg
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
           architecture: arm64
