@@ -169,7 +169,8 @@ jobs:
           overwrite: true          
 
   build_ios:
-    runs-on: macos-latest
+    runs-on: macos-11
+             ARM64
     steps:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@v2
