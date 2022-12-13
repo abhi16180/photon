@@ -148,6 +148,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           cache: true
+          architecture: arm64
           token: ${{secrets.TOKEN}} 
       - run: flutter config --enable-macos-desktop
       - run: flutter pub get
@@ -162,7 +163,6 @@ jobs:
           file: build/photon-macos-ARM64.dmg
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
-          architecture: arm64
           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
           overwrite: true          
