@@ -150,7 +150,7 @@ jobs:
           cache: true
           architecture: arm64
           token: ${{secrets.TOKEN}} 
-      - run: flutter config --enable-macos-desktop
+      - run: flutter config --enable-macos-arm
       - run: flutter pub get
       - run: flutter build macos
       - run: du -sh build/macos/Build/Products/Release/photon.app
