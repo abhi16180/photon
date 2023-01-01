@@ -90,8 +90,9 @@ class _HistoryPageState extends State<HistoryPage> {
                                 } else {
                                   try {
                                     launchUrl(
-                                      Uri.parse(
+                                      Uri.file(
                                         path,
+                                        windows: Platform.isWindows,
                                       ),
                                     );
                                   } catch (e) {
