@@ -63,7 +63,9 @@ class _SharePageState extends State<SharePage> {
                             children: [
                               Lottie.asset(
                                 'assets/lottie/share.json',
-                                width: 240,
+                                width: MediaQuery.of(context).size.width < 720
+                                    ? 200
+                                    : 240,
                               ),
                               SizedBox(
                                 width: width / 8,
@@ -72,7 +74,7 @@ class _SharePageState extends State<SharePage> {
                                 width: width > 720 ? 200 : 100,
                                 height: width > 720 ? 200 : 100,
                                 child: QrImage(
-                                  size: 150,
+                                  size: 180,
                                   foregroundColor: Colors.black,
                                   data: PhotonSender.getPhotonLink,
                                   backgroundColor: Colors.white,
