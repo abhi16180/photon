@@ -116,7 +116,7 @@ jobs:
           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
           overwrite: true
 
-  build_macos_intel:
+  build_macos:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -141,32 +141,7 @@ jobs:
           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
           overwrite: true
           
-  build_macos_arm:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
-          architecture: arm64
-          token: ${{secrets.TOKEN}} 
-      - run: flutter config --enable-macos-desktop
-      - run: flutter pub get
-      - run: flutter build macos
-      - run: du -sh build/macos/Build/Products/Release/photon.app
-      - run: npm install -g appdmg
-      - run: appdmg photondmg.json build/photon-macos-ARM64.dmg
- 
-      - uses: svenstaro/upload-release-action@latest
-        with:
-          repo_token: ${{ secrets.TOKEN }}
-          file: build/photon-macos-ARM64.dmg
-          file_glob: true
-          prerelease: ${{ github.event_name != 'release' }}
-          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-          overwrite: true          
+       
 
   build_ios:
     runs-on: macos-11
