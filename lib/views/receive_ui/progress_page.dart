@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
-
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +9,7 @@ import 'package:photon/services/photon_receiver.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../components/constants.dart';
 import '../../components/dialogs.dart';
+import '../../components/progress_line.dart';
 import '../../methods/methods.dart';
 import '../../models/sender_model.dart';
 import '../../services/file_services.dart';
@@ -85,59 +84,63 @@ class _ProgressPageState extends State<ProgressPage> {
                             elevation: mode.isDark ? 5 : 10,
                             color: mode.isDark
                                 ? const Color.fromARGB(255, 25, 24, 24)
-                                : Color.fromARGB(255, 255, 255, 255),
+                                : const Color.fromARGB(255, 255, 255, 255),
                             child: SizedBox(
                               height: 180,
                               width: width + 60,
                               child: Obx(
                                 () => Center(
-                                    child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      "Current speed",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                        style: const TextStyle(
-                                            fontSize: 48,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 102, 245, 107)),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        "Current speed",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      RichText(
+                                        text: TextSpan(
+                                          style: const TextStyle(
+                                              fontSize: 48,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color.fromARGB(
+                                                  255, 102, 245, 107)),
+                                          children: [
+                                            TextSpan(
+                                              text: getInstance.speed.value
+                                                  .toStringAsFixed(2),
+                                            ),
+                                            const TextSpan(
+                                              text: ' mbps',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          TextSpan(
-                                            text: getInstance.speed.value
-                                                .toStringAsFixed(2),
+                                          Text(
+                                            "Min ${(getInstance.minSpeed.value).toStringAsFixed(2)} mbps",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          const TextSpan(
-                                            text: ' mbps',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20),
-                                          ),
+                                          Text(
+                                            "Max ${(getInstance.maxSpeed.value).toStringAsFixed(2)}  mbps",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          )
                                         ],
                                       ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          "Min ${(getInstance.minSpeed.value).toStringAsFixed(2)} mbps",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          "Max ${(getInstance.maxSpeed.value).toStringAsFixed(2)}  mbps",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
+                                     Text(
+                                          'Total time elapsed ${getInstance.totalTimeElapsed}',
                                         )
-                                      ],
-                                    )
-                                  ],
-                                )),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -392,40 +395,5 @@ class _ProgressPageState extends State<ProgressPage> {
       case "downloaded":
         return const Text("Completed");
     }
-  }
-}
-
-class ProgressLine extends CustomPainter {
-  final double pos;
-  ProgressLine({required this.pos});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    var rect = Offset.zero & size;
-    var paint = Paint()
-      ..color = Colors.green.shade400
-      ..strokeWidth = 10
-      ..shader = const LinearGradient(
-        begin: Alignment.topRight,
-        end: Alignment.bottomLeft,
-        colors: [
-          Color.fromARGB(255, 24, 228, 218),
-          Color.fromARGB(255, 15, 147, 255),
-        ],
-      ).createShader(rect)
-      ..strokeCap = StrokeCap.round;
-
-    // double i = -0.0;
-    // to animate
-    // while (i != pos) {
-    //   i = i + 1;
-    //   canvas.drawLine(const Offset(0, 0), Offset(i, 0), paint);
-    // }
-    canvas.drawLine(const Offset(10, 24), Offset(pos + 10, 24), paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
   }
 }

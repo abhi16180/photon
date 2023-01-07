@@ -11,7 +11,9 @@ class PercentageController extends GetxController {
   var minSpeed = 0.0.obs;
   var maxSpeed = 0.0.obs;
   var estimatedTime = ''.obs;
+  var totalTimeElapsed = 0.obs;
   var fileStatus = [].obs;
+  var isFinished = false.obs;
   List<CancelToken> cancelTokenList = [];
 }
 

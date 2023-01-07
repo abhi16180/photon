@@ -94,7 +94,7 @@ class PhotonReceiver {
     return senderRespData;
   }
 
-  static sendReceiverRealtimeData(SenderModel senderModel,
+  static sendBackReceiverRealtimeData(SenderModel senderModel,
       {fileIndex = -1, isCompleted = true}) {
     http.post(
       Uri.parse('http://${senderModel.ip}:4040/receiver-data'),
@@ -109,9 +109,11 @@ class PhotonReceiver {
   }
 
   static receive(SenderModel senderModel, int secretCode) async {
+    PercentageController getInstance =
+        GetIt.instance.get<PercentageController>();
     //getting hiveObj
-    var getInstance = GetIt.instance.get<PercentageController>();
     _box = Hive.box('appData');
+
     try {
       var resp = await Dio()
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
@@ -127,7 +129,10 @@ class PhotonReceiver {
               filePathMap['paths'][fileIndex], fileIndex, senderModel);
         }
       }
-      sendReceiverRealtimeData(senderModel);
+      // sends after last file is sent
+
+      sendBackReceiverRealtimeData(senderModel);
+      getInstance.isFinished.value = true;
     } catch (e) {
       debugPrint('$e');
     }
@@ -143,7 +148,7 @@ class PhotonReceiver {
     //creates instance of cancelToken and inserts it to list
     getInstance.cancelTokenList.insert(fileIndex, CancelToken());
     String savePath = await FileMethods.getSavePath(filePath, senderModel);
-    Stopwatch s = Stopwatch();
+    Stopwatch stopwatch = Stopwatch();
     int? prevBits;
     int? prevDuration;
     //for handling speed update frequency
@@ -151,9 +156,9 @@ class PhotonReceiver {
 
     try {
       //sends post request every time receiver requests for a file
-      sendReceiverRealtimeData(senderModel,
+      sendBackReceiverRealtimeData(senderModel,
           fileIndex: fileIndex, isCompleted: false);
-      s.start();
+      stopwatch.start();
       getInstance.fileStatus[fileIndex].value = "downloading";
       await dio.download(
         'http://${senderModel.ip}:4040/$_secretCode/$fileIndex',
@@ -167,12 +172,12 @@ class PhotonReceiver {
                 (double.parse((received / total * 100).toStringAsFixed(0)));
             if (prevBits == null) {
               prevBits = received;
-              prevDuration = s.elapsedMicroseconds;
+              prevDuration = stopwatch.elapsedMicroseconds;
               getInstance.minSpeed.value = getInstance.maxSpeed.value =
                   ((prevBits! * 8) / prevDuration!);
             } else {
               prevBits = received - prevBits!;
-              prevDuration = s.elapsedMicroseconds - prevDuration!;
+              prevDuration = stopwatch.elapsedMicroseconds - prevDuration!;
             }
           }
           //used for reducing speed update frequency
@@ -188,10 +193,13 @@ class PhotonReceiver {
             // update estimated time
             getInstance.estimatedTime.value = getEstimatedTime(
                 received * 8, total * 8, getInstance.speed.value);
+            //update time elapsed
+            getInstance.totalTimeElapsed.value += prevDuration! ~/ 1000000;
           }
         },
       );
-      s.reset();
+
+      stopwatch.reset();
       getInstance.speed.value = 0.0;
       //after completion of download mark it as true
       getInstance.isReceived[fileIndex].value = true;
@@ -209,23 +217,4 @@ class PhotonReceiver {
       }
     }
   }
-}
-
-getEstimatedTime(receivedBits, totalBits, currentSpeed) {
-  ///speed in [mega bits  x * 10^6 bits ]
-  double estBits = (totalBits - receivedBits) / 1000000;
-  int estTimeInInt = (estBits ~/ currentSpeed);
-  int mins = 0;
-  int seconds = 0;
-  int hours = 0;
-  hours = estTimeInInt ~/ 3600;
-  mins = (estTimeInInt % 3600) ~/ 60;
-  seconds = ((estTimeInInt % 3600) % 60);
-  if (hours == 0) {
-    if (mins == 0) {
-      return 'About $seconds seconds left';
-    }
-    return 'About $mins m and $seconds s left';
-  }
-  return 'About $hours h $mins m $seconds s left';
 }
