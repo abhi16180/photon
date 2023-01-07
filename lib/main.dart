@@ -77,6 +77,7 @@ void main() async {
                   nextScreen: prefInst.getBool('isIntroRead') == true
                       ? (externalIntent ? const HandleIntentUI() : const App())
                       : const IntroPage(),
+                  duration: 1000,
                   splashTransition: SplashTransition.fadeTransition,
                   pageTransitionType: PageTransitionType.fade,
                   backgroundColor: const Color.fromARGB(255, 0, 4, 7),
