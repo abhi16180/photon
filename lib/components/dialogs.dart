@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart' as ulaunch;
@@ -62,6 +63,8 @@ progressPageAlertDialog(BuildContext context) async {
           ElevatedButton(
             onPressed: () async {
               // ignore: use_build_context_synchronously
+              GetIt.I.get<PercentageController>().totalTimeElapsed.value = 0;
+              GetIt.I.get<PercentageController>().isFinished.value = false;
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/home', (Route<dynamic> route) => false);
             },
@@ -95,7 +98,11 @@ progressPageWillPopDialog(context) async {
           ElevatedButton(
             onPressed: () async {
               willPop = true;
+
               // ignore: use_build_context_synchronously
+              GetIt.I.get<PercentageController>().totalTimeElapsed.value = 0;
+              GetIt.I.get<PercentageController>().isFinished.value = false;
+
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/home', (Route<dynamic> route) => false);
             },
