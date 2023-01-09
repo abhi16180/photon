@@ -1,12 +1,8 @@
 import 'dart:io';
-
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-
-import '../../methods/methods.dart';
-import '../receive_ui/qr_scan.dart';
+import '../../services/photon_sender.dart';
 
 class WidescreenHome extends StatefulWidget {
   const WidescreenHome({Key? key}) : super(key: key);
@@ -41,7 +37,7 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                         setState(() {
                           isLoading = true;
                         });
-                        await handleSharing(context);
+                        await PhotonSender.handleSharing(context);
                         setState(() {
                           isLoading = false;
                         });
@@ -84,34 +80,32 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                               context: context,
                               builder: (context) {
                                 return Center(
-                                  child: Container(
-                                    child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pushNamed('/receivepage');
-                                            },
-                                            child: const Text('Normal mode'),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              // Navigator.of(context).push(
-                                              //     MaterialPageRoute(
-                                              //         builder: (context) {
-                                              //   return const QrReceivePage();
-                                              // }));
-                                            },
-                                            child: const Text('QR Code mode'),
-                                          )
-                                        ],
-                                      ),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pushNamed('/receivepage');
+                                          },
+                                          child: const Text('Normal mode'),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            // Navigator.of(context).push(
+                                            //     MaterialPageRoute(
+                                            //         builder: (context) {
+                                            //   return const QrReceivePage();
+                                            // }));
+                                          },
+                                          child: const Text('QR Code mode'),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 );

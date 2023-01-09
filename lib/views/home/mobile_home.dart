@@ -1,20 +1,10 @@
 import 'dart:io';
-
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-
 import 'package:lottie/lottie.dart';
-import 'package:permission_handler/permission_handler.dart';
-
 import 'package:photon/services/photon_sender.dart';
 import 'package:photon/views/receive_ui/qr_scan.dart';
-import '../../components/snackbar.dart';
 import '../../methods/methods.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
-
-import '../../models/sender_model.dart';
-import '../../services/photon_receiver.dart';
-import '../receive_ui/progress_page.dart';
 
 class MobileHome extends StatefulWidget {
   const MobileHome({Key? key}) : super(key: key);
@@ -25,7 +15,7 @@ class MobileHome extends StatefulWidget {
 
 class _MobileHomeState extends State<MobileHome> {
   PhotonSender photonSePhotonSender = PhotonSender();
-  bool isLoading = false; // Create a controller to send instructions to scanner
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +39,7 @@ class _MobileHomeState extends State<MobileHome> {
                       setState(() {
                         isLoading = true;
                       });
-                      await handleSharing(context);
+                      await PhotonSender.handleSharing(context);
                       setState(() {
                         isLoading = false;
                       });

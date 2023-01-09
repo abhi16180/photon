@@ -6,6 +6,7 @@ import 'package:photon/controllers/controllers.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
+import 'package:photon/models/share_error_model.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 import '../components/dialogs.dart';
@@ -14,7 +15,7 @@ import 'file_services.dart';
 
 class PhotonSender {
   static late HttpServer _server;
-  static late String _address;
+  static String _address = '';
   static late List<String?> _fileList;
   static late int _randomSecretCode;
   static late String photonLink;
@@ -33,21 +34,44 @@ class PhotonSender {
     //todo handle exception when no ip available
     //todo add option to choose ip from list
     List<String> ip = await getIP();
-    _address = ip.first;
+    if (ip.isNotEmpty) _address = ip.first;
   }
 
-  static _startServer(List<String?> fileList, BuildContext context) async {
+  static handleSharing(BuildContext context,
+      {bool externalIntent = false}) async {
+    Map<String, dynamic> shareRespMap =
+        await PhotonSender.share(context, externalIntent: externalIntent);
+    ShareError shareErr = ShareError.fromMap(shareRespMap);
+
+    switch (shareErr.hasError) {
+      case true:
+        // ignore: use_build_context_synchronously
+        showSnackBar(context, '${shareErr.errorMessage}');
+        break;
+
+      case false:
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, '/sharepage');
+        break;
+    }
+  }
+
+  static Future<Map<String, dynamic>> _startServer(
+      List<String?> fileList, context) async {
     //todo remove print statements
     late Map<String, Object> serverInf;
 
     //check if no proper address is assigned
 
     if (_address == '') {
-      return false;
+      return {
+        'hasErr': true,
+        'type': 'ip',
+        'errMsg': 'Please connect to wifi or turn on your mobile hotspot'
+      };
     }
     try {
       _server = await HttpServer.bind(_address, 4040);
-
       _randomSecretCode = getRandomNumber();
       serverInf = {
         'ip': _server.address.address,
@@ -58,9 +82,9 @@ class PhotonSender {
         'files-count': _fileList.length,
       };
     } catch (e) {
-      showSnackBar(context, e.toString());
-      return false;
+      return {'hasErr': true, 'type': 'server', 'errMsg': '$e'};
     }
+
     bool? allowRequest;
     photonLink = 'http://$_address:4040/photon-server';
     _server.listen(
@@ -156,23 +180,33 @@ class PhotonSender {
         }
       },
     );
-    return true;
+    return {
+      'hasErr': false,
+      'type': null,
+      'errMsg': null,
+    };
   }
 
-  static share(context, {bool externalIntent = false}) async {
+  static Future<Map<String, dynamic>> share(context,
+      {bool externalIntent = false}) async {
     if (externalIntent) {
-      var sharedMediaFiles = await ReceiveSharingIntent.getInitialMedia();
+      // When user tries to share files opened / listed on external app
+      // Photon will be opened along with intended files' paths.
+      List<SharedMediaFile> sharedMediaFiles =
+          await ReceiveSharingIntent.getInitialMedia();
       _fileList = sharedMediaFiles.map((e) => e.path).toList();
       await assignIP();
-      var res = _startServer(_fileList, context);
+      Future<Map<String, dynamic>> res = _startServer(_fileList, context);
       return await res;
     } else {
+      // User manually opens photon
+      // Selects files
       if (await getFilesPath()) {
         await assignIP();
-        var res = _startServer(_fileList, context);
-        return await res;
+        Map<String, dynamic> res = await _startServer(_fileList, context);
+        return res;
       } else {
-        return null;
+        return {'hasErr': true, 'type': 'file', 'errMsg': "No file chosen"};
       }
     }
   }
