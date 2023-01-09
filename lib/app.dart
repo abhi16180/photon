@@ -173,14 +173,14 @@ class _AppState extends State<App> {
             backgroundColor:
                 mode.isDark ? Colors.blueGrey.shade900 : Colors.white,
             onPressed: () {
-              SystemSettings.wifi();
               showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
                       title: const Text("Help"),
                       content: const Text(
-                        """1. Before sharing files make sure that you are connected to wifi or your mobile-hotspot is turned on.\n\n2. While receiving make sure you are connected to the same wifi or hotspot as that of sender.""",
+                        """1. Before sharing files make sure that you are connected to wifi or your mobile-hotspot is turned on.\n\n
+                        2. While receiving make sure you are connected to the same wifi or hotspot as that of sender.""",
                         textAlign: TextAlign.justify,
                       ),
                       actions: [
