@@ -17,7 +17,7 @@ class PhotonReceiver {
   static late int _secretCode;
   static late Map<String, dynamic> filePathMap;
   static late Box _box;
-  static late int senderID;
+  static late int id;
   static Stopwatch stopwatch = Stopwatch();
 
   ///to get network address [assumes class C address]
@@ -90,7 +90,7 @@ class PhotonReceiver {
           'receiver-name': Platform.localHostname,
           'os': Platform.operatingSystem,
         });
-    senderID = Random().nextInt(10000);
+    id = Random().nextInt(10000);
     var senderRespData = jsonDecode(resp.body);
     return senderRespData;
   }
@@ -100,7 +100,7 @@ class PhotonReceiver {
     http.post(
       Uri.parse('http://${senderModel.ip}:4040/receiver-data'),
       headers: {
-        "receiverID": senderID.toString(),
+        "receiverID": id.toString(),
         "os": Platform.operatingSystem,
         "hostName": Platform.localHostname,
         "currentFile": '${fileIndex + 1}',
