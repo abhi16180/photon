@@ -21,18 +21,7 @@ handleSharing(BuildContext context, {bool externalIntent = false}) async {
 }
 
 Future<List<String>> getIP() async {
-  //todo handle exception when no ip available
-  // String? wifiIP;
-  // try {
-  //   wifiIP = await NetworkInfo().getWifiIP();
-  // } catch (_) {}
-
-  // if (wifiIP != null) {
-  //   return [wifiIP.toString()];
-  // }
-  ///sometimes when device acts as hotspot it will return null
-  ///find list of interfaces
-  ///assign ip with proper ip-address
+  // todo handle exception when no ip available
   List<NetworkInterface> listOfInterfaces = await NetworkInterface.list();
   List<String> ipList = [];
 
@@ -197,4 +186,23 @@ processReceiversData(Map<String, dynamic> newReceiverData) {
       }
     },
   );
+}
+
+getEstimatedTime(receivedBits, totalBits, currentSpeed) {
+  ///speed in [mega bits  x * 10^6 bits ]
+  double estBits = (totalBits - receivedBits) / 1000000;
+  int estTimeInInt = (estBits ~/ currentSpeed);
+  int mins = 0;
+  int seconds = 0;
+  int hours = 0;
+  hours = estTimeInInt ~/ 3600;
+  mins = (estTimeInInt % 3600) ~/ 60;
+  seconds = ((estTimeInInt % 3600) % 60);
+  if (hours == 0) {
+    if (mins == 0) {
+      return 'About $seconds seconds left';
+    }
+    return 'About $mins m and $seconds s left';
+  }
+  return 'About $hours h $mins m $seconds s left';
 }
