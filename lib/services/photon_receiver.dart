@@ -6,9 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
-
 import 'package:photon/services/file_services.dart';
-
 import '../controllers/controllers.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
