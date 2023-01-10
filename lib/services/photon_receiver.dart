@@ -6,9 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
-
 import 'package:photon/services/file_services.dart';
-
 import '../controllers/controllers.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -17,7 +15,7 @@ class PhotonReceiver {
   static late int _secretCode;
   static late Map<String, dynamic> filePathMap;
   static late Box _box;
-  static late int senderID;
+  static late int id;
   static Stopwatch stopwatch = Stopwatch();
 
   ///to get network address [assumes class C address]
@@ -90,7 +88,7 @@ class PhotonReceiver {
           'receiver-name': Platform.localHostname,
           'os': Platform.operatingSystem,
         });
-    senderID = Random().nextInt(10000);
+    id = Random().nextInt(10000);
     var senderRespData = jsonDecode(resp.body);
     return senderRespData;
   }
@@ -100,7 +98,7 @@ class PhotonReceiver {
     http.post(
       Uri.parse('http://${senderModel.ip}:4040/receiver-data'),
       headers: {
-        "receiverID": senderID.toString(),
+        "receiverID": id.toString(),
         "os": Platform.operatingSystem,
         "hostName": Platform.localHostname,
         "currentFile": '${fileIndex + 1}',

@@ -6,19 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:photon/components/snackbar.dart';
-
 import '../controllers/controllers.dart';
-import '../services/photon_sender.dart';
-
-handleSharing(BuildContext context, {bool externalIntent = false}) async {
-  if ((await PhotonSender.share(context, externalIntent: externalIntent) ==
-      true)) {
-    Navigator.pushNamed(context, '/sharepage');
-  } else {
-    showSnackBar(context, 'No file chosen');
-  }
-}
 
 Future<List<String>> getIP() async {
   // todo handle exception when no ip available

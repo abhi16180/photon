@@ -5,12 +5,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:photon/views/drawer/about_page.dart';
 import 'package:photon/views/drawer/settings.dart';
 import 'package:photon/views/home/widescreen_home.dart';
+import 'package:system_settings/system_settings.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'components/constants.dart';
 import 'controllers/intents.dart';
 import 'views/drawer/history.dart';
 import 'views/home/mobile_home.dart';
+import 'package:wifi_iot/wifi_iot.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:photon/methods/methods.dart';
+import 'package:photon/services/photon_sender.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class HandleIntentUI extends StatefulWidget {
@@ -55,7 +56,8 @@ class _HandleIntentUIState extends State<HandleIntentUI> {
                     sts(() {
                       isLoading = true;
                     });
-                    await handleSharing(context, externalIntent: true);
+                    await PhotonSender.handleSharing(context,
+                        externalIntent: true);
                     sts(() {
                       isLoading = false;
                     });
