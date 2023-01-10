@@ -3,8 +3,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/services/photon_sender.dart';
-import 'package:photon/views/receive_ui/qr_scan.dart';
-import '../../methods/methods.dart';
+import '../../methods/handle_share.dart';
 
 class MobileHome extends StatefulWidget {
   const MobileHome({Key? key}) : super(key: key);
@@ -86,8 +85,8 @@ class _MobileHomeState extends State<MobileHome> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
-                                          Navigator.of(context)
-                                              .pushNamed('/receivepage');
+                                          HandleShare(context: context)
+                                              .onNormalScanTap();
                                         },
                                         child: const Text('Normal mode'),
                                       ),
@@ -96,11 +95,8 @@ class _MobileHomeState extends State<MobileHome> {
                                       ),
                                       ElevatedButton(
                                         onPressed: () async {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return const QrReceivePage();
-                                          }));
+                                          HandleShare(context: context)
+                                              .onQrScanTap();
                                         },
                                         child: const Text('QR Code mode'),
                                       )

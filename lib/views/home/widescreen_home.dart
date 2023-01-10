@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:photon/methods/handle_share.dart';
 import '../../services/photon_sender.dart';
 
 class WidescreenHome extends StatefulWidget {
@@ -87,8 +88,8 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
-                                            Navigator.of(context)
-                                                .pushNamed('/receivepage');
+                                            HandleShare(context: context)
+                                                .onNormalScanTap();
                                           },
                                           child: const Text('Normal mode'),
                                         ),
@@ -97,11 +98,8 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                                         ),
                                         ElevatedButton(
                                           onPressed: () async {
-                                            // Navigator.of(context).push(
-                                            //     MaterialPageRoute(
-                                            //         builder: (context) {
-                                            //   return const QrReceivePage();
-                                            // }));
+                                            HandleShare(context: context)
+                                                .onQrScanTap();
                                           },
                                           child: const Text('QR Code mode'),
                                         )
