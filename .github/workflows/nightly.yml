@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
@@ -41,15 +41,15 @@ jobs:
         uses: lhotari/action-upterm@v1
         with:
           limit-access-to-actor: true
-      - uses: svenstaro/upload-release-action@latest
-        with:
-          repo_token: ${{ secrets.TOKEN }}
-          file: Photon-Linux-Bundle
-          file_glob: true
-          prerelease: ${{ github.event_name != 'release' }}
-          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-          overwrite: true
+      # - uses: svenstaro/upload-release-action@latest
+      #   with:
+      #     repo_token: ${{ secrets.TOKEN }}
+      #     file: Photon-Linux-Bundle
+      #     file_glob: true
+      #     prerelease: ${{ github.event_name != 'release' }}
+      #     release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+      #     tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+      #     overwrite: true
 
   build_android:
     runs-on: ubuntu-latest
@@ -140,12 +140,9 @@ jobs:
           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
           overwrite: true
-          
-       
 
   build_ios:
-    runs-on: macos-11
-             ARM64
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@v2
