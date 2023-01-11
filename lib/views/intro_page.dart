@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/components/snackbar.dart';
@@ -17,6 +19,9 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
+  List<bool> selected = List.generate(4, (index) => false);
+  Box box = Hive.box('appData');
+  TextEditingController usernameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -28,9 +33,7 @@ class _IntroPageState extends State<IntroPage> {
               globalBackgroundColor: mode.isDark ? Colors.black : null,
               pages: getPages(),
               onDone: () async {
-                if (Platform.isWindows ||
-                    Platform.isAndroid ||
-                    Platform.isIOS) {
+                if (Platform.isAndroid || Platform.isIOS) {
                   var status = await Permission.storage.request();
                   if (status.isGranted) {
                     SharedPreferences prefInst =
@@ -47,6 +50,7 @@ class _IntroPageState extends State<IntroPage> {
                   SharedPreferences prefInst =
                       await SharedPreferences.getInstance();
                   prefInst.setBool('isIntroRead', true);
+                  box.put('username', usernameController.text.trim());
                   // ignore: use_build_context_synchronously
                   Navigator.of(context).pushReplacementNamed('/home');
                 }
@@ -132,40 +136,6 @@ class _IntroPageState extends State<IntroPage> {
       PageViewModel(
         titleWidget: Padding(
             padding: const EdgeInsets.only(top: 18.0),
-            child: Lottie.asset('assets/lottie/cross-platform.json',
-                width: 200, height: 200)),
-        bodyWidget: Center(
-          child: Card(
-            child: Container(
-              height: 200,
-              margin: const EdgeInsets.only(top: 60),
-              width: MediaQuery.of(context).size.width / 1.2,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Photon is open source cross-platform application.\nSupports High-speed cross-platform data transfer \n',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize:
-                              MediaQuery.of(context).size.width > 720 ? 18 : 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      PageViewModel(
-        titleWidget: Padding(
-            padding: const EdgeInsets.only(top: 18.0),
             child: Lottie.asset('assets/lottie/wifi_intro.json',
                 width: 200, height: 200)),
         bodyWidget: Center(
@@ -197,6 +167,72 @@ class _IntroPageState extends State<IntroPage> {
           ),
         ),
       ),
+      PageViewModel(
+        title: 'One last step, Select avatar',
+        bodyWidget: Center(
+          child: SizedBox(
+              width: MediaQuery.of(context).size.width / 1.2,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 2.2,
+                      width: MediaQuery.of(context).size.height / 2.4,
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        itemCount: 4,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                childAspectRatio: 1.2, crossAxisCount: 2),
+                        itemBuilder: ((context, index) => Card(
+                                child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selected.fillRange(0, 4, false);
+                                  selected[index] = true;
+                                  box.put('avatarPath',
+                                      'assets/avatars/${index + 1}.png');
+                                });
+                              },
+                              child: Card(
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Image.asset(
+                                        'assets/avatars/${index + 1}.png'),
+                                    if (selected[index]) ...{
+                                      Positioned(
+                                        top: 5,
+                                        right: 5,
+                                        child: SvgPicture.asset(
+                                          'assets/icons/right_mark.svg',
+                                          color: Colors.white,
+                                          width: 30,
+                                        ),
+                                      )
+                                    }
+                                  ],
+                                ),
+                              ),
+                            ))),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width / 1.4,
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                              hintText: 'Set your username here'),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )),
+        ),
+      )
     ];
     return pages;
   }

@@ -23,6 +23,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Hive.init((await getApplicationDocumentsDirectory()).path);
   await Hive.openBox('appData');
+  Box box = Hive.box('appData');
+  box.get('avatarPath') ?? box.put('avatarPath', 'assets/avatars/1.png');
+  box.get('username') ?? box.put('username', '${Platform.localHostname} user');
   GetIt getIt = GetIt.instance;
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
