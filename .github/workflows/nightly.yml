@@ -39,17 +39,15 @@ jobs:
       - name: Setup upterm session
         if: ${{ failure() }}
         uses: lhotari/action-upterm@v1
+      - uses: svenstaro/upload-release-action@latest
         with:
-          limit-access-to-actor: true
-      # - uses: svenstaro/upload-release-action@latest
-      #   with:
-      #     repo_token: ${{ secrets.TOKEN }}
-      #     file: Photon-Linux-Bundle
-      #     file_glob: true
-      #     prerelease: ${{ github.event_name != 'release' }}
-      #     release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-      #     tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-      #     overwrite: true
+          repo_token: ${{ secrets.TOKEN }}
+          file: Photon-Linux-Bundle
+          file_glob: true
+          prerelease: ${{ github.event_name != 'release' }}
+          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+          overwrite: true
 
   build_android:
     runs-on: ubuntu-latest
