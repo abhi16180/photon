@@ -33,6 +33,9 @@ class _IntroPageState extends State<IntroPage> {
               globalBackgroundColor: mode.isDark ? Colors.black : null,
               pages: getPages(),
               onDone: () async {
+                if (usernameController.text.trim() != '') {
+                  box.put('username', usernameController.text.trim());
+                }
                 if (Platform.isAndroid || Platform.isIOS) {
                   var status = await Permission.storage.request();
                   if (status.isGranted) {
@@ -50,9 +53,7 @@ class _IntroPageState extends State<IntroPage> {
                   SharedPreferences prefInst =
                       await SharedPreferences.getInstance();
                   prefInst.setBool('isIntroRead', true);
-                  if (usernameController.text.trim() != '') {
-                    box.put('username', usernameController.text.trim());
-                  }
+
                   // ignore: use_build_context_synchronously
                   Navigator.of(context).pushReplacementNamed('/home');
                 }
