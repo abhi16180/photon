@@ -102,7 +102,7 @@ class PhotonSender {
             'http://$_address:4040/get-code') {
           String os = (request.headers['os']![0]);
           String username = request.headers['receiver-name']![0];
-          String avatar = request.headers['avatar']![0];
+
           allowRequest = await senderRequestDialog(context, username, os);
           if (allowRequest == true) {
             //appending receiver data

@@ -293,7 +293,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: ea60f117eef7ce7313e7f4e448c46f12782cef32
+      resolved-ref: "6e77cdafbb60f5718a84922f71b20a123852b92a"
       url: "https://github.com/abhi16180/flutter_file_picker.git"
     source: git
     version: "5.2.0"

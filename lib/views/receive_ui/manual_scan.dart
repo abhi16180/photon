@@ -173,6 +173,10 @@ class _ReceivePageState extends State<ReceivePage> {
                                   ),
                                 ),
                                 ListView.builder(
+                                  padding: width > 720
+                                      ? const EdgeInsets.only(
+                                          left: 120, right: 120)
+                                      : const EdgeInsets.all(0),
                                   shrinkWrap: true,
                                   itemCount: snap.data.length,
                                   itemBuilder: (c, index) {
@@ -243,22 +247,27 @@ class _ReceivePageState extends State<ReceivePage> {
                                                               .center,
                                                       children: [
                                                         Expanded(
-                                                          flex: 1,
-                                                          child: senderModels[
-                                                                          index]
-                                                                      .avatar !=
-                                                                  null
-                                                              ? Image.memory(
-                                                                  senderModels[
-                                                                          index]
-                                                                      .avatar!)
-                                                              : const Icon(
-                                                                  UniconsLine
-                                                                      .user_circle,
-                                                                ),
-                                                        ),
+                                                            flex: 1,
+                                                            child: senderModels[
+                                                                            index]
+                                                                        .avatar !=
+                                                                    null
+                                                                ? Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            8.0),
+                                                                    child: Image.memory(
+                                                                        senderModels[index]
+                                                                            .avatar!),
+                                                                  )
+                                                                : Image.asset(
+                                                                    'assets/avatars/1.png',
+                                                                    height: 80,
+                                                                  )),
                                                         Expanded(
-                                                          flex: 2,
+                                                          flex: width > 720
+                                                              ? 1
+                                                              : 2,
                                                           child: Padding(
                                                             padding:
                                                                 const EdgeInsets
@@ -286,7 +295,7 @@ class _ReceivePageState extends State<ReceivePage> {
                                                                           '${senderModels[index].os}\n'),
                                                                   TextSpan(
                                                                     text:
-                                                                        '${senderModels[index].version}',
+                                                                        '${senderModels[index].filesCount} file(s)',
                                                                   ),
                                                                 ],
                                                               ),

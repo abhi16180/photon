@@ -59,6 +59,9 @@ class _SharePageState extends State<SharePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         if (width > 720) ...{
+                          const SizedBox(
+                            height: 40,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
