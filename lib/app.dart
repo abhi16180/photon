@@ -94,7 +94,7 @@ class _AppState extends State<App> {
                                 child: Text(
                                   box.get('username'),
                                   style: const TextStyle(
-                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -196,7 +196,12 @@ class _AppState extends State<App> {
                                 width: 30, height: 30),
                             const Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: Text('Photon v 1.1.1'),
+                              child: Text(
+                                'Photon v 1.1.1',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             )
                           ],
                         ),
