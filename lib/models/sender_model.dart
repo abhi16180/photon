@@ -1,4 +1,6 @@
 // ignore: file_names
+import 'package:flutter/foundation.dart';
+
 class SenderModel {
   String? ip;
   int? port;
@@ -6,6 +8,7 @@ class SenderModel {
   dynamic host;
   dynamic os;
   dynamic version;
+  Uint8List? avatar;
   SenderModel(
       {this.ip,
       this.port,
@@ -13,8 +16,8 @@ class SenderModel {
       this.host,
       this.os,
       this.version,
-     });
-  factory SenderModel.fromJson(json) {
+      this.avatar});
+  factory SenderModel.fromJson(Map<String, dynamic> json) {
     return SenderModel(
       ip: json['ip'],
       port: json['port'],
@@ -22,7 +25,11 @@ class SenderModel {
       host: json['host'],
       os: json['os'],
       version: json['version'],
-    
+      avatar: json.containsKey('avatar')
+          ? Uint8List.fromList(
+              List<int>.from(json['avatar']),
+            )
+          : null,
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:photon/components/components.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/services/file_services.dart';
 import 'package:photon/views/receive_ui/progress_page.dart';
+import 'package:unicons/unicons.dart';
 import '../../components/constants.dart';
 import '../../controllers/intents.dart';
 import '../../services/photon_receiver.dart';
@@ -33,6 +34,7 @@ class _ReceivePageState extends State<ReceivePage> {
   }
 
   GetIt getIt = GetIt.instance;
+
   //to keep copy of stateful builder context
   //otherwise it will throw error
   late StateSetter sts;
@@ -78,6 +80,8 @@ class _ReceivePageState extends State<ReceivePage> {
                   future: _scan(),
                   builder: (context, AsyncSnapshot snap) {
                     if (snap.connectionState == ConnectionState.done) {
+                      List<SenderModel> senderModels =
+                          snap.data as List<SenderModel>;
                       return StatefulBuilder(builder: (context, StateSetter c) {
                         sts = c;
                         return Center(
@@ -165,7 +169,7 @@ class _ReceivePageState extends State<ReceivePage> {
                                 const Center(
                                   child: Focus(
                                     child: Text(
-                                        "Please select the 'sender' from the following list"),
+                                        "Please select the 'sender' from the list"),
                                   ),
                                 ),
                                 ListView.builder(
@@ -185,8 +189,9 @@ class _ReceivePageState extends State<ReceivePage> {
                                                   255, 5, 6, 6)
                                               : null,
                                           shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
                                           child: InkWell(
                                             onTap: () async {
                                               //only rebuild the column
@@ -225,23 +230,70 @@ class _ReceivePageState extends State<ReceivePage> {
                                                             'Access denied by the sender')));
                                               }
                                             },
-                                            child: SizedBox(
-                                              height: width > 720 ? 200 : 128,
-                                              width: width > 720
-                                                  ? width / 2
-                                                  : width / 1.25,
-                                              child: Center(
-                                                child: Wrap(
-                                                  direction: Axis.vertical,
-                                                  children: infoList(
-                                                    snap.data[index],
-                                                    width,
-                                                    height,
-                                                    false,
-                                                    mode.isDark
-                                                        ? "dark"
-                                                        : "bright",
-                                                  ),
+                                            child: Center(
+                                              child: SizedBox(
+                                                height: width > 720 ? 200 : 128,
+                                                width: width > 720
+                                                    ? width / 2
+                                                    : width / 1.25,
+                                                child: Center(
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: senderModels[
+                                                                          index]
+                                                                      .avatar !=
+                                                                  null
+                                                              ? Image.memory(
+                                                                  senderModels[
+                                                                          index]
+                                                                      .avatar!)
+                                                              : const Icon(
+                                                                  UniconsLine
+                                                                      .user_circle,
+                                                                ),
+                                                        ),
+                                                        Expanded(
+                                                          flex: 2,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 8.0),
+                                                            child: RichText(
+                                                              text: TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                    text:
+                                                                        '${senderModels[index].host}\n',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                  TextSpan(
+                                                                    text:
+                                                                        '${senderModels[index].ip} ◉\n',
+                                                                  ),
+                                                                  TextSpan(
+                                                                      text:
+                                                                          '${senderModels[index].os}\n'),
+                                                                  TextSpan(
+                                                                    text:
+                                                                        '${senderModels[index].version}',
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ]),
                                                 ),
                                               ),
                                             ),
