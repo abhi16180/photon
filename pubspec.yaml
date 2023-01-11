@@ -61,12 +61,12 @@ dependencies:
   
   http:
   # This is modified version of file_picker it is faster and doesn't cache files unnecessarily
-  # file_picker:
-  #   git:
-  #     url:
-  #       https://github.com/abhi16180/flutter_file_picker.git
-  file_picker: 
-    path: 'D:/flutter_file_picker'
+  file_picker:
+    git:
+      url:
+        https://github.com/abhi16180/flutter_file_picker.git
+  # file_picker: 
+  #   path: 'D:/flutter_file_picker'
 
   # This is modified version of open_file (Migrated to null-safety)
   open_file:
