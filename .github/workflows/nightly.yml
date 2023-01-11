@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_ubuntu:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
@@ -27,7 +27,6 @@ jobs:
       - run: |
           flutter config --enable-linux-desktop
           flutter pub get
-
           dart pub global activate flutter_distributor
           flutter_distributor package --platform=linux --targets=appimage --skip-clean
           
@@ -39,6 +38,8 @@ jobs:
       - name: Setup upterm session
         if: ${{ failure() }}
         uses: lhotari/action-upterm@v1
+        with:
+          limit-access-to-actor: true
       - uses: svenstaro/upload-release-action@latest
         with:
           repo_token: ${{ secrets.TOKEN }}
