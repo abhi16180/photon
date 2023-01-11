@@ -171,66 +171,68 @@ class _IntroPageState extends State<IntroPage> {
         title: 'One last step, Select avatar',
         bodyWidget: Center(
           child: SizedBox(
-              width: MediaQuery.of(context).size.width / 1.2,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 2.2,
-                      width: MediaQuery.of(context).size.height / 2.4,
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: 4,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio: 1.2, crossAxisCount: 2),
-                        itemBuilder: ((context, index) => Card(
-                                child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selected.fillRange(0, 4, false);
-                                  selected[index] = true;
-                                  box.put('avatarPath',
-                                      'assets/avatars/${index + 1}.png');
-                                });
-                              },
-                              child: Card(
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Image.asset(
-                                        'assets/avatars/${index + 1}.png'),
-                                    if (selected[index]) ...{
-                                      Positioned(
-                                        top: 5,
-                                        right: 5,
-                                        child: SvgPicture.asset(
-                                          'assets/icons/right_mark.svg',
-                                          color: Colors.white,
-                                          width: 30,
-                                        ),
-                                      )
-                                    }
-                                  ],
-                                ),
+            width: MediaQuery.of(context).size.width / 1.2,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 2.2,
+                    width: MediaQuery.of(context).size.height / 2.4,
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: 4,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              childAspectRatio: 1.2, crossAxisCount: 2),
+                      itemBuilder: ((context, index) => Card(
+                              child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selected.fillRange(0, 4, false);
+                                selected[index] = true;
+                                box.put('avatarPath',
+                                    'assets/avatars/${index + 1}.png');
+                              });
+                            },
+                            child: Card(
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                      'assets/avatars/${index + 1}.png'),
+                                  if (selected[index]) ...{
+                                    Positioned(
+                                      top: 5,
+                                      right: 5,
+                                      child: SvgPicture.asset(
+                                        'assets/icons/right_mark.svg',
+                                        color: Colors.white,
+                                        width: 30,
+                                      ),
+                                    )
+                                  }
+                                ],
                               ),
-                            ))),
+                            ),
+                          ))),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.4,
+                      child: TextFormField(
+                        controller: usernameController,
+                        decoration: const InputDecoration(
+                            hintText: 'Set your username here'),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.4,
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                              hintText: 'Set your username here'),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              )),
+                  )
+                ],
+              ),
+            ),
+          ),
         ),
       )
     ];

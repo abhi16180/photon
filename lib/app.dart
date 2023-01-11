@@ -74,10 +74,11 @@ class _AppState extends State<App> {
                 child: Stack(
                   children: [
                     ListView(
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       children: [
-                        const SizedBox(
-                          height: 50,
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 15,
                         ),
                         Padding(
                           padding: const EdgeInsets.all(0.0),
@@ -88,9 +89,15 @@ class _AppState extends State<App> {
                                 width: 90,
                                 height: 90,
                               ),
-                              Text(
-                                box.get('username'),
-                                style: TextStyle(color: Colors.white),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  box.get('username'),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               )
                             ],
                           ),
@@ -98,8 +105,7 @@ class _AppState extends State<App> {
                         const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Divider(
-                            height: 2,
-                            color: Colors.blueGrey,
+                            thickness: 2,
                           ),
                         ),
                         ListTile(
@@ -220,10 +226,13 @@ class _AppState extends State<App> {
                       ),
                       actions: [
                         IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            icon: const Icon(Icons.close)),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: const Icon(
+                            Icons.close,
+                          ),
+                        ),
                       ],
                     );
                   });

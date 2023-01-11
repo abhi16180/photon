@@ -1,8 +1,10 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:file_picker/file_picker.dart';
 import "package:flutter/material.dart";
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:photon/components/constants.dart';
 import 'package:photon/services/file_services.dart';
+import 'package:photon/views/drawer/edit_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -77,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                               ),
                               ListTile(
-                                title: Text('Toggle theme'),
+                                title: const Text('Toggle theme'),
                                 trailing: Switch(
                                   value: pref.getBool('isDarkTheme')!,
                                   onChanged: (val) {
@@ -94,6 +96,23 @@ class _SettingsPageState extends State<SettingsPage> {
                                   },
                                 ),
                               ),
+                              ListTile(
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                      return const EditProfilePage();
+                                    }));
+                                  },
+                                  icon: SvgPicture.asset(
+                                    'assets/icons/profile_edit.svg',
+                                    color: mode.isDark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
+                                title: const Text('Edit profile'),
+                              )
                             ],
                           ),
                         ),
