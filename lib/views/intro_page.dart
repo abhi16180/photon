@@ -50,7 +50,9 @@ class _IntroPageState extends State<IntroPage> {
                   SharedPreferences prefInst =
                       await SharedPreferences.getInstance();
                   prefInst.setBool('isIntroRead', true);
-                  box.put('username', usernameController.text.trim());
+                  if (usernameController.text.trim() != '') {
+                    box.put('username', usernameController.text.trim());
+                  }
                   // ignore: use_build_context_synchronously
                   Navigator.of(context).pushReplacementNamed('/home');
                 }

@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/models/share_error_model.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-
+import 'package:hive/hive.dart';
 import '../components/dialogs.dart';
 import '../components/snackbar.dart';
 import 'file_services.dart';
@@ -17,7 +18,7 @@ class PhotonSender {
   static late List<String?> _fileList;
   static late int _randomSecretCode;
   static late String photonLink;
-
+  static late Uint8List avatar;
   static getFilesPath() async {
     //flutter specific package
     _fileList = await FileMethods.pickFiles();
@@ -71,13 +72,19 @@ class PhotonSender {
     try {
       _server = await HttpServer.bind(_address, 4040);
       _randomSecretCode = getRandomNumber();
+      Box box = Hive.box('appData');
+      String username = box.get('username');
+      avatar =
+          (await rootBundle.load(box.get('avatarPath'))).buffer.asUint8List();
+
       serverInf = {
         'ip': _server.address.address,
         'port': _server.port,
-        'host': Platform.localHostname,
+        'host': username,
         'os': Platform.operatingSystem,
         'version': Platform.operatingSystemVersion,
         'files-count': _fileList.length,
+        'avatar': avatar
       };
     } catch (e) {
       return {'hasErr': true, 'type': 'server', 'errMsg': '$e'};
@@ -95,6 +102,7 @@ class PhotonSender {
             'http://$_address:4040/get-code') {
           String os = (request.headers['os']![0]);
           String username = request.headers['receiver-name']![0];
+          String avatar = request.headers['avatar']![0];
           allowRequest = await senderRequestDialog(context, username, os);
           if (allowRequest == true) {
             //appending receiver data
@@ -227,8 +235,10 @@ class PhotonSender {
       'os': Platform.operatingSystem,
       'version': Platform.operatingSystemVersion,
       'files-count': _fileList.length,
+      'avatar': avatar
     };
     SenderModel senderData = SenderModel.fromJson(info);
+
     return senderData;
   }
 

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
@@ -49,6 +50,7 @@ class PhotonReceiver {
       Map<String, dynamic> senderInfo = jsonDecode(resp.data);
       return SenderModel.fromJson(senderInfo);
     } catch (_) {
+      print('ee' + '$_');
       return null;
     }
   }
@@ -82,11 +84,16 @@ class PhotonReceiver {
   }
 
   static isRequestAccepted(SenderModel senderModel) async {
+    Box box = Hive.box('appData');
+    String username = box.get('username');
+    var avatar = await rootBundle.load(box.get('avatarPath'));
     var resp = await http.get(
         Uri.parse('http://${senderModel.ip}:${senderModel.port}/get-code'),
         headers: {
-          'receiver-name': Platform.localHostname,
+          'receiver-name': username,
           'os': Platform.operatingSystem,
+          'avatar': avatar.buffer.asUint8List().toString()
+          // 'avatar': avatar.buffer.asUint8List().toString()s
         });
     id = Random().nextInt(10000);
     var senderRespData = jsonDecode(resp.body);

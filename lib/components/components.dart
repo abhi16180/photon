@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:unicons/unicons.dart';
 
 import '../models/sender_model.dart';
@@ -13,12 +14,21 @@ infoList(
         color: Colors.blue.shade600,
       ),
     ),
-    const Padding(
-      padding: EdgeInsets.only(left: 8.0),
-      child: Icon(
-        UniconsLine.process,
-      ),
-    ),
+    if (!sender && senderModel.avatar != null) ...{
+      Padding(
+          padding: EdgeInsets.only(left: 8.0),
+          child: Image.memory(
+            senderModel.avatar!,
+            width: 24,
+          )),
+    } else ...{
+      const Padding(
+        padding: EdgeInsets.only(left: 8.0),
+        child: Icon(
+          UniconsLine.process,
+        ),
+      )
+    },
     if (senderModel.os == "android") ...{
       Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -64,44 +74,46 @@ infoList(
   ];
   var serverDataList = [
     {'type': 'IP'.padRight(12), 'value': senderModel.ip},
-    {'type': 'Port'.padRight(10), 'value': senderModel.port},
+    {'type': 'User'.padRight(10), 'value': senderModel.host},
     {'type': 'OS'.padRight(11), 'value': senderModel.os},
     {'type': 'Version', 'value': senderModel.version}
   ];
   List<Widget> data = [];
   for (int i = 0; i < iconList.length; i++) {
-    data.add(Padding(
-      padding: const EdgeInsets.all(0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          iconList[i],
-          const SizedBox(
-            width: 20,
-          ),
-          RichText(
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(
-              text: width > 720
-                  ? serverDataList[i]['type']
-                  : serverDataList[i]['type'] + ' : ',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: theme == "dark" ? Colors.white : Colors.black,
-                  overflow: TextOverflow.ellipsis),
-              children: [
-                TextSpan(
-                    text: serverDataList[i]['value'].toString(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontStyle: FontStyle.italic,
-                    )),
-              ],
+    data.add(
+      Padding(
+        padding: const EdgeInsets.all(0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            iconList[i],
+            const SizedBox(
+              width: 20,
             ),
-          )
-        ],
+            RichText(
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                text: width > 720
+                    ? serverDataList[i]['type']
+                    : serverDataList[i]['type'] + ' : ',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: theme == "dark" ? Colors.white : Colors.black,
+                    overflow: TextOverflow.ellipsis),
+                children: [
+                  TextSpan(
+                      text: serverDataList[i]['value'].toString(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontStyle: FontStyle.italic,
+                      )),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
   if (sender) {
     data.insert(

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
@@ -186,7 +189,11 @@ sharePageWillPopDialog(context) async {
   return willPop;
 }
 
-senderRequestDialog(BuildContext context, String username, String os) async {
+senderRequestDialog(
+  BuildContext context,
+  String username,
+  String os,
+) async {
   bool allowRequest = false;
   SharedPreferences prefInst = await SharedPreferences.getInstance();
 
