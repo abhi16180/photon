@@ -271,7 +271,7 @@ class _ReceivePageState extends State<ReceivePage> {
                                                                     text:
                                                                         '${senderModels[index].host}\n',
                                                                     style:
-                                                                        TextStyle(
+                                                                        const TextStyle(
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold,
