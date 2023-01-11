@@ -40,15 +40,15 @@ jobs:
         uses: lhotari/action-upterm@v1
         with:
           limit-access-to-actor: true
-      - uses: svenstaro/upload-release-action@latest
-        with:
-          repo_token: ${{ secrets.TOKEN }}
-          file: Photon-Linux-Bundle
-          file_glob: true
-          prerelease: ${{ github.event_name != 'release' }}
-          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-          overwrite: true
+#       - uses: svenstaro/upload-release-action@latest
+#         with:
+#           repo_token: ${{ secrets.TOKEN }}
+#           file: Photon-Linux-Bundle
+#           file_glob: true
+#           prerelease: ${{ github.event_name != 'release' }}
+#           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+#           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+#           overwrite: true
 
   build_android:
     runs-on: ubuntu-latest
