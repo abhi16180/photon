@@ -2,6 +2,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:photon/views/drawer/about_page.dart';
 import 'package:photon/views/drawer/settings.dart';
 import 'package:photon/views/home/widescreen_home.dart';
@@ -28,6 +29,7 @@ class _AppState extends State<App> {
     super.initState();
   }
 
+  Box box = Hive.box('appData');
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -69,97 +71,142 @@ class _AppState extends State<App> {
                 })
               },
               child: Drawer(
-                child: ListView(
+                child: Stack(
                   children: [
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            'assets/images/icon.png',
-                            width: 75,
-                            height: 75,
+                    ListView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 15,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                box.get('avatarPath'),
+                                width: 90,
+                                height: 90,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  box.get('username'),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
-                          const Text('Photon')
-                        ],
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        UniconsSolid.history,
-                        color: mode.isDark ? null : Colors.black,
-                      ),
-                      title: const Text('Received-history'),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const HistoryPage();
-                            },
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Divider(
+                            thickness: 2,
                           ),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.settings,
-                        color: mode.isDark ? null : Colors.black,
-                      ),
-                      title: const Text("Settings"),
-                      onTap: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return const SettingsPage();
-                        }));
-                      },
-                    ),
-                    ListTile(
-                      leading: SvgPicture.asset(
-                        'assets/icons/licenses.svg',
-                        color: mode.isLight ? Colors.black : Colors.white,
-                      ),
-                      onTap: () {
-                        showLicensePage(
-                            context: context,
-                            applicationLegalese: 'GPL3 license',
-                            applicationVersion: "1.1.1",
-                            applicationIcon: Image.asset(
-                              'assets/images/splash.png',
-                              width: 60,
-                            ));
-                      },
-                      title: const Text('Licenses'),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.privacy_tip_rounded,
-                        color: mode.isDark ? null : Colors.black,
-                      ),
-                      onTap: () async {
-                        launchUrl(
-                            Uri.parse(
-                                "https://photondev.netlify.app/privacy-policy-page"),
-                            mode: LaunchMode.externalApplication);
-                      },
-                      title: const Text('Privacy policy'),
-                    ),
-                    ListTile(
-                      title: const Text('About'),
-                      leading: Icon(UniconsLine.info_circle,
-                          color: mode.isDark ? null : Colors.black),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const AboutPage();
-                            },
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            UniconsSolid.history,
+                            color: mode.isDark ? null : Colors.black,
                           ),
-                        );
-                      },
+                          title: const Text('Received-history'),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const HistoryPage();
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.settings,
+                            color: mode.isDark ? null : Colors.black,
+                          ),
+                          title: const Text("Settings"),
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return const SettingsPage();
+                            }));
+                          },
+                        ),
+                        ListTile(
+                          leading: SvgPicture.asset(
+                            'assets/icons/licenses.svg',
+                            color: mode.isLight ? Colors.black : Colors.white,
+                          ),
+                          onTap: () {
+                            showLicensePage(
+                                context: context,
+                                applicationLegalese: 'GPL3 license',
+                                applicationVersion: "1.1.1",
+                                applicationIcon: Image.asset(
+                                  'assets/images/splash.png',
+                                  width: 60,
+                                ));
+                          },
+                          title: const Text('Licenses'),
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.privacy_tip_rounded,
+                            color: mode.isDark ? null : Colors.black,
+                          ),
+                          onTap: () async {
+                            launchUrl(
+                                Uri.parse(
+                                    "https://photondev.netlify.app/privacy-policy-page"),
+                                mode: LaunchMode.externalApplication);
+                          },
+                          title: const Text('Privacy policy'),
+                        ),
+                        ListTile(
+                          title: const Text('About'),
+                          leading: Icon(UniconsLine.info_circle,
+                              color: mode.isDark ? null : Colors.black),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const AboutPage();
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
+                    Positioned(
+                      bottom: 18,
+                      right: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset('assets/images/icon.png',
+                                width: 30, height: 30),
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Photon v 1.1.1',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -184,10 +231,13 @@ class _AppState extends State<App> {
                       ),
                       actions: [
                         IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            icon: const Icon(Icons.close)),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: const Icon(
+                            Icons.close,
+                          ),
+                        ),
                       ],
                     );
                   });
