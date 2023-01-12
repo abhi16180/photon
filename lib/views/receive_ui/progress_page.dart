@@ -6,14 +6,15 @@ import 'package:get_it/get_it.dart';
 import 'package:photon/components/snackbar.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'package:photon/services/photon_receiver.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:open_file/open_file.dart';
 import '../../components/constants.dart';
 import '../../components/dialogs.dart';
 import '../../components/progress_line.dart';
 import '../../methods/methods.dart';
 import '../../models/sender_model.dart';
 import '../../services/file_services.dart';
-import 'package:open_file/open_file.dart';
 
 class ProgressPage extends StatefulWidget {
   final SenderModel? senderModel;
@@ -29,15 +30,23 @@ class ProgressPage extends StatefulWidget {
 }
 
 class _ProgressPageState extends State<ProgressPage> {
+  StopWatchTimer stopWatchTimer = StopWatchTimer();
+  bool willPop = false;
+  bool isDownloaded = false;
   @override
   void initState() {
     super.initState();
     generatePercentageList(widget.senderModel!.filesCount);
     PhotonReceiver.receive(widget.senderModel!, widget.secretCode);
+    stopWatchTimer.onStartTimer();
   }
 
-  bool willPop = false;
-  bool isDownloaded = false;
+  @override
+  void dispose() async {
+    super.dispose();
+    await stopWatchTimer.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var getInstance = GetIt.I<PercentageController>();
@@ -78,73 +87,85 @@ class _ProgressPageState extends State<ProgressPage> {
                     physics: const ScrollPhysics(),
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Card(
-                            elevation: mode.isDark ? 5 : 10,
-                            color: mode.isDark
-                                ? const Color.fromARGB(255, 25, 24, 24)
-                                : const Color.fromARGB(255, 255, 255, 255),
-                            child: SizedBox(
-                              height: 180,
-                              width: width + 60,
-                              child: Obx(
-                                () => Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      if (getInstance.isFinished.isFalse) ...{
-                                        const Text(
-                                          "Current speed",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        RichText(
-                                          text: TextSpan(
-                                            style: const TextStyle(
+                        Focus(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 16),
+                            child: Card(
+                              elevation: mode.isDark ? 5 : 10,
+                              color: mode.isDark
+                                  ? const Color.fromARGB(255, 25, 24, 24)
+                                  : const Color.fromARGB(255, 255, 255, 255),
+                              child: SizedBox(
+                                height: 180,
+                                width: width + 60,
+                                child: Obx(() {
+                                  if (getInstance.isFinished.isTrue) {
+                                    getInstance.totalTimeElapsed.value =
+                                        stopWatchTimer.secondTime.value;
+                                    stopWatchTimer.onStopTimer();
+                                  }
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        if (getInstance.isFinished.isFalse) ...{
+                                          const Text(
+                                            "Current speed",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          RichText(
+                                            text: TextSpan(
+                                              style: const TextStyle(
                                                 fontSize: 48,
                                                 fontWeight: FontWeight.bold,
                                                 color: Color.fromARGB(
-                                                    255, 102, 245, 107)),
-                                            children: [
-                                              TextSpan(
-                                                text: getInstance.speed.value
-                                                    .toStringAsFixed(2),
+                                                    255, 102, 245, 107),
                                               ),
-                                              const TextSpan(
-                                                text: ' mbps',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20,
+                                              children: [
+                                                TextSpan(
+                                                  text: getInstance.speed.value
+                                                      .toStringAsFixed(2),
                                                 ),
+                                                const TextSpan(
+                                                  text: ' mbps',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Text(
+                                                "Min ${(getInstance.minSpeed.value).toStringAsFixed(2)} mbps",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
+                                              Text(
+                                                "Max ${(getInstance.maxSpeed.value).toStringAsFixed(2)}  mbps",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
                                             ],
                                           ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(
-                                              "Min ${(getInstance.minSpeed.value).toStringAsFixed(2)} mbps",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              "Max ${(getInstance.maxSpeed.value).toStringAsFixed(2)}  mbps",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          ],
-                                        ),
-                                      } else ...{
-                                        Text(
-                                          'Total time elapsed ${getInstance.totalTimeElapsed}',
-                                        )
-                                      }
-                                    ],
-                                  ),
-                                ),
+                                        } else ...{
+                                          Text(
+                                            'Total time elapsed ${getInstance.totalTimeElapsed}',
+                                          )
+                                        }
+                                      ],
+                                    ),
+                                  );
+                                }),
                               ),
                             ),
                           ),
@@ -154,179 +175,189 @@ class _ProgressPageState extends State<ProgressPage> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: snap.data.length,
                           itemBuilder: (context, item) {
-                            return Obx(
-                              () {
-                                double progressLineWidth = ((width - 80) *
-                                    (getInstance.percentage[item] as RxDouble)
-                                        .value /
-                                    100);
+                            return Focus(
+                              child: Obx(
+                                () {
+                                  double progressLineWidth = ((width - 80) *
+                                      (getInstance.percentage[item] as RxDouble)
+                                          .value /
+                                      100);
 
-                                return UnconstrainedBox(
-                                    child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      openFile(
-                                          snap.data[item], widget.senderModel!);
-                                    },
-                                    child: Card(
-                                      // color: Colors.blue.shade100,
-                                      elevation: 2,
-                                      clipBehavior: Clip.antiAlias,
-                                      child: SizedBox(
-                                        width: width + 60,
-                                        height: 100,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            getFileIcon(snap.data[item]
-                                                .toString()
-                                                .split('.')
-                                                .last),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 8.0, top: 8.0),
-                                                  child: SizedBox(
-                                                    width: width / 1.4,
-                                                    child: Text(
-                                                      snap.data![item],
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: width - 80,
-                                                  child: CustomPaint(
-                                                    painter: ProgressLine(
-                                                      pos: progressLineWidth,
-                                                    ),
-                                                    child: Container(),
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 40,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(0.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 2.5),
-                                                        child: getStatusWidget(
-                                                            getInstance
-                                                                    .fileStatus[
-                                                                item],
-                                                            item),
+                                  return UnconstrainedBox(
+                                      child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        openFile(snap.data[item],
+                                            widget.senderModel!);
+                                      },
+                                      child: Card(
+                                        // color: Colors.blue.shade100,
+                                        elevation: 2,
+                                        clipBehavior: Clip.antiAlias,
+                                        child: SizedBox(
+                                          width: width + 60,
+                                          height: 100,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              getFileIcon(snap.data[item]
+                                                  .toString()
+                                                  .split('.')
+                                                  .last),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 8.0,
+                                                            top: 8.0),
+                                                    child: SizedBox(
+                                                      width: width / 1.4,
+                                                      child: Text(
+                                                        snap.data![item],
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
-                                                      if (getInstance
-                                                              .fileStatus[item]
-                                                              .value ==
-                                                          "downloading") ...{
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: width - 80,
+                                                    child: CustomPaint(
+                                                      painter: ProgressLine(
+                                                        pos: progressLineWidth,
+                                                      ),
+                                                      child: Container(),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 40,
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            0.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
                                                                       .only(
-                                                                  left: 10),
-                                                          child: SizedBox(
-                                                            width: width / 1.8,
-                                                            child: Text(
+                                                                  left: 2.5),
+                                                          child: getStatusWidget(
                                                               getInstance
-                                                                  .estimatedTime
-                                                                  .value,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: TextStyle(
-                                                                fontSize: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width >
-                                                                        720
-                                                                    ? 16
-                                                                    : 12.5,
+                                                                      .fileStatus[
+                                                                  item],
+                                                              item),
+                                                        ),
+                                                        if (getInstance
+                                                                .fileStatus[
+                                                                    item]
+                                                                .value ==
+                                                            "downloading") ...{
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 10),
+                                                            child: SizedBox(
+                                                              width:
+                                                                  width / 1.8,
+                                                              child: Text(
+                                                                getInstance
+                                                                    .estimatedTime
+                                                                    .value,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      MediaQuery.of(context).size.width >
+                                                                              720
+                                                                          ? 16
+                                                                          : 12.5,
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        )
-                                                      }
-                                                    ],
+                                                          )
+                                                        }
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            if (getInstance
-                                                .isCancelled[item].value) ...{
-                                              IconButton(
-                                                icon: const Padding(
-                                                  padding: EdgeInsets.all(0),
-                                                  child: Icon(
-                                                    Icons.refresh,
-                                                    semanticLabel: 'Restart',
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              if (getInstance
+                                                  .isCancelled[item].value) ...{
+                                                IconButton(
+                                                  icon: const Padding(
+                                                    padding: EdgeInsets.all(0),
+                                                    child: Icon(
+                                                      Icons.refresh,
+                                                      semanticLabel: 'Restart',
+                                                    ),
                                                   ),
-                                                ),
-                                                onPressed: () {
-                                                  //restart download
-                                                  getInstance.isCancelled[item]
-                                                      .value = false;
-                                                  PhotonReceiver.getFile(
-                                                    snap.data[item],
-                                                    item,
-                                                    widget.senderModel!,
-                                                  );
-                                                },
-                                              )
-                                            } else if (!getInstance
-                                                .isReceived[item].value) ...{
-                                              IconButton(
-                                                icon: const Padding(
-                                                  padding: EdgeInsets.all(0.0),
-                                                  child: Icon(
-                                                    Icons.cancel,
-                                                    semanticLabel:
-                                                        'Cancel receive',
+                                                  onPressed: () {
+                                                    //restart download
+                                                    getInstance
+                                                        .isCancelled[item]
+                                                        .value = false;
+                                                    PhotonReceiver.getFile(
+                                                      snap.data[item],
+                                                      item,
+                                                      widget.senderModel!,
+                                                    );
+                                                  },
+                                                )
+                                              } else if (!getInstance
+                                                  .isReceived[item].value) ...{
+                                                IconButton(
+                                                  icon: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(0.0),
+                                                    child: Icon(
+                                                      Icons.cancel,
+                                                      semanticLabel:
+                                                          'Cancel receive',
+                                                    ),
                                                   ),
-                                                ),
-                                                onPressed: () {
-                                                  getInstance.isCancelled[item]
-                                                      .value = true;
-                                                  getInstance
-                                                      .cancelTokenList[item]
-                                                      .cancel();
-                                                },
-                                              )
-                                            } else ...{
-                                              const Padding(
-                                                  padding: EdgeInsets.all(8),
-                                                  child:
-                                                      Icon(Icons.done_rounded))
-                                            },
-                                          ],
+                                                  onPressed: () {
+                                                    getInstance
+                                                        .isCancelled[item]
+                                                        .value = true;
+                                                    getInstance
+                                                        .cancelTokenList[item]
+                                                        .cancel();
+                                                  },
+                                                )
+                                              } else ...{
+                                                const Padding(
+                                                    padding: EdgeInsets.all(8),
+                                                    child: Icon(
+                                                        Icons.done_rounded))
+                                              },
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ));
-                              },
+                                  ));
+                                },
+                              ),
                             );
                           },
                         )
