@@ -17,7 +17,6 @@ class PhotonReceiver {
   static late Map<String, dynamic> filePathMap;
   static late Box _box;
   static late int id;
-  static Stopwatch stopwatch = Stopwatch();
 
   ///to get network address [assumes class C address]
   static List<String> getNetAddress(List<String> ipList) {
@@ -125,7 +124,6 @@ class PhotonReceiver {
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
       filePathMap = jsonDecode(resp.data);
       _secretCode = secretCode;
-      stopwatch.start();
 
       for (int fileIndex = 0;
           fileIndex < filePathMap['paths']!.length;
@@ -138,8 +136,7 @@ class PhotonReceiver {
         }
       }
       // sends after last file is sent
-      getInstance.totalTimeElapsed.value = stopwatch.elapsed.inSeconds;
-      stopwatch.reset();
+
       sendBackReceiverRealtimeData(senderModel);
       getInstance.isFinished.value = true;
     } catch (e) {
