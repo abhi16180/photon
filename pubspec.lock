@@ -284,9 +284,11 @@ packages:
   file_picker:
     dependency: "direct main"
     description:
-      path: "D:/flutter_file_picker"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "423b03281a87f9326825dc3ec3d9768f13a8c46c"
+      url: "https://github.com/abhi16180/flutter_file_picker.git"
+    source: git
     version: "5.2.0"
   fixnum:
     dependency: transitive
