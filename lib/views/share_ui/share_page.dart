@@ -168,9 +168,11 @@ class _SharePageState extends State<SharePage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              const Center(
-                                                child: Text("Sharing status"),
-                                              ),
+                                              if (item == 0) ...{
+                                                const Center(
+                                                  child: Text("Sharing status"),
+                                                ),
+                                              },
                                               const Divider(
                                                 thickness: 2.4,
                                                 indent: 20,

@@ -17,6 +17,7 @@ class PhotonReceiver {
   static late Map<String, dynamic> filePathMap;
   static late Box _box;
   static late int id;
+  static int totalTime = 0;
 
   ///to get network address [assumes class C address]
   static List<String> getNetAddress(List<String> ipList) {
@@ -49,7 +50,6 @@ class PhotonReceiver {
       Map<String, dynamic> senderInfo = jsonDecode(resp.data);
       return SenderModel.fromJson(senderInfo);
     } catch (_) {
-      print('ee' + '$_');
       return null;
     }
   }
@@ -139,6 +139,7 @@ class PhotonReceiver {
 
       sendBackReceiverRealtimeData(senderModel);
       getInstance.isFinished.value = true;
+      getInstance.totalTimeElapsed.value = totalTime;
     } catch (e) {
       debugPrint('$e');
     }
@@ -204,7 +205,7 @@ class PhotonReceiver {
           }
         },
       );
-
+      totalTime = totalTime + stopwatch.elapsed.inSeconds;
       stopwatch.reset();
       getInstance.speed.value = 0.0;
       //after completion of download mark it as true

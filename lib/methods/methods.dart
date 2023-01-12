@@ -9,13 +9,10 @@ import 'package:hive/hive.dart';
 import '../controllers/controllers.dart';
 
 String formatTime(int seconds) {
-  Duration duration = Duration(seconds: seconds);
-  String hr =
-      double.parse(duration.toString().split(':')[0]).toStringAsFixed(0);
-  String min =
-      double.parse(duration.toString().split(':')[1]).toStringAsFixed(0);
-  String sec =
-      double.parse(duration.toString().split(':')[2]).toStringAsFixed(0);
+  List<String> timeList = Duration(seconds: seconds).toString().split(':');
+  String hr = double.parse(timeList[0]).toStringAsFixed(0);
+  String min = double.parse(timeList[1]).toStringAsFixed(0);
+  String sec = double.parse(timeList[2]).toStringAsFixed(0);
   if (seconds > 3600) {
     return '$hr hr $min mins $sec s';
   }
@@ -136,6 +133,22 @@ Widget getFileIcon(String extn) {
         width: 30,
         height: 30,
       );
+  }
+}
+
+getStatusWidget(RxString status, idx) {
+  switch (status.value) {
+    case "waiting":
+      return const Text("Waiting");
+    case "downloading":
+      return Text(
+          '${GetIt.I.get<PercentageController>().percentage[idx].value}');
+    case "cancelled":
+      return const Text("Cancelled");
+    case "error":
+      return const Text("Error");
+    case "downloaded":
+      return const Text("Completed");
   }
 }
 
