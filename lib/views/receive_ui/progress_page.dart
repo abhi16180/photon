@@ -3,6 +3,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lottie/lottie.dart';
 import 'package:photon/components/snackbar.dart';
 import 'package:photon/controllers/controllers.dart';
 import 'package:photon/services/photon_receiver.dart';
@@ -158,9 +159,16 @@ class _ProgressPageState extends State<ProgressPage> {
                                             ],
                                           ),
                                         } else ...{
-                                          Text(
-                                            'Total time elapsed ${getInstance.totalTimeElapsed}',
-                                          )
+                                          Expanded(
+                                            flex: 2,
+                                            child: Lottie.asset(
+                                                'assets/lottie/fire.json'),
+                                          ),
+                                          Expanded(
+                                              flex: 1,
+                                              child: Text(
+                                                'Time taken, ${formatTime(getInstance.totalTimeElapsed.value)}',
+                                              ))
                                         }
                                       ],
                                     ),

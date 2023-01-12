@@ -8,6 +8,24 @@ import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import '../controllers/controllers.dart';
 
+String formatTime(int seconds) {
+  Duration duration = Duration(seconds: seconds);
+  String hr =
+      double.parse(duration.toString().split(':')[0]).toStringAsFixed(0);
+  String min =
+      double.parse(duration.toString().split(':')[1]).toStringAsFixed(0);
+  String sec =
+      double.parse(duration.toString().split(':')[2]).toStringAsFixed(0);
+  if (seconds > 3600) {
+    return '$hr hr $min mins $sec s';
+  }
+
+  if (seconds > 60) {
+    return '$min min, $sec s';
+  }
+  return '$sec seconds';
+}
+
 Future<List<String>> getIP() async {
   // todo handle exception when no ip available
   List<NetworkInterface> listOfInterfaces = await NetworkInterface.list();
