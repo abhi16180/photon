@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:unicons/unicons.dart';
 
 import '../models/sender_model.dart';
@@ -74,7 +75,7 @@ infoList(
   ];
   var serverDataList = [
     {'type': 'IP'.padRight(12), 'value': senderModel.ip},
-    {'type': 'User'.padRight(10), 'value': senderModel.host},
+    {'type': 'User'.padRight(10), 'value': Hive.box('appData').get('username')},
     {'type': 'OS'.padRight(11), 'value': senderModel.os},
     {'type': 'Version', 'value': senderModel.version}
   ];

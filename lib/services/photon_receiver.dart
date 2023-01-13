@@ -118,7 +118,7 @@ class PhotonReceiver {
         GetIt.instance.get<PercentageController>();
     //getting hiveObj
     _box = Hive.box('appData');
-
+    String filePath = '';
     try {
       var resp = await Dio()
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
@@ -131,8 +131,19 @@ class PhotonReceiver {
         //if a file is cancelled once ,it should not be automatically fetched without user action
         if (getInstance.isCancelled[fileIndex].value == false) {
           getInstance.fileStatus[fileIndex].value = Status.downloading.name;
-          await getFile(
-              filePathMap['paths'][fileIndex], fileIndex, senderModel);
+
+          if (filePathMap.containsKey('isApk')) {
+            if (filePathMap['isApk']) {
+              // when sender sends apk files
+              // this case is not true when sender sends apk from generic file selection
+              filePath =
+                  '${filePathMap['paths'][fileIndex].toString().split("/")[4].split(".").last}.apk';
+            }
+          } else {
+            filePath = filePathMap['paths'][fileIndex];
+          }
+
+          await getFile(filePath, fileIndex, senderModel);
         }
       }
       // sends after last file is sent

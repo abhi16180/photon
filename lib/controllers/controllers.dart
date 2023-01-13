@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum Status { waiting, downloaded, cancelled, downloading, error }
@@ -19,4 +20,8 @@ class PercentageController extends GetxController {
 
 class ReceiverDataController extends GetxController {
   var receiverMap = {}.obs;
+}
+
+class St {
+  BuildContext? cxt;
 }

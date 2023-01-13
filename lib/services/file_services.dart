@@ -34,10 +34,17 @@ class FileMethods {
     }
   }
 
-  static Future<FileModel> extractFileData(path) async {
+  static Future<FileModel> extractFileData(path, {bool isApk = false}) async {
     File file = File(path);
     int size = await file.length();
-    String fileName = path.split(Platform.isWindows ? r'\' : '/').last;
+    late String fileName;
+    if (isApk) {
+      fileName =
+          path.split(Platform.pathSeparator)[4].toString().split('.').last;
+    } else {
+      fileName = path.split(Platform.isWindows ? r'\' : '/').last;
+    }
+
     String type = path.toString().split('.').last;
     return FileModel.fromFileData(
         {'name': fileName, 'size': size, 'file': file, 'extension': type});
@@ -74,10 +81,20 @@ class FileMethods {
   static Future<List<String>> getFileNames(SenderModel senderModel) async {
     var resp = await Dio()
         .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
-    var filePathMap = jsonDecode(resp.data);
+    Map<String, dynamic> filePathMap = jsonDecode(resp.data);
     List<String> fileNames = [];
-    for (String path in filePathMap['paths']) {
-      fileNames.add(path.split(senderModel.os == "windows" ? r'\' : r'/').last);
+    if (filePathMap.containsKey('isApk')) {
+      if (filePathMap['isApk']) {
+        for (String path in filePathMap['paths']) {
+          fileNames.add(
+              '${path.split("/")[4].split(".").last.split('-').first}.apk');
+        }
+      }
+    } else {
+      for (String path in filePathMap['paths']) {
+        fileNames
+            .add(path.split(senderModel.os == "windows" ? r'\' : r'/').last);
+      }
     }
     return fileNames;
   }

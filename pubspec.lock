@@ -246,6 +246,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.4"
+  device_apps:
+    dependency: "direct main"
+    description:
+      name: device_apps
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   dio:
     dependency: "direct main"
     description:
@@ -550,6 +557,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.18"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   open_file:
     dependency: "direct main"
     description:
@@ -713,6 +727,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.5"
   pub_semver:
     dependency: transitive
     description:

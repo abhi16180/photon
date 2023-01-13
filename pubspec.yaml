@@ -55,8 +55,10 @@ dependencies:
   adaptive_theme: 
   system_settings:
   stop_watch_timer:
-  flutter_markdown:   
+  flutter_markdown:  
+  device_apps: 
   http:
+  provider: 
   # This is modified version of file_picker it is faster and doesn't cache files unnecessarily
   file_picker:
     git:

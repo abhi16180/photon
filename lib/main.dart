@@ -27,6 +27,7 @@ void main() async {
   box.get('avatarPath') ?? box.put('avatarPath', 'assets/avatars/1.png');
   box.get('username') ?? box.put('username', '${Platform.localHostname} user');
   GetIt getIt = GetIt.instance;
+  getIt.registerSingleton(St());
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
   prefInst.get('isDarkTheme') ?? prefInst.setBool('isDarkTheme', true);
