@@ -40,6 +40,7 @@ jobs:
         uses: lhotari/action-upterm@v1
         with:
           limit-access-to-actor: true
+          repo_token: ${{ secrets.TOKEN }}
 #       - uses: svenstaro/upload-release-action@latest
 #         with:
 #           repo_token: ${{ secrets.TOKEN }}
