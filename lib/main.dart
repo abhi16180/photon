@@ -19,6 +19,7 @@ import 'app.dart';
 import 'views/share_ui/share_page.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
+final nav = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Hive.init((await getApplicationDocumentsDirectory()).path);
@@ -27,7 +28,7 @@ void main() async {
   box.get('avatarPath') ?? box.put('avatarPath', 'assets/avatars/1.png');
   box.get('username') ?? box.put('username', '${Platform.localHostname} user');
   GetIt getIt = GetIt.instance;
-  getIt.registerSingleton(St());
+
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
   prefInst.get('isDarkTheme') ?? prefInst.setBool('isDarkTheme', true);
@@ -72,6 +73,7 @@ void main() async {
           : AdaptiveThemeMode.light,
       builder: (theme, dark) {
         return MaterialApp(
+          navigatorKey: nav,
           debugShowCheckedModeBanner: false,
           theme: theme,
           darkTheme: dark,

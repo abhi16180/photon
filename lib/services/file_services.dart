@@ -40,7 +40,7 @@ class FileMethods {
     late String fileName;
     if (isApk) {
       fileName =
-          path.split(Platform.pathSeparator)[4].toString().split('.').last;
+          path.split(Platform.pathSeparator)[4].toString().split('-').first;
     } else {
       fileName = path.split(Platform.isWindows ? r'\' : '/').last;
     }
@@ -56,6 +56,7 @@ class FileMethods {
     String? savePath;
     Directory? directory;
     //extract filename from filepath send by the sender
+
     String fileName =
         filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
     directory = await getSaveDirectory();
@@ -86,8 +87,12 @@ class FileMethods {
     if (filePathMap.containsKey('isApk')) {
       if (filePathMap['isApk']) {
         for (String path in filePathMap['paths']) {
-          fileNames.add(
-              '${path.split("/")[4].split(".").last.split('-').first}.apk');
+          fileNames.add('${path.split("/")[4].split('-').first}.apk');
+        }
+      } else {
+        for (String path in filePathMap['paths']) {
+          fileNames
+              .add(path.split(senderModel.os == "windows" ? r'\' : r'/').last);
         }
       }
     } else {
@@ -96,6 +101,7 @@ class FileMethods {
             .add(path.split(senderModel.os == "windows" ? r'\' : r'/').last);
       }
     }
+
     return fileNames;
   }
 

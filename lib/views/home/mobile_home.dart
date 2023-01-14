@@ -41,7 +41,7 @@ class _MobileHomeState extends State<MobileHome> {
                   child: InkWell(
                     onTap: () async {
                       if (Platform.isAndroid) {
-                        await showModalBottomSheet(
+                        showModalBottomSheet(
                             context: context,
                             builder: (context) {
                               return Column(
@@ -65,8 +65,9 @@ class _MobileHomeState extends State<MobileHome> {
                                         setState(() {
                                           isLoading = true;
                                         });
-                                        await PhotonSender.handleSharing(
-                                            context);
+
+                                        await PhotonSender.handleSharing();
+
                                         setState(() {
                                           isLoading = false;
                                         });
@@ -105,12 +106,10 @@ class _MobileHomeState extends State<MobileHome> {
                                             205, 117, 255, 122)
                                         : Colors.blue,
                                     onPressed: () async {
-                                      await Permission.requestInstallPackages
-                                          .request();
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  AppsList()));
+                                                  const AppsList()));
                                     },
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -142,10 +141,9 @@ class _MobileHomeState extends State<MobileHome> {
                       } else {
                         setState(() {
                           isLoading = true;
-                          Navigator.of(context).pop();
                         });
-                        GetIt.instance.get<St>().cxt = context;
-                        await PhotonSender.handleSharing(context);
+
+                        await PhotonSender.handleSharing();
                         setState(() {
                           isLoading = false;
                         });

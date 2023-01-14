@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path/path.dart';
+import 'package:photon/main.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart' as ulaunch;
@@ -196,9 +198,9 @@ senderRequestDialog(
 ) async {
   bool allowRequest = false;
   SharedPreferences prefInst = await SharedPreferences.getInstance();
-  final nav = GetIt.I.get<St>();
+
   await showDialog(
-      context: nav.cxt!,
+      context: nav.currentContext!,
       builder: (context) {
         return AlertDialog(
           backgroundColor: prefInst.getBool('isDarkTheme') == true

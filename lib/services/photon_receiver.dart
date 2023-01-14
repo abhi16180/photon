@@ -15,7 +15,7 @@ import 'package:http/http.dart' as http;
 class PhotonReceiver {
   static late int _secretCode;
   static late Map<String, dynamic> filePathMap;
-  static late Box _box;
+  static final Box _box = Hive.box('appData');
   static late int id;
   static int totalTime = 0;
 
@@ -83,9 +83,8 @@ class PhotonReceiver {
   }
 
   static isRequestAccepted(SenderModel senderModel) async {
-    Box box = Hive.box('appData');
-    String username = box.get('username');
-    var avatar = await rootBundle.load(box.get('avatarPath'));
+    String username = _box.get('username');
+    var avatar = await rootBundle.load(_box.get('avatarPath'));
     var resp = await http.get(
         Uri.parse('http://${senderModel.ip}:${senderModel.port}/get-code'),
         headers: {
@@ -106,7 +105,7 @@ class PhotonReceiver {
       headers: {
         "receiverID": id.toString(),
         "os": Platform.operatingSystem,
-        "hostName": Platform.localHostname,
+        "hostName": _box.get('username'),
         "currentFile": '${fileIndex + 1}',
         "isCompleted": '$isCompleted',
       },
@@ -117,8 +116,9 @@ class PhotonReceiver {
     PercentageController getInstance =
         GetIt.instance.get<PercentageController>();
     //getting hiveObj
-    _box = Hive.box('appData');
+
     String filePath = '';
+    totalTime = 0;
     try {
       var resp = await Dio()
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
@@ -137,7 +137,9 @@ class PhotonReceiver {
               // when sender sends apk files
               // this case is not true when sender sends apk from generic file selection
               filePath =
-                  '${filePathMap['paths'][fileIndex].toString().split("/")[4].split(".").last}.apk';
+                  '${filePathMap['paths'][fileIndex].toString().split("/")[4].split("-").first}.apk';
+            } else {
+              filePath = filePathMap['paths'][fileIndex];
             }
           } else {
             filePath = filePathMap['paths'][fileIndex];
@@ -177,6 +179,7 @@ class PhotonReceiver {
       sendBackReceiverRealtimeData(senderModel,
           fileIndex: fileIndex, isCompleted: false);
       stopwatch.start();
+
       getInstance.fileStatus[fileIndex].value = "downloading";
       await dio.download(
         'http://${senderModel.ip}:4040/$_secretCode/$fileIndex',

@@ -56,8 +56,7 @@ class _HandleIntentUIState extends State<HandleIntentUI> {
                     sts(() {
                       isLoading = true;
                     });
-                    await PhotonSender.handleSharing(context,
-                        externalIntent: true);
+                    await PhotonSender.handleSharing(externalIntent: true);
                     sts(() {
                       isLoading = false;
                     });

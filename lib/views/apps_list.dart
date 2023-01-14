@@ -76,7 +76,7 @@ class _AppsListState extends State<AppsList> {
           }),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          PhotonSender.handleSharing(context, appList: paths);
+          PhotonSender.handleSharing(appList: paths);
         },
         label: const Text('Share'),
         icon: const Icon(UniconsLine.share),

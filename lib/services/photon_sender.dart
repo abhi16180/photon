@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/route_manager.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
@@ -10,6 +11,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:hive/hive.dart';
 import '../components/dialogs.dart';
 import '../components/snackbar.dart';
+import '../main.dart';
 import 'file_services.dart';
 
 class PhotonSender {
@@ -40,27 +42,29 @@ class PhotonSender {
     if (ip.isNotEmpty) _address = ip.first;
   }
 
-  static handleSharing(
-    BuildContext context, {
+  static handleSharing({
     bool externalIntent = false,
     List<String> appList = const <String>[],
   }) async {
-    final navigator = Navigator.of(context);
-    navigator.pop();
-    Map<String, dynamic> shareRespMap = await PhotonSender.share(context,
-        externalIntent: externalIntent, appList: appList);
+    if (Platform.isAndroid) {
+      // cause in case of android bottom sheet opens up when share is tapped
+      Navigator.pop(nav.currentContext!);
+    }
+    Map<String, dynamic> shareRespMap = await PhotonSender.share(
+        nav.currentContext,
+        externalIntent: externalIntent,
+        appList: appList);
     ShareError shareErr = ShareError.fromMap(shareRespMap);
 
     switch (shareErr.hasError) {
       case true:
-
         // ignore: use_build_context_synchronously
-        showSnackBar(context, '${shareErr.errorMessage}');
+        showSnackBar(nav.currentContext, '${shareErr.errorMessage}');
         break;
 
       case false:
         // ignore: use_build_context_synchronously
-        navigator.pushNamed('/sharepage');
+        Navigator.pushNamed(nav.currentContext!, '/sharepage');
         break;
     }
   }
