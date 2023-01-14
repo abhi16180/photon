@@ -39,8 +39,7 @@ jobs:
         if: ${{ failure() }}
         uses: lhotari/action-upterm@v1
         with:
-          limit-access-to-actor: true
-          repo_token: ${{ secrets.TOKEN }}
+          limit-access-to-actor: false
 #       - uses: svenstaro/upload-release-action@latest
 #         with:
 #           repo_token: ${{ secrets.TOKEN }}
