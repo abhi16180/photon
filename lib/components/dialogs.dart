@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path/path.dart';
+import 'package:photon/main.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart' as ulaunch;
 
@@ -190,7 +193,6 @@ sharePageWillPopDialog(context) async {
 }
 
 senderRequestDialog(
-  BuildContext context,
   String username,
   String os,
 ) async {
@@ -198,7 +200,7 @@ senderRequestDialog(
   SharedPreferences prefInst = await SharedPreferences.getInstance();
 
   await showDialog(
-      context: context,
+      context: nav.currentContext!,
       builder: (context) {
         return AlertDialog(
           backgroundColor: prefInst.getBool('isDarkTheme') == true

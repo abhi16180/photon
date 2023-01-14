@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/route_manager.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
@@ -10,6 +11,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:hive/hive.dart';
 import '../components/dialogs.dart';
 import '../components/snackbar.dart';
+import '../main.dart';
 import 'file_services.dart';
 
 class PhotonSender {
@@ -19,8 +21,12 @@ class PhotonSender {
   static late int _randomSecretCode;
   static late String photonLink;
   static late Uint8List avatar;
-  static getFilesPath() async {
+  static getFilesPath({List<String> appList = const <String>[]}) async {
     //flutter specific package
+    if (appList.isNotEmpty) {
+      _fileList = appList;
+      return true;
+    }
     _fileList = await FileMethods.pickFiles();
     if (_fileList.isEmpty) {
       return false;
@@ -36,27 +42,36 @@ class PhotonSender {
     if (ip.isNotEmpty) _address = ip.first;
   }
 
-  static handleSharing(BuildContext context,
-      {bool externalIntent = false}) async {
-    Map<String, dynamic> shareRespMap =
-        await PhotonSender.share(context, externalIntent: externalIntent);
+  static handleSharing({
+    bool externalIntent = false,
+    List<String> appList = const <String>[],
+  }) async {
+    if (Platform.isAndroid) {
+      // cause in case of android bottom sheet opens up when share is tapped
+      Navigator.pop(nav.currentContext!);
+    }
+    Map<String, dynamic> shareRespMap = await PhotonSender.share(
+        nav.currentContext,
+        externalIntent: externalIntent,
+        appList: appList);
     ShareError shareErr = ShareError.fromMap(shareRespMap);
 
     switch (shareErr.hasError) {
       case true:
         // ignore: use_build_context_synchronously
-        showSnackBar(context, '${shareErr.errorMessage}');
+        showSnackBar(nav.currentContext, '${shareErr.errorMessage}');
         break;
 
       case false:
         // ignore: use_build_context_synchronously
-        Navigator.pushNamed(context, '/sharepage');
+        Navigator.pushNamed(nav.currentContext!, '/sharepage');
         break;
     }
   }
 
   static Future<Map<String, dynamic>> _startServer(
-      List<String?> fileList, context) async {
+      List<String?> fileList, context,
+      {bool isApk = false}) async {
     //todo remove print statements
     late Map<String, Object> serverInf;
 
@@ -103,10 +118,9 @@ class PhotonSender {
           String os = (request.headers['os']![0]);
           String username = request.headers['receiver-name']![0];
 
-          allowRequest = await senderRequestDialog(context, username, os);
+          allowRequest = await senderRequestDialog(username, os);
           if (allowRequest == true) {
             //appending receiver data
-
             request.response.write(
                 jsonEncode({'code': _randomSecretCode, 'accepted': true}));
             request.response.close();
@@ -118,7 +132,8 @@ class PhotonSender {
           }
         } else if (request.requestedUri.toString() ==
             'http://$_address:4040/getpaths') {
-          request.response.write(jsonEncode({'paths': fileList}));
+          request.response
+              .write(jsonEncode({'paths': fileList, 'isApk': isApk}));
           request.response.close();
         } else if (request.requestedUri.toString() ==
             'http://$_address:4040/favicon.ico') {
@@ -193,8 +208,11 @@ class PhotonSender {
     };
   }
 
-  static Future<Map<String, dynamic>> share(context,
-      {bool externalIntent = false}) async {
+  static Future<Map<String, dynamic>> share(
+    context, {
+    bool externalIntent = false,
+    List<String> appList = const <String>[],
+  }) async {
     if (externalIntent) {
       // When user tries to share files opened / listed on external app
       // Photon will be opened along with intended files' paths.
@@ -207,9 +225,10 @@ class PhotonSender {
     } else {
       // User manually opens photon
       // Selects files
-      if (await getFilesPath()) {
+      if (await getFilesPath(appList: appList)) {
         await assignIP();
-        Map<String, dynamic> res = await _startServer(_fileList, context);
+        Map<String, dynamic> res =
+            await _startServer(_fileList, context, isApk: appList.isNotEmpty);
         return res;
       } else {
         return {'hasErr': true, 'type': 'file', 'errMsg': "No file chosen"};

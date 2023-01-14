@@ -1,9 +1,13 @@
 import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/methods/handle_share.dart';
+import '../../controllers/controllers.dart';
 import '../../services/photon_sender.dart';
+import '../apps_list.dart';
 
 class WidescreenHome extends StatefulWidget {
   const WidescreenHome({Key? key}) : super(key: key);
@@ -35,13 +39,115 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                     ),
                     child: InkWell(
                       onTap: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await PhotonSender.handleSharing(context);
-                        setState(() {
-                          isLoading = false;
-                        });
+                        if (Platform.isAndroid) {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(
+                                      height: 50,
+                                    ),
+                                    MaterialButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        minWidth:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        color: mode.isDark
+                                            ? const Color.fromARGB(
+                                                205, 117, 255, 122)
+                                            : Colors.blue,
+                                        onPressed: () async {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+
+                                          await PhotonSender.handleSharing();
+
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                        },
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: const [
+                                            Icon(
+                                              Icons.file_open,
+                                              color: Colors.white,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              'Files',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                    MaterialButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      minWidth:
+                                          MediaQuery.of(context).size.width / 2,
+                                      color: mode.isDark
+                                          ? const Color.fromARGB(
+                                              205, 117, 255, 122)
+                                          : Colors.blue,
+                                      onPressed: () async {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AppsList()));
+                                      },
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/icons/android.svg',
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          const Text(
+                                            'Apps',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 50,
+                                    ),
+                                  ],
+                                );
+                              });
+                        } else {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await PhotonSender.handleSharing();
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
                       },
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -80,32 +186,59 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                           showModalBottomSheet(
                               context: context,
                               builder: (context) {
-                                return Center(
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            HandleShare(context: context)
-                                                .onNormalScanTap();
-                                          },
-                                          child: const Text('Normal mode'),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () async {
-                                            HandleShare(context: context)
-                                                .onQrScanTap();
-                                          },
-                                          child: const Text('QR Code mode'),
-                                        )
-                                      ],
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(
+                                      height: 20,
                                     ),
-                                  ),
+                                    MaterialButton(
+                                      onPressed: () async {
+                                        HandleShare(context: context)
+                                            .onNormalScanTap();
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      minWidth:
+                                          MediaQuery.of(context).size.width / 2,
+                                      color: mode.isDark
+                                          ? const Color.fromARGB(
+                                              205, 117, 255, 122)
+                                          : Colors.blue,
+                                      child: const Text(
+                                        'Normal mode',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    MaterialButton(
+                                      onPressed: () {
+                                        HandleShare(context: context)
+                                            .onQrScanTap();
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      minWidth:
+                                          MediaQuery.of(context).size.width / 2,
+                                      color: mode.isDark
+                                          ? const Color.fromARGB(
+                                              205, 117, 255, 122)
+                                          : Colors.blue,
+                                      child: const Text(
+                                        'QR code mode',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 50,
+                                    ),
+                                  ],
                                 );
                               });
                         } else {
@@ -142,7 +275,7 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                   ),
                   const Center(
                     child: Text(
-                      'Please wait !',
+                      'Please wait, file(s) are being fetched',
                       style: TextStyle(
                         fontSize: 20,
                       ),
