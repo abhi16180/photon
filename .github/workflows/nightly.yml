@@ -7,48 +7,53 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_ubuntu:
-    runs-on: ubuntu-20.04
+  build-linux:
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v2
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@master
         with:
-          cache: true
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-      - run: |
-          sudo apt-get update -y
-          sudo apt-get install -y tar clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
-      - run: |
-          wget -O appimage-builder https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.1.0/appimage-builder-1.1.0-x86_64.AppImage
-          chmod +x appimage-builder
-          mv appimage-builder /usr/local/bin/
-      - run: |
-          flutter config --enable-linux-desktop
-          flutter pub get
-          dart pub global activate flutter_distributor
-          flutter_distributor package --platform=linux --targets=appimage --skip-clean
-          
-    
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Photon-Linux-Bundle
-          path: dist/
-      - name: Setup upterm session
-        if: ${{ failure() }}
-        uses: lhotari/action-upterm@v1
-        with:
-          limit-access-to-actor: true
+          channel: stable
+
+      - name: Install dependencies
+        run: sudo apt-get update -y && sudo apt-get install -y libfuse2 libvlc-dev ninja-build libgtk-3-dev dpkg-dev pkg-config rpm
+
+      - name: Enable desktop support
+        run: flutter config --enable-linux-desktop
+
+      - name: Build Flutter app
+        run: flutter build linux
+
+      # - name: Update version
+      #   run: |
+      #     version=$(grep "^version" pubspec.yaml | awk '{print $2}')
+      #     sed -i "s:VERSION:$(echo $version):" linux/packaging/rpm/Photon.spec
+      #     sed -i "s:VERSION:$(echo $version):" linux/packaging/deb/DEBIAN/control
+
+      - name: Build AppImage
+        run: |
+          echo '#!/bin/sh
+          cd "$(dirname "$0")"
+          exec ./Photon' > AppDir/AppRun
+          chmod +x AppDir/AppRun
+          cp AppDir/usr/share/applications/Photon.desktop AppDir/Photon.desktop
+          curl -L https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -o appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir/ Photon-linux-${{ github.event_name == 'release' && github.event.release.tag_name || 'continuous' }}-x86_64.AppImage
+
       - uses: svenstaro/upload-release-action@latest
         with:
           repo_token: ${{ secrets.TOKEN }}
-          file: Photon-Linux-Bundle
+          file: Photon-linux-*
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
           overwrite: true
+
 
 #   build_android:
 #     runs-on: ubuntu-latest
