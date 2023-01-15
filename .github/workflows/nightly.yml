@@ -37,7 +37,6 @@ jobs:
         run: |
           echo '#!/bin/sh
           cd "$(dirname "$0")"
- 
           cp AppDir/usr/share/applications/Photon.desktop AppDir/Photon.desktop
           curl -L https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -o appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
