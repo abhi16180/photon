@@ -7,42 +7,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  
-    name: Ubuntu
-    runs-on: Ubuntu-20.04
+  build_ubuntu:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: subosito/flutter-action@v1
-      with:
-        flutter-version: '3.3.10'
-    - run: flutter channel dev
-    - run: flutter upgrade
-    - run: flutter config --enable-linux-desktop
-    - name: "Install dependencies"
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake ninja-build build-essential pkg-config curl file git unzip xz-utils zip libgtk-3-dev
-    - name: Build flutter app
-      run: flutter build linux
-    - name: Build AppImage unsing appimage-builder
-      uses: docker://appimagecrafters/appimage-builder:0.8.5
-      with:
-        entrypoint: appimage-builder
-        args: --recipe ./AppImageBuilder.yml --skip-test
-    - name: Save build Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: AppImage
-        path: './*.AppImage*'
-    - name: Release AppImage
-      uses: marvinpinto/action-automatic-releases@latest
-      with:
-        title: Development Build
-        automatic_release_tag: 'nightly'
-        prerelease: true
-        draft: false
-        files: './*.AppImage*'
-        repo_token: ${{ secrets.TOKEN }}
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - run: |
+          sudo apt-get update -y
+          sudo apt-get install -y tar clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+      - run: |
+          wget -O appimage-builder-x86_64.AppImage https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.0-beta.1/appimage-builder-1.0.0-677acbd-x86_64.AppImage
+          chmod +x appimage-builder-x86_64.AppImage
+          mv appimage-builder-x86_64.AppImage /usr/local/bin/appimage-builder
+      - run: |
+          flutter config --enable-linux-desktop
+          flutter pub get
+          dart pub global activate flutter_distributor
+          flutter_distributor package --platform=linux --targets=appimage --skip-clean
+          
+    
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Photon-Linux-Bundle
+          path: dist/
+      - name: Setup upterm session
+        if: ${{ failure() }}
+        uses: lhotari/action-upterm@v1
+        with:
+          limit-access-to-actor: true
+      - uses: svenstaro/upload-release-action@latest
+        with:
+          repo_token: ${{ secrets.TOKEN }}
+          file: Photon-Linux-Bundle
+          file_glob: true
+          prerelease: ${{ github.event_name != 'release' }}
+          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+          overwrite: true
 
 #   build_android:
 #     runs-on: ubuntu-latest
@@ -150,5 +156,3 @@ jobs:
         token: ${{secrets.TOKEN}}
         path: |
           build/ios/ipa/*.ipa
-
-    
