@@ -144,7 +144,7 @@ class _AppState extends State<App> {
                             showLicensePage(
                                 context: context,
                                 applicationLegalese: 'GPL3 license',
-                                applicationVersion: "1.1.1",
+                                applicationVersion: "1.2.0",
                                 applicationIcon: Image.asset(
                                   'assets/images/splash.png',
                                   width: 60,
@@ -195,7 +195,7 @@ class _AppState extends State<App> {
                             const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text(
-                                'Photon v 1.1.1',
+                                'Photon v 1.2.0',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
