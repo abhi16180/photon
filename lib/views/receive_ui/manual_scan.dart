@@ -317,31 +317,20 @@ class _ReceivePageState extends State<ReceivePage> {
                         );
                       });
                     } else {
-                      return SingleChildScrollView(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              if (width < 720) ...{
-                                const SizedBox(
-                                  height: 100,
-                                ),
-                              },
-                              const Text(
-                                'Scanning ...',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Center(
-                                child: Lottie.asset(
-                                    'assets/lottie/wifi_scan.json',
-                                    width: width < 720 ? 400 : width / 2.4,
-                                    height: width < 720 ? 400 : width / 2.4),
-                              )
-                            ],
+                      return Center(
+                        child: SingleChildScrollView(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Lottie.asset(
+                                    'assets/lottie/searching.json',
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       );
