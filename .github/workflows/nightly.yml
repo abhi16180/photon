@@ -7,45 +7,45 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
+  # build-linux:
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v2
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v1
-      with:
-        flutter-version: 'stable'
-        channel: stable
+  #   - name: Setup Flutter
+  #     uses: subosito/flutter-action@v1
+  #     with:
+  #       flutter-version: 'stable'
+  #       channel: stable
 
-    - name: Install dependencies
-      run: flutter pub get
+  #   - name: Install dependencies
+  #     run: flutter pub get
 
-    - name: Build App
-      run: flutter build linux --release --target=linux/x64
+  #   - name: Build App
+  #     run: flutter build linux --release --target=linux/x64
 
-    - name: Create AppImage
-      run: |
-        wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage build/linux/release/bundle/libapp.so -appimage
+  #   - name: Create AppImage
+  #     run: |
+  #       wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+  #       chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+  #       ./linuxdeployqt-continuous-x86_64.AppImage build/linux/release/bundle/libapp.so -appimage
         
-    - name: Archive AppImage
-      uses: actions/upload-artifact@v2
-      with:
-        name: app.AppImage
-        path: app-x86_64.AppImage
-    - uses: svenstaro/upload-release-action@latest
-      with:
-        repo_token: ${{ secrets.TOKEN }}
-        file: build/app-x86_64.AppImage
-        file_glob: true
-        prerelease: ${{ github.event_name != 'release' }}
-        release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-        tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-        overwrite: true
+  #   - name: Archive AppImage
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: app.AppImage
+  #       path: app-x86_64.AppImage
+  #   - uses: svenstaro/upload-release-action@latest
+  #     with:
+  #       repo_token: ${{ secrets.TOKEN }}
+  #       file: build/app-x86_64.AppImage
+  #       file_glob: true
+  #       prerelease: ${{ github.event_name != 'release' }}
+  #       release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+  #       tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+  #       overwrite: true
 
 
 #   build_android:
