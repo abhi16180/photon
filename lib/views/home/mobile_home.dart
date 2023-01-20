@@ -49,51 +49,52 @@ class _MobileHomeState extends State<MobileHome> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const SizedBox(
-                                    height: 50,
+                                    height: 20,
                                   ),
                                   MaterialButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      minWidth:
-                                          MediaQuery.of(context).size.width / 2,
-                                      color: mode.isDark
-                                          ? const Color.fromARGB(
-                                              205, 117, 255, 122)
-                                          : Colors.blue,
-                                      onPressed: () async {
-                                        setState(() {
-                                          isLoading = true;
-                                        });
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    minWidth:
+                                        MediaQuery.of(context).size.width / 2,
+                                    color: mode.isDark
+                                        ? const Color.fromARGB(
+                                            205, 117, 255, 122)
+                                        : Colors.blue,
+                                    onPressed: () async {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
 
-                                        await PhotonSender.handleSharing();
+                                      await PhotonSender.handleSharing();
 
-                                        setState(() {
-                                          isLoading = false;
-                                        });
-                                      },
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: const [
-                                          Icon(
-                                            Icons.file_open,
-                                            color: Colors.white,
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                    },
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: const [
+                                        Icon(
+                                          Icons.file_open,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          'Files',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            'Files',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      )),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   const SizedBox(
-                                    height: 30,
+                                    height: 20,
                                   ),
                                   MaterialButton(
                                     shape: RoundedRectangleBorder(

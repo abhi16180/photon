@@ -48,7 +48,7 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     const SizedBox(
-                                      height: 50,
+                                      height: 20,
                                     ),
                                     MaterialButton(
                                         shape: RoundedRectangleBorder(
@@ -94,7 +94,7 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                                           ],
                                         )),
                                     const SizedBox(
-                                      height: 30,
+                                      height: 25,
                                     ),
                                     MaterialButton(
                                       shape: RoundedRectangleBorder(

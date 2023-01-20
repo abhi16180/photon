@@ -39,3 +39,15 @@ choco:
 
 msix:
 	flutter pub run msix:create
+
+
+# On local machine 
+
+winandroid:
+	flutter pub get packages
+	flutter build windows
+	flutter build apk --split-per-abi
+
+	
+	
+	
