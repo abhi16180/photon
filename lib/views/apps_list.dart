@@ -1,5 +1,6 @@
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
+import 'package:photon/components/snackbar.dart';
 import 'package:photon/services/photon_sender.dart';
 import 'package:provider/provider.dart';
 import 'package:unicons/unicons.dart';
@@ -76,7 +77,12 @@ class _AppsListState extends State<AppsList> {
           }),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          PhotonSender.handleSharing(appList: paths);
+          if (paths.isNotEmpty) {
+            PhotonSender.handleSharing(appList: paths);
+          } else {
+            Navigator.of(context).pop();
+            showSnackBar(context, 'No apk chosen');
+          }
         },
         label: const Text('Share'),
         icon: const Icon(UniconsLine.share),
