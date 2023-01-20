@@ -6,7 +6,7 @@ Peer to Peer (P2P) data transfer within LAN. Under heavy development 🚧.
 <h1 >Welcome to Photon👋</h1><br>
 <p align="center"> <img style="border-radius:20px" src="photon.png" width="400px"></p>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.1.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.2.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://twitter.com/AbhilashHegde9" target="_blank">
     <img alt="Twitter: AbhilashHegde9" src="https://img.shields.io/twitter/follow/AbhilashHegde9.svg?style=social" />
   </a>
@@ -88,7 +88,7 @@ flutter run
 
 ### FAQ / Notes: 
 - The **LICENSE** has been updated to GPL3 from MIT 
-- **File transfer location:** Currently the app doesn't allow users to set a file-location. But before the sharing process starts, it will show the file-storing location (see image below). I have set downloads folder as file-storing location.
+- **File transfer location:** Now you can edit file saving location. By default files will be stored at internal_storage/Download/Photon directory.
 ![image](https://user-images.githubusercontent.com/63426722/191982511-b5d6fab2-7fb9-4588-b014-7957c4b1829d.png)
 - If you run the program with `flutter run` and **if you see a blank application window instead of the UI**, try running `flutter run --enable-software-rendering` instead. 
 
