@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/methods/handle_share.dart';
@@ -18,6 +19,7 @@ class WidescreenHome extends StatefulWidget {
 
 class _WidescreenHomeState extends State<WidescreenHome> {
   bool isLoading = false;
+  Box box = Hive.box('appData');
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -97,42 +99,79 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                                       height: 25,
                                     ),
                                     MaterialButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      minWidth:
-                                          MediaQuery.of(context).size.width / 2,
-                                      color: mode.isDark
-                                          ? const Color.fromARGB(
-                                              205, 117, 255, 122)
-                                          : Colors.blue,
-                                      onPressed: () async {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const AppsList()));
-                                      },
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SvgPicture.asset(
-                                            'assets/icons/android.svg',
-                                            color: Colors.white,
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          const Text(
-                                            'Apps',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        minWidth:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        color: mode.isDark
+                                            ? const Color.fromARGB(
+                                                205, 117, 255, 122)
+                                            : Colors.blue,
+                                        onPressed: () async {
+                                          if (box.get('queryPackages')) {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const AppsList()));
+                                          } else {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                      'Query installed packages'),
+                                                  content: const Text(
+                                                      'To get installed apps, you need to allow photon to query all installed packages. Would you like to continue ?'),
+                                                  actions: [
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child:
+                                                          const Text('Go back'),
+                                                    ),
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        box.put('queryPackages',
+                                                            true);
+
+                                                        Navigator.of(context)
+                                                            .popAndPushNamed(
+                                                                '/apps');
+                                                      },
+                                                      child: const Text(
+                                                          'Continue'),
+                                                    )
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
+                                        },
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/icons/android.svg',
+                                              color: Colors.white,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            const Text(
+                                              'Apps',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        )),
                                     const SizedBox(
                                       height: 50,
                                     ),

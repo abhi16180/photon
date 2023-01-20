@@ -3,6 +3,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/services/photon_sender.dart';
@@ -20,7 +21,7 @@ class MobileHome extends StatefulWidget {
 class _MobileHomeState extends State<MobileHome> {
   PhotonSender photonSePhotonSender = PhotonSender();
   bool isLoading = false;
-
+  Box box = Hive.box('appData');
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -107,10 +108,43 @@ class _MobileHomeState extends State<MobileHome> {
                                             205, 117, 255, 122)
                                         : Colors.blue,
                                     onPressed: () async {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const AppsList()));
+                                      if (box.get('queryPackages')) {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AppsList()));
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  'Query installed packages'),
+                                              content: const Text(
+                                                  'To get installed apps, you need to allow photon to query all installed packages. Would you like to continue ?'),
+                                              actions: [
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('Go back'),
+                                                ),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    box.put(
+                                                        'queryPackages', true);
+
+                                                    Navigator.of(context)
+                                                        .popAndPushNamed(
+                                                            '/apps');
+                                                  },
+                                                  child: const Text('Continue'),
+                                                )
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
                                     },
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
