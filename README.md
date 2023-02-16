@@ -107,8 +107,9 @@ Give a ⭐️ if this project helped you!
 You can support me by,
 <br>
 <a href="https://www.buymeacoffee.com/abhi1.6180" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
-
-
+<br>
+### UPI payment 
+<img src="snapshots/qr.jpg" width="240">
 ### Icon credits 
 
 <a href="https://creativecommons.org/licenses/by-sa/4.0">Windows icon - Microsoft Corporation, CC BY-SA 4.0, via Wikimedia Commons</a>
