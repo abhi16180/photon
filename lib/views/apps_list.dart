@@ -1,5 +1,6 @@
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
+import 'package:photon/components/constants.dart';
 import 'package:photon/components/snackbar.dart';
 import 'package:photon/services/photon_sender.dart';
 import 'package:provider/provider.dart';
@@ -35,22 +36,18 @@ class _AppsListState extends State<AppsList> {
                         title: const Text("Search"),
                         content: TextFormField(
                           controller: searchController,
-                          decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            focusedBorder: UnderlineInputBorder(),
-                            enabledBorder: UnderlineInputBorder(),
-                          ),
+                          decoration: inputDecoration,
                         ),
                         actions: [
                           ElevatedButton(
                               onPressed: () {
                                 searchData = [];
-                                data.forEach((element) {
+                                for (var element in data) {
                                   if (element.appName.toLowerCase().contains(
                                       searchController.text.toLowerCase())) {
                                     searchData.add(element);
                                   }
-                                });
+                                }
                                 setState(() {
                                   isSearched = true;
                                 });

@@ -215,7 +215,6 @@ class PhotonReceiver {
             getInstance.estimatedTime.value = getEstimatedTime(
                 received * 8, total * 8, getInstance.speed.value);
             //update time elapsed
-
           }
         },
       );
