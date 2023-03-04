@@ -9,3 +9,21 @@ const BoxDecoration appBarGradient = BoxDecoration(
     ],
   ),
 );
+
+const InputDecoration inputDecoration = InputDecoration(
+  border: UnderlineInputBorder(
+    borderRadius: BorderRadius.all(
+      Radius.circular(15),
+    ),
+  ),
+  focusedBorder: UnderlineInputBorder(
+    borderRadius: BorderRadius.all(
+      Radius.circular(15),
+    ),
+  ),
+  enabledBorder: UnderlineInputBorder(
+    borderRadius: BorderRadius.all(
+      Radius.circular(15),
+    ),
+  ),
+);
