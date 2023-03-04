@@ -16,19 +16,62 @@ class _AppsListState extends State<AppsList> {
   final future = DeviceApps.getInstalledApplications(includeAppIcons: true);
   List<ApplicationWithIcon> apps = <ApplicationWithIcon>[];
   List<String> paths = [];
-
+  TextEditingController searchController = TextEditingController();
+  List<Application> searchData = [];
+  late List<Application> data;
+  bool isSearched = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Apps'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("Search"),
+                        content: TextFormField(
+                          controller: searchController,
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            focusedBorder: UnderlineInputBorder(),
+                            enabledBorder: UnderlineInputBorder(),
+                          ),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                              onPressed: () {
+                                searchData = [];
+                                data.forEach((element) {
+                                  if (element.appName.toLowerCase().contains(
+                                      searchController.text.toLowerCase())) {
+                                    searchData.add(element);
+                                  }
+                                });
+                                setState(() {
+                                  isSearched = true;
+                                });
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Search"))
+                        ],
+                      );
+                    });
+              },
+              icon: Icon(Icons.search))
+        ],
       ),
       body: FutureBuilder(
           future: future,
           builder: (context, AsyncSnapshot snap) {
             if (snap.connectionState == ConnectionState.done) {
-              List<Application> data = snap.data;
-              apps = data.cast<ApplicationWithIcon>();
+              data = snap.data;
+              apps = isSearched
+                  ? searchData.cast<ApplicationWithIcon>()
+                  : data.cast<ApplicationWithIcon>();
               //create list of bool
               List<bool> boolList = List.generate(apps.length, (i) => false);
 
@@ -98,4 +141,6 @@ class ListTileState extends ChangeNotifier {
     isSelected[i] = !isSelected[i];
     notifyListeners();
   }
+
+  search() {}
 }
