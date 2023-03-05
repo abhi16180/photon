@@ -15,107 +15,197 @@ class HistoryPage extends StatefulWidget {
   State<HistoryPage> createState() => _HistoryPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
+class _HistoryPageState extends State<HistoryPage>
+    with TickerProviderStateMixin {
+  late TabController tabController;
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(
+      initialIndex: 0,
+      length: 2,
+      vsync: this,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
-        builder: (_, AdaptiveThemeMode mode, __) {
-          return Scaffold(
-            backgroundColor: mode.isDark
-                ? const Color.fromARGB(255, 27, 32, 35)
-                : Colors.white,
-            appBar: AppBar(
-              backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
-              title: const Text('History'),
-              flexibleSpace: Container(
-                decoration: mode.isDark ? null : appBarGradient,
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 18.0),
-                  child: IconButton(
-                    icon: const Icon(Icons.delete_forever_rounded),
-                    onPressed: () {
-                      setState(() {
-                        clearHistory();
-                      });
-                      showSnackBar(context, 'History cleared');
-                    },
-                  ),
+      valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
+      builder: (_, AdaptiveThemeMode mode, __) {
+        return Scaffold(
+          backgroundColor: mode.isDark
+              ? const Color.fromARGB(255, 27, 32, 35)
+              : Colors.white,
+          appBar: AppBar(
+            backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
+            title: const Text('History'),
+            leading: BackButton(
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
+            bottom: TabBar(
+              controller: tabController,
+              tabs: const [
+                Tab(
+                  text: "Sent history",
                 ),
+                Tab(
+                  text: "Received history",
+                ),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            controller: tabController,
+            children: [
+              FutureBuilder(
+                future: getSentFileHistory(),
+                builder: (context, AsyncSnapshot snap) {
+                  if (snap.connectionState == ConnectionState.done) {
+                    late List<ShareHistory> data;
+
+                    snap.data == null
+                        ? data = []
+                        : data = HistoryList.formData(snap.data).historyList;
+
+                    return snap.data == null
+                        ? const Center(
+                            child: Text('Sent files history will appear here'),
+                          )
+                        : ListView.separated(
+                            separatorBuilder: (context, i) {
+                              return const Divider(
+                                color: Color.fromARGB(255, 70, 69, 69),
+                              );
+                            },
+                            itemCount: data.length,
+                            itemBuilder: (context, item) {
+                              return ListTile(
+                                leading: getFileIcon(
+                                    data[item].fileName.split('.').last),
+                                onTap: () async {
+                                  String path =
+                                      data[item].filePath.replaceAll(r"\", "/");
+                                  if (Platform.isAndroid || Platform.isIOS) {
+                                    try {
+                                      OpenFile.open(path);
+                                    } catch (_) {
+                                      // ignore: use_build_context_synchronously
+                                      showSnackBar(context,
+                                          'No corresponding app found');
+                                    }
+                                  } else {
+                                    try {
+                                      launchUrl(
+                                        Uri.file(
+                                          path,
+                                          windows: Platform.isWindows,
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      // ignore: use_build_context_synchronously
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text(
+                                                  'Unable to open the file')));
+                                    }
+                                  }
+                                },
+                                title: Text(
+                                  data[item].fileName,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Text(getDateString(data[item].date)),
+                              );
+                            });
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
               ),
-              leading: BackButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
-            ),
-            body: FutureBuilder(
-              future: getHistory(),
-              builder: (context, AsyncSnapshot snap) {
-                if (snap.connectionState == ConnectionState.done) {
-                  late List<ShareHistory> data;
+              FutureBuilder(
+                future: getHistory(),
+                builder: (context, AsyncSnapshot snap) {
+                  if (snap.connectionState == ConnectionState.done) {
+                    late List<ShareHistory> data;
 
-                  snap.data == null
-                      ? data = []
-                      : data = HistoryList.formData(snap.data).historyList;
+                    snap.data == null
+                        ? data = []
+                        : data = HistoryList.formData(snap.data).historyList;
 
-                  return snap.data == null
-                      ? const Center(
-                          child: Text('File sharing history will appear here'),
-                        )
-                      : ListView.separated(
-                          separatorBuilder: (context, i) {
-                            return const Divider(
-                              color: Color.fromARGB(255, 70, 69, 69),
-                            );
-                          },
-                          itemCount: data.length,
-                          itemBuilder: (context, item) {
-                            return ListTile(
-                              leading: getFileIcon(
-                                  data[item].fileName.split('.').last),
-                              onTap: () async {
-                                String path =
-                                    data[item].filePath.replaceAll(r"\", "/");
-                                if (Platform.isAndroid || Platform.isIOS) {
-                                  try {
-                                    OpenFile.open(path);
-                                  } catch (_) {
-                                    // ignore: use_build_context_synchronously
-                                    showSnackBar(
-                                        context, 'No corresponding app found');
+                    return snap.data == null
+                        ? const Center(
+                            child:
+                                Text('Received files history will appear here'),
+                          )
+                        : ListView.separated(
+                            separatorBuilder: (context, i) {
+                              return const Divider(
+                                color: Color.fromARGB(255, 70, 69, 69),
+                              );
+                            },
+                            itemCount: data.length,
+                            itemBuilder: (context, item) {
+                              return ListTile(
+                                leading: getFileIcon(
+                                    data[item].fileName.split('.').last),
+                                onTap: () async {
+                                  String path =
+                                      data[item].filePath.replaceAll(r"\", "/");
+                                  if (Platform.isAndroid || Platform.isIOS) {
+                                    try {
+                                      OpenFile.open(path);
+                                    } catch (_) {
+                                      // ignore: use_build_context_synchronously
+                                      showSnackBar(context,
+                                          'No corresponding app found');
+                                    }
+                                  } else {
+                                    try {
+                                      launchUrl(
+                                        Uri.file(
+                                          path,
+                                          windows: Platform.isWindows,
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      // ignore: use_build_context_synchronously
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text(
+                                                  'Unable to open the file')));
+                                    }
                                   }
-                                } else {
-                                  try {
-                                    launchUrl(
-                                      Uri.file(
-                                        path,
-                                        windows: Platform.isWindows,
-                                      ),
-                                    );
-                                  } catch (e) {
-                                    // ignore: use_build_context_synchronously
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Unable to open the file')));
-                                  }
-                                }
-                              },
-                              title: Text(
-                                data[item].fileName,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              subtitle: Text(getDateString(data[item].date)),
-                            );
-                          });
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
-            ),
-          );
-        });
+                                },
+                                title: Text(
+                                  data[item].fileName,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Text(getDateString(data[item].date)),
+                              );
+                            });
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              setState(() {
+                tabController.index == 0 ? clearSentHistory() : clearHistory();
+              });
+              showSnackBar(context,
+                  '${tabController.index == 0 ? "Sent" : "Received"} history cleared');
+            },
+            label: const Text("Clear"),
+            icon: const Icon(Icons.clear),
+          ),
+        );
+      },
+    );
   }
 }

@@ -111,7 +111,7 @@ class _AppState extends State<App> {
                             UniconsSolid.history,
                             color: mode.isDark ? null : Colors.black,
                           ),
-                          title: const Text('Received-history'),
+                          title: const Text('History'),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(

@@ -227,6 +227,7 @@ class PhotonSender {
       // Selects files
       if (await getFilesPath(appList: appList)) {
         await assignIP();
+        await storeSentFileHistory(_fileList);
         Map<String, dynamic> res =
             await _startServer(_fileList, context, isApk: appList.isNotEmpty);
         return res;
