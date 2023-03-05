@@ -169,7 +169,7 @@ storeHistory(Box box, String savePath) {
   box.put('fileInfo', fileInfo);
 }
 
-storeSentFileHistory(List<String?> files) async {
+Future<void> storeSentFileHistory(List<String?> files) async {
   Box box = await Hive.openBox('appData');
   if (box.get('sentHistory') == null) {
     box.put('sentHistory', []);
@@ -186,13 +186,22 @@ storeSentFileHistory(List<String?> files) async {
             })
         .toList(),
   );
+}
 
-  print("Stored files are " + sentFiles.toString());
+getSentFileHistory() async {
+  Box box = await Hive.openBox('appData');
+  List sentFilesHistory = box.get('sentHistory') as List;
+  return sentFilesHistory;
 }
 
 getHistory() async {
   var box = await Hive.openBox('appData');
   return box.get('fileInfo');
+}
+
+clearSentHistory() async {
+  var box = await Hive.openBox('appData');
+  box.delete('sentHistory');
 }
 
 clearHistory() async {
