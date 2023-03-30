@@ -24,14 +24,14 @@ jobs:
         uses: subosito/flutter-action@v2
 
       - name: Build Flutter linux version
-        working-directory: ${{ github.workspace }}/counter_app
+        working-directory: ${{ github.workspace }}/photon
         run: |
           ./build-flutter-app.sh
       - name: Upload app archive to workflow
         uses: actions/upload-artifact@v3
         with:
           name: FlutterApp-Archive
-          path: counter_app/FlutterApp-Linux-Portable.tar.gz
+          path: photon/FlutterApp-Linux-Portable.tar.gz
 
   build-flatpak:
     name: Build flatpak
