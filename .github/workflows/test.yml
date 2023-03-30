@@ -24,7 +24,7 @@ jobs:
         uses: subosito/flutter-action@v2
 
       - name: Build Flutter linux version
-        working-directory: ${{ github.workspace }}/photon
+        working-directory: ${{ github.workspace }}
         run: |
           ./build-flutter-app.sh
       - name: Upload app archive to workflow
