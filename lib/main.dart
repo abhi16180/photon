@@ -5,8 +5,10 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/methods/share_intent.dart';
 import 'package:photon/views/apps_list.dart';
 import 'package:photon/views/handle_intent_ui.dart';
@@ -34,10 +36,24 @@ void main() async {
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
   prefInst.get('isDarkTheme') ?? prefInst.setBool('isDarkTheme', true);
+  prefInst.getBool('isTv') ?? prefInst.setBool('isTv', false);
   getIt.registerSingleton<PercentageController>(PercentageController());
   getIt.registerSingleton<ReceiverDataController>(ReceiverDataController());
+
   bool externalIntent = false;
   if (Platform.isAndroid) {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    if (androidInfo.systemFeatures.contains('android.software.leanback')) {
+      prefInst.setBool('isTv', true);
+      if (!prefInst.getBool('isIntroRead')!) {
+        var status = await Permission.storage.request();
+        if (status.isGranted) {
+          SharedPreferences prefInst = await SharedPreferences.getInstance();
+          prefInst.setBool('isIntroRead', true);
+        }
+      }
+    }
     externalIntent = await handleSharingIntent();
     try {
       await FlutterDisplayMode.setHighRefreshRate();

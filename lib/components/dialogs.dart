@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dpad_container/dpad_container.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -33,17 +34,23 @@ void privacyPolicyDialog(BuildContext context, String data) async {
                       MarkdownListItemCrossAxisAlignment.start,
                   data: data)),
           actions: [
-            ElevatedButton(
-                onPressed: () async {
-                  await ulaunch.launchUrl(Uri.parse(
-                      'https://github.com/abhi16180/photon-file-transfer'));
-                },
-                child: const Text('Source-code')),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Okay'))
+            DpadContainer(
+              onClick: () async {
+                await ulaunch.launchUrl(Uri.parse(
+                    'https://github.com/abhi16180/photon-file-transfer'));
+              },
+              onFocus: (_) {},
+              child: ElevatedButton(
+                  onPressed: () async {}, child: const Text('Source-code')),
+            ),
+            DpadContainer(
+              onClick: () {
+                Navigator.of(context).pop();
+              },
+              onFocus: (_) {},
+              child:
+                  ElevatedButton(onPressed: () {}, child: const Text('Okay')),
+            )
           ],
         );
       });
@@ -51,6 +58,7 @@ void privacyPolicyDialog(BuildContext context, String data) async {
 
 progressPageAlertDialog(BuildContext context) async {
   SharedPreferences prefInst = await SharedPreferences.getInstance();
+  // ignore: use_build_context_synchronously
   showDialog(
     context: context,
     builder: (context) {
@@ -61,20 +69,26 @@ progressPageAlertDialog(BuildContext context) async {
         title: const Text('Alert'),
         content: const Text('Make sure that transfer is completed !'),
         actions: [
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Stay')),
-          ElevatedButton(
-            onPressed: () async {
+          DpadContainer(
+            onClick: () {
+              Navigator.of(context).pop();
+            },
+            onFocus: (_) {},
+            child: ElevatedButton(onPressed: () {}, child: const Text('Stay')),
+          ),
+          DpadContainer(
+            onClick: () {
               // ignore: use_build_context_synchronously
               GetIt.I.get<PercentageController>().totalTimeElapsed.value = 0;
               GetIt.I.get<PercentageController>().isFinished.value = false;
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/home', (Route<dynamic> route) => false);
             },
-            child: const Text('Go back'),
+            onFocus: (_) {},
+            child: ElevatedButton(
+              onPressed: () async {},
+              child: const Text('Go back'),
+            ),
           )
         ],
       );
@@ -95,14 +109,16 @@ progressPageWillPopDialog(context) async {
         title: const Text('Alert'),
         content: const Text('Make sure that download is completed !'),
         actions: [
-          ElevatedButton(
-              onPressed: () {
-                willPop = false;
-                Navigator.of(context).pop();
-              },
-              child: const Text('Stay')),
-          ElevatedButton(
-            onPressed: () async {
+          DpadContainer(
+            onClick: () {
+              willPop = false;
+              Navigator.of(context).pop();
+            },
+            onFocus: (_) {},
+            child: ElevatedButton(onPressed: () {}, child: const Text('Stay')),
+          ),
+          DpadContainer(
+            onClick: () {
               willPop = true;
 
               // ignore: use_build_context_synchronously
@@ -112,7 +128,11 @@ progressPageWillPopDialog(context) async {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/home', (Route<dynamic> route) => false);
             },
-            child: const Text('Go back'),
+            onFocus: (_) {},
+            child: ElevatedButton(
+              onPressed: () async {},
+              child: const Text('Go back'),
+            ),
           )
         ],
       );
@@ -123,6 +143,7 @@ progressPageWillPopDialog(context) async {
 
 sharePageAlertDialog(BuildContext context) async {
   SharedPreferences prefInst = await SharedPreferences.getInstance();
+  // ignore: use_build_context_synchronously
   showDialog(
     context: context,
     builder: (context) {
@@ -133,11 +154,15 @@ sharePageAlertDialog(BuildContext context) async {
         title: const Text('Server alert'),
         content: const Text('Would you like to terminate the current session'),
         actions: [
-          ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Stay')),
-          ElevatedButton(
-            onPressed: () async {
+          DpadContainer(
+              onClick: () {
+                Navigator.of(context).pop();
+              },
+              onFocus: (_) {},
+              child:
+                  ElevatedButton(onPressed: () {}, child: const Text('Stay'))),
+          DpadContainer(
+            onClick: () async {
               await PhotonSender.closeServer(context);
               // ignore: use_build_context_synchronously
               GetIt.I.get<ReceiverDataController>().receiverMap.clear();
@@ -145,7 +170,11 @@ sharePageAlertDialog(BuildContext context) async {
                   MaterialPageRoute(builder: (context) => const App()),
                   (route) => false);
             },
-            child: const Text('Terminate'),
+            onFocus: (_) {},
+            child: ElevatedButton(
+              onPressed: () async {},
+              child: const Text('Terminate'),
+            ),
           )
         ],
       );
@@ -167,14 +196,16 @@ sharePageWillPopDialog(context) async {
         content:
             const Text('Would you like to terminate the current session ?'),
         actions: [
-          ElevatedButton(
-              onPressed: () {
-                willPop = false;
-                Navigator.of(context).pop();
-              },
-              child: const Text('Stay')),
-          ElevatedButton(
-            onPressed: () async {
+          DpadContainer(
+            onClick: () {
+              willPop = false;
+              Navigator.of(context).pop();
+            },
+            onFocus: (_) {},
+            child: ElevatedButton(onPressed: () {}, child: const Text('Stay')),
+          ),
+          DpadContainer(
+            onClick: () async {
               await PhotonSender.closeServer(context);
               willPop = true;
               // ignore: use_build_context_synchronously
@@ -183,7 +214,11 @@ sharePageWillPopDialog(context) async {
               //     MaterialPageRoute(builder: (context) => const App()),
               //     (route) => false);
             },
-            child: const Text('Terminate'),
+            onFocus: (_) {},
+            child: ElevatedButton(
+              onPressed: () async {},
+              child: const Text('Terminate'),
+            ),
           )
         ],
       );
@@ -210,19 +245,28 @@ senderRequestDialog(
           content: Text(
               "$username ($os) is requesting for files. Would you like to share with them ?"),
           actions: [
-            ElevatedButton(
-              onPressed: () {
-                allowRequest = false;
+            DpadContainer(
+              onClick: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Deny'),
+              onFocus: (_) {},
+              child: ElevatedButton(
+                onPressed: () {
+                  allowRequest = false;
+                },
+                child: const Text('Deny'),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
+            DpadContainer(
+              onClick: () {
                 allowRequest = true;
                 Navigator.of(context).pop();
               },
-              child: const Text('Accept'),
+              onFocus: (_) {},
+              child: ElevatedButton(
+                onPressed: () {},
+                child: const Text('Accept'),
+              ),
             )
           ],
         );

@@ -4,11 +4,19 @@
    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+   <!-- TV -->
+   <uses-feature android:name="android.software.leanback" android:required="false" /> 
+   <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+   <uses-feature android:name="android.hardware.wifi" android:required="false"/>
+
    <application
         android:label="Photon"
-        android:requestLegacyExternalStorage="true"
+        android:requestLegacyExternalStorage="true" 
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:banner="@drawable/banner"
+        >
+      
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -28,8 +36,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <!-- TV -->
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" android:required="false" />
             </intent-filter>
-
+          
 
     <!-- sharing intent -->
       <intent-filter>

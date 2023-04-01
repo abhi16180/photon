@@ -67,7 +67,7 @@ class _SharePageState extends State<SharePage> {
                             children: [
                               Lottie.asset(
                                 'assets/lottie/share.json',
-                                width: 240,
+                                width: 200,
                               ),
                               SizedBox(
                                 width: width / 8,
@@ -85,7 +85,7 @@ class _SharePageState extends State<SharePage> {
                             ],
                           )
                         } else ...{
-                          Lottie.asset('assets/lottie/share.json', width: 240),
+                          Lottie.asset('assets/lottie/share.json', width: 200),
                           SizedBox(
                             width: 160,
                             height: 160,

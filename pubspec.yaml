@@ -76,6 +76,8 @@ dependencies:
   
   qr_flutter: ^4.0.0
   qrscan:
+  dpad_container: ^2.0.3
+  device_info_plus: ^8.1.0
  
 
  
