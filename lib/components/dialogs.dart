@@ -18,6 +18,7 @@ import '../services/photon_sender.dart';
 
 void privacyPolicyDialog(BuildContext context, String data) async {
   SharedPreferences prefInst = await SharedPreferences.getInstance();
+  // ignore: use_build_context_synchronously
   showDialog(
       context: context,
       builder: (context) {
@@ -41,15 +42,22 @@ void privacyPolicyDialog(BuildContext context, String data) async {
               },
               onFocus: (_) {},
               child: ElevatedButton(
-                  onPressed: () async {}, child: const Text('Source-code')),
+                  onPressed: () async {
+                    await ulaunch.launchUrl(Uri.parse(
+                        'https://github.com/abhi16180/photon-file-transfer'));
+                  },
+                  child: const Text('Source-code')),
             ),
             DpadContainer(
               onClick: () {
                 Navigator.of(context).pop();
               },
               onFocus: (_) {},
-              child:
-                  ElevatedButton(onPressed: () {}, child: const Text('Okay')),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Okay')),
             )
           ],
         );
@@ -74,7 +82,11 @@ progressPageAlertDialog(BuildContext context) async {
               Navigator.of(context).pop();
             },
             onFocus: (_) {},
-            child: ElevatedButton(onPressed: () {}, child: const Text('Stay')),
+            child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Stay')),
           ),
           DpadContainer(
             onClick: () {
@@ -86,7 +98,13 @@ progressPageAlertDialog(BuildContext context) async {
             },
             onFocus: (_) {},
             child: ElevatedButton(
-              onPressed: () async {},
+              onPressed: () async {
+                // ignore: use_build_context_synchronously
+                GetIt.I.get<PercentageController>().totalTimeElapsed.value = 0;
+                GetIt.I.get<PercentageController>().isFinished.value = false;
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/home', (Route<dynamic> route) => false);
+              },
               child: const Text('Go back'),
             ),
           )
@@ -115,7 +133,12 @@ progressPageWillPopDialog(context) async {
               Navigator.of(context).pop();
             },
             onFocus: (_) {},
-            child: ElevatedButton(onPressed: () {}, child: const Text('Stay')),
+            child: ElevatedButton(
+                onPressed: () {
+                  willPop = false;
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Stay')),
           ),
           DpadContainer(
             onClick: () {
@@ -130,7 +153,16 @@ progressPageWillPopDialog(context) async {
             },
             onFocus: (_) {},
             child: ElevatedButton(
-              onPressed: () async {},
+              onPressed: () async {
+                willPop = true;
+
+                // ignore: use_build_context_synchronously
+                GetIt.I.get<PercentageController>().totalTimeElapsed.value = 0;
+                GetIt.I.get<PercentageController>().isFinished.value = false;
+
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/home', (Route<dynamic> route) => false);
+              },
               child: const Text('Go back'),
             ),
           )
@@ -159,8 +191,11 @@ sharePageAlertDialog(BuildContext context) async {
                 Navigator.of(context).pop();
               },
               onFocus: (_) {},
-              child:
-                  ElevatedButton(onPressed: () {}, child: const Text('Stay'))),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Stay'))),
           DpadContainer(
             onClick: () async {
               await PhotonSender.closeServer(context);
@@ -172,7 +207,14 @@ sharePageAlertDialog(BuildContext context) async {
             },
             onFocus: (_) {},
             child: ElevatedButton(
-              onPressed: () async {},
+              onPressed: () async {
+                await PhotonSender.closeServer(context);
+                // ignore: use_build_context_synchronously
+                GetIt.I.get<ReceiverDataController>().receiverMap.clear();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const App()),
+                    (route) => false);
+              },
               child: const Text('Terminate'),
             ),
           )
@@ -202,7 +244,12 @@ sharePageWillPopDialog(context) async {
               Navigator.of(context).pop();
             },
             onFocus: (_) {},
-            child: ElevatedButton(onPressed: () {}, child: const Text('Stay')),
+            child: ElevatedButton(
+                onPressed: () {
+                  willPop = false;
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Stay')),
           ),
           DpadContainer(
             onClick: () async {
@@ -216,7 +263,15 @@ sharePageWillPopDialog(context) async {
             },
             onFocus: (_) {},
             child: ElevatedButton(
-              onPressed: () async {},
+              onPressed: () async {
+                await PhotonSender.closeServer(context);
+                willPop = true;
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+                // Navigator.of(context).pushAndRemoveUntil(
+                //     MaterialPageRoute(builder: (context) => const App()),
+                //     (route) => false);
+              },
               child: const Text('Terminate'),
             ),
           )
@@ -247,12 +302,14 @@ senderRequestDialog(
           actions: [
             DpadContainer(
               onClick: () {
+                allowRequest = false;
                 Navigator.of(context).pop();
               },
               onFocus: (_) {},
               child: ElevatedButton(
                 onPressed: () {
                   allowRequest = false;
+                  Navigator.of(context).pop();
                 },
                 child: const Text('Deny'),
               ),
@@ -264,7 +321,10 @@ senderRequestDialog(
               },
               onFocus: (_) {},
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  allowRequest = true;
+                  Navigator.of(context).pop();
+                },
                 child: const Text('Accept'),
               ),
             )
@@ -291,16 +351,22 @@ credits(context) async {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text('Icons'),
-                GestureDetector(
-                  onTap: () {
+                DpadContainer(
+                  onClick: () {
                     ulaunch.launchUrl(Uri.parse('https://www.svgrepo.com'));
                   },
-                  child: const Text(
-                    'https://www.svgrepo.com/',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.blue,
+                  onFocus: (_) {},
+                  child: GestureDetector(
+                    onTap: () {
+                      ulaunch.launchUrl(Uri.parse('https://www.svgrepo.com'));
+                    },
+                    child: const Text(
+                      'https://www.svgrepo.com/',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue,
+                      ),
                     ),
                   ),
                 ),
@@ -308,16 +374,22 @@ credits(context) async {
                   height: 20,
                 ),
                 const Text('Animations'),
-                GestureDetector(
-                  onTap: () {
+                DpadContainer(
+                  onClick: () {
                     ulaunch.launchUrl(Uri.parse('https://lottiefiles.com/'));
                   },
-                  child: const Text(
-                    'https://lottiefiles.com/',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.blue,
+                  onFocus: (_) {},
+                  child: GestureDetector(
+                    onTap: () {
+                      ulaunch.launchUrl(Uri.parse('https://lottiefiles.com/'));
+                    },
+                    child: const Text(
+                      'https://lottiefiles.com/',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue,
+                      ),
                     ),
                   ),
                 ),
@@ -325,32 +397,46 @@ credits(context) async {
                   height: 20,
                 ),
                 const Text('Fonts\nYftoowhy', textAlign: TextAlign.center),
-                GestureDetector(
-                  onTap: () {
+                DpadContainer(
+                  onClick: () {
                     ulaunch.launchUrl(Uri.parse(
                         'https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL'));
                   },
-                  child: const Text(
-                    """ Font license""",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.blue,
+                  onFocus: (_) {},
+                  child: GestureDetector(
+                    onTap: () {
+                      ulaunch.launchUrl(Uri.parse(
+                          'https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL'));
+                    },
+                    child: const Text(
+                      """ Font license""",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue,
+                      ),
                     ),
                   ),
                 ),
                 const Text('\nQuestrial', textAlign: TextAlign.center),
-                GestureDetector(
-                  onTap: () {
+                DpadContainer(
+                  onClick: () {
                     ulaunch.launchUrl(
                         Uri.parse('https://github.com/googlefonts/questrial'));
                   },
-                  child: const Text(
-                    """ Font license""",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.blue,
+                  onFocus: (_) {},
+                  child: GestureDetector(
+                    onTap: () {
+                      ulaunch.launchUrl(Uri.parse(
+                          'https://github.com/googlefonts/questrial'));
+                    },
+                    child: const Text(
+                      """ Font license""",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue,
+                      ),
                     ),
                   ),
                 ),
@@ -359,11 +445,17 @@ credits(context) async {
           ),
           actionsAlignment: MainAxisAlignment.end,
           actions: [
-            IconButton(
-              onPressed: () {
+            DpadContainer(
+              onClick: () {
                 Navigator.of(context).pop();
               },
-              icon: const Icon(Icons.close),
+              onFocus: (_) {},
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.close),
+              ),
             )
           ],
         );

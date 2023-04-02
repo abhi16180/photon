@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:dpad_container/dpad_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -42,11 +43,17 @@ class _SharePageState extends State<SharePage> {
                   backgroundColor:
                       mode.isDark ? Colors.blueGrey.shade900 : null,
                   title: const Text('Share'),
-                  leading: BackButton(
-                      color: Colors.white,
-                      onPressed: () {
-                        sharePageAlertDialog(context);
-                      }),
+                  leading: DpadContainer(
+                    onClick: () {
+                      sharePageAlertDialog(context);
+                    },
+                    onFocus: (_) {},
+                    child: BackButton(
+                        color: Colors.white,
+                        onPressed: () {
+                          sharePageAlertDialog(context);
+                        }),
+                  ),
                   flexibleSpace: mode.isLight
                       ? Container(
                           decoration: appBarGradient,

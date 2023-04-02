@@ -31,21 +31,23 @@ void main() async {
   box.get('avatarPath') ?? box.put('avatarPath', 'assets/avatars/1.png');
   box.get('username') ?? box.put('username', '${Platform.localHostname} user');
   box.get('queryPackages') ?? box.put('queryPackages', false);
-  GetIt getIt = GetIt.instance;
+  box.get('isTv') ?? box.put('isTv', false);
 
   SharedPreferences prefInst = await SharedPreferences.getInstance();
   prefInst.get('isIntroRead') ?? prefInst.setBool('isIntroRead', false);
   prefInst.get('isDarkTheme') ?? prefInst.setBool('isDarkTheme', true);
-  prefInst.getBool('isTv') ?? prefInst.setBool('isTv', false);
+
+  GetIt getIt = GetIt.instance;
   getIt.registerSingleton<PercentageController>(PercentageController());
   getIt.registerSingleton<ReceiverDataController>(ReceiverDataController());
 
   bool externalIntent = false;
+
   if (Platform.isAndroid) {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     if (androidInfo.systemFeatures.contains('android.software.leanback')) {
-      prefInst.setBool('isTv', true);
+      box.put('isTv', true);
       if (!prefInst.getBool('isIntroRead')!) {
         var status = await Permission.storage.request();
         if (status.isGranted) {
