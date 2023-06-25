@@ -7,40 +7,47 @@ on:
   workflow_dispatch:
 
 jobs:
+
   build_ubuntu:
-
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Setup flutter
-        uses: subosito/flutter-action@master
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2.2
         with:
-          channel: stable
-
-      - name: Build Linux App
-        run: flutter build linux --release --dart-define=APP_NAME=photon-nightly
-
-      - name: Archive Linux App
-        run: tar czf app.tar.gz build/linux/x64/release/bundle/
-
-      - name: Set Variables
-        id: set-vars
-        run: |
-          echo "::set-output name=prerelease::${{ github.event_name != 'release' }}"
-          echo "::set-output name=release_name::${{ github.event.release.name || 'Development Build' }}"
-          echo "::set-output name=tag::${{ github.event.release.tag_name || 'nightly' }}"
-
-      - name: Upload Release
-        uses: svenstaro/upload-release-action@latest
+          cache: true
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - run: |
+          sudo apt-get update -y
+          sudo apt-get install -y tar clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+      - run: |
+          wget -O appimage-builder-x86_64.AppImage https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.0-beta.1/appimage-builder-1.0.0-677acbd-x86_64.AppImage
+          chmod +x appimage-builder-x86_64.AppImage
+          sudo mv appimage-builder-x86_64.AppImage /usr/local/bin/appimage-builder
+      - run: |
+          flutter config --enable-linux-desktop
+          flutter pub get
+          dart pub global activate flutter_distributor
+          flutter_distributor package --platform=linux --targets=appimage --skip-clean
+    
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Photon-Linux-Bundle
+          path: dist/Photon-Linux-Bundle
+      - name: Setup upterm session
+        if: ${{ failure() }}
+        uses: lhotari/action-upterm@v1
+        with:
+          limit-access-to-actor: true
+      - uses: svenstaro/upload-release-action@latest
         with:
           repo_token: ${{ secrets.TOKEN }}
-          file: app.tar.gz
-          prerelease: ${{ steps.set-vars.outputs.prerelease }}
-          release_name: ${{ steps.set-vars.outputs.release_name }}
-          tag: ${{ steps.set-vars.outputs.tag }}
+          file: dist/Photon-Linux-Bundle
+          file_glob: true
+          prerelease: ${{ github.event_name != 'release' }}
+          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
           overwrite: true
 
 
