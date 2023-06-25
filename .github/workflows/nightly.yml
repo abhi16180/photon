@@ -98,7 +98,7 @@ jobs:
         run: flutter build windows
         
       - name: Copy dlls to build 
-        run : cp -r assets/dll build/windows/runner/Release        
+        run : cp -r assets/dll/. build/windows/runner/Release        
 
       - run: cp -r build/windows/runner/Release photon-windows-exe
       - run: tar.exe -a -c -f photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.zip photon-windows-exe
