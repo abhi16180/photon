@@ -18,7 +18,7 @@ jobs:
         uses: subosito/flutter-action@master
         with:
           channel: stable
-
+          
       - name: Install Flatpak dependencies
         run: |
           sudo add-apt-repository ppa:alexlarsson/flatpak -y
