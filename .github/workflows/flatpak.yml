@@ -1,0 +1,39 @@
+name: Build Linux Flatpak
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: stable
+
+      - name: Install Flatpak dependencies
+        run: |
+          sudo add-apt-repository ppa:alexlarsson/flatpak -y
+          sudo apt-get update -q
+          sudo apt-get install flatpak -y
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo -y
+
+      - name: Build Flatpak package
+        run: |
+          flutter pub get
+          flutter build linux
+          flatpak-builder build-dir com.example.myapp.yaml --force-clean --install-deps-from=flathub
+          flatpak build-bundle build-dir dev.abhi.photon.flatpak dev.abhi.photon
+
+      - name: Archive and upload Flatpak package
+        uses: actions/upload-artifact@v2
+        with:
+          name: Flatpak Package
+          path: build-dir/dev.abhi.photon.flatpak
