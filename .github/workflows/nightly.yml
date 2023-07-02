@@ -3,157 +3,161 @@ name: Photon Nightly
 on:
   push:
     branches:
-      - build
+      - '*'
   workflow_dispatch:
 
 jobs:
-  build_ubuntu:
+
+  # build_ubuntu:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         cache: true
+  #     - name: Get current date
+  #       id: date
+  #       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+  #     - run: |
+  #         sudo apt-get update -y
+  #         sudo apt-get install -y tar clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+  #     - run: |
+  #         wget -O appimage-builder-x86_64.AppImage https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.0-beta.1/appimage-builder-1.0.0-677acbd-x86_64.AppImage
+  #         chmod +x appimage-builder-x86_64.AppImage
+  #         mv appimage-builder-x86_64.AppImage /usr/local/bin/appimage-builder
+  #     - run: |
+  #         flutter config --enable-linux-desktop
+  #         flutter pub get
+  #         dart pub global activate flutter_distributor
+  #         flutter_distributor package --platform=linux --targets=appimage --skip-clean
+
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: Photon-Linux-Bundle
+  #         path: dist/
+  #     - name: Setup upterm session
+  #       if: ${{ failure() }}
+  #       uses: lhotari/action-upterm@v1
+  #       with:
+  #         limit-access-to-actor: true
+          
+  #     - uses: svenstaro/upload-release-action@latest
+  #       with:
+  #         repo_token: ${{ secrets.TOKEN }}
+  #         file: Photon-Linux-Bundle
+  #         file_glob: true
+  #         prerelease: ${{ github.event_name != 'release' }}
+  #         release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+  #         tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+  #         overwrite: true
+
+
+  build_android:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
           cache: true
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+          token: ${{secrets.TOKEN}} 
       - run: |
           sudo apt-get update -y
-          sudo apt-get install -y tar clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse
+
       - run: |
-          wget -O appimage-builder-x86_64.AppImage https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.0-beta.1/appimage-builder-1.0.0-677acbd-x86_64.AppImage
-          chmod +x appimage-builder-x86_64.AppImage
-          mv appimage-builder-x86_64.AppImage /usr/local/bin/appimage-builder
-      - run: |
-          flutter config --enable-linux-desktop
           flutter pub get
-          dart pub global activate flutter_distributor
-          flutter_distributor package --platform=linux --targets=appimage --skip-clean
-          
-    
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Photon-Linux-Bundle
-          path: dist/
-      - name: Setup upterm session
-        if: ${{ failure() }}
-        uses: lhotari/action-upterm@v1
-        with:
-          limit-access-to-actor: true
-          
+          flutter build apk
+
+      - name: rename
+        if: ${{ github.event_name != 'release' }}
+        run: mv build/app/outputs/apk/release/app-* build/app/outputs/apk/release/photon-android-nightly.apk
       - uses: svenstaro/upload-release-action@latest
         with:
           repo_token: ${{ secrets.TOKEN }}
-          file: Photon-Linux-Bundle
+          file: build/app/outputs/apk/release/photon-*
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
           overwrite: true
 
-#   build_android:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
-#       - uses: subosito/flutter-action@v2
-#         with:
-#           cache: true
-#           token: ${{secrets.TOKEN}} 
-#       - run: |
-#           sudo apt-get update -y
-#           sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse
+  # build_windows:
+  #   name: Windows
+  #   runs-on: windows-latest
 
-#       - run: |
-#           flutter pub get
-#           flutter build apk
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-#       - name: rename
-#         if: ${{ github.event_name != 'release' }}
-#         run: mv build/app/outputs/apk/release/app-* build/app/outputs/apk/release/photon-android-nightly.apk
-#       - uses: svenstaro/upload-release-action@latest
-#         with:
-#           repo_token: ${{ secrets.TOKEN }}
-#           file: build/app/outputs/apk/release/photon-*
-#           file_glob: true
-#           prerelease: ${{ github.event_name != 'release' }}
-#           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-#           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-#           overwrite: true
+  #     - name: Setup flutter
+  #       uses: subosito/flutter-action@master
+  #       with:
+  #         channel: stable
 
-  build_windows:
-    name: Windows
-    runs-on: windows-latest
+  #     - name: Enable desktop support
+  #       run: flutter config --enable-windows-desktop
 
-    steps:
-      - uses: actions/checkout@v2
+  #     - name: Build Flutter app
+  #       run: flutter build windows
+        
+  #     - name: Copy dlls to build 
+  #       run : cp -r assets/dll/vcruntime140*.dll build/windows/runner/Release        
 
-      - name: Setup flutter
-        uses: subosito/flutter-action@master
-        with:
-          channel: stable
+  #     - run: cp -r build/windows/runner/Release photon-windows-exe
+  #     - run: tar.exe -a -c -f photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.zip photon-windows-exe
 
-      - name: Enable desktop support
-        run: flutter config --enable-windows-desktop
+  #     - run: |
+  #         "%programfiles(x86)%\Inno Setup 6\iscc.exe" "photon_inst.iss"
+  #       shell: cmd
+  #     - run: cp Output/* ./photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.exe
 
-      - name: Build Flutter app
-        run: flutter build windows
+  #     - uses: svenstaro/upload-release-action@latest
+  #       with:
+  #         repo_token: ${{ secrets.TOKEN }}
+  #         file: photon-windows-*
+  #         file_glob: true
+  #         prerelease: ${{ github.event_name != 'release' }}
+  #         release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+  #         tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+  #         overwrite: true
 
-      - run: cp -r build/windows/runner/Release photon-windows-exe
-      - run: tar.exe -a -c -f photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.zip photon-windows-exe
-
-      - run: |
-          "%programfiles(x86)%\Inno Setup 6\iscc.exe" "photon_inst.iss"
-        shell: cmd
-      - run: cp Output/* ./photon-windows-${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}.exe
-
-      - uses: svenstaro/upload-release-action@latest
-        with:
-          repo_token: ${{ secrets.TOKEN }}
-          file: photon-windows-*
-          file_glob: true
-          prerelease: ${{ github.event_name != 'release' }}
-          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-          overwrite: true
-
-  build_macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          cache: true
-          token: ${{secrets.TOKEN}} 
-      - run: flutter config --enable-macos-desktop
-      - run: flutter pub get
-      - run: flutter build macos
-      - run: du -sh build/macos/Build/Products/Release/photon.app
-      - run: npm install -g appdmg
-      - run: appdmg photondmg.json build/photon-macos-x86_64.dmg
+  # build_macos:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         cache: true
+  #         token: ${{secrets.TOKEN}} 
+  #     - run: flutter config --enable-macos-desktop
+  #     - run: flutter pub get
+  #     - run: flutter build macos
+  #     - run: du -sh build/macos/Build/Products/Release/photon.app
+  #     - run: npm install -g appdmg
+  #     - run: appdmg photondmg.json build/photon-macos-x86_64.dmg
  
-      - uses: svenstaro/upload-release-action@latest
-        with:
-          repo_token: ${{ secrets.TOKEN }}
-          file: build/photon-macos-x86_64.dmg
-          file_glob: true
-          prerelease: ${{ github.event_name != 'release' }}
-          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-          overwrite: true
+  #     - uses: svenstaro/upload-release-action@latest
+  #       with:
+  #         repo_token: ${{ secrets.TOKEN }}
+  #         file: build/photon-macos-x86_64.dmg
+  #         file_glob: true
+  #         prerelease: ${{ github.event_name != 'release' }}
+  #         release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+  #         tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+  #         overwrite: true
 
-  build_ios:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable'
-        architecture: x64
-    - run: flutter pub get
-    - run: flutter build ipa --release --no-codesign
-    - uses: actions/upload-artifact@v2 
-      with:
-        name: Photon-iOS-Bundle
-        token: ${{secrets.TOKEN}}
-        path: |
-          build/ios/ipa/*.ipa
+#   build_ios:
+#     runs-on: macos-latest
+#     steps:
+#     - uses: actions/checkout@v3
+#     - uses: subosito/flutter-action@v2
+#       with:
+#         channel: 'stable'
+#         architecture: x64
+#     - run: flutter pub get
+#     - run: flutter build ipa --release --no-codesign
+#     - uses: actions/upload-artifact@v2 
+#       with:
+#         name: Photon-iOS-Bundle
+#         token: ${{secrets.TOKEN}}
+#         path: |
+#           build/ios/ipa/*.ipa
