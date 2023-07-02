@@ -152,12 +152,7 @@ packages:
     dependency: "direct dev"
     description:
       name: build_runner
-<<<<<<< HEAD
-      sha256: b0a8a7b8a76c493e85f1b84bffa0588859a06197863dba8c9036b15581fd9727
-      url: "https://pub.dev"
-=======
       url: "https://pub.dartlang.org"
->>>>>>> origin
     source: hosted
     version: "2.3.3"
   build_runner_core:
@@ -220,12 +215,7 @@ packages:
     dependency: transitive
     description:
       name: collection
-<<<<<<< HEAD
-      sha256: cfc915e6923fe5ce6e153b0723c753045de46de1b4d63771530504004a45fae0
-      url: "https://pub.dev"
-=======
       url: "https://pub.dartlang.org"
->>>>>>> origin
     source: hosted
     version: "1.17.0"
   convert:
@@ -385,16 +375,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.2"
-<<<<<<< HEAD
-  flutter_hooks:
-    dependency: transitive
-    description:
-      name: flutter_hooks
-      sha256: "6a126f703b89499818d73305e4ce1e3de33b4ae1c5512e3b8eab4b986f46774c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.18.6"
-=======
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -437,7 +417,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
->>>>>>> origin
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -564,12 +543,7 @@ packages:
     dependency: transitive
     description:
       name: js
-<<<<<<< HEAD
-      sha256: "5528c2f391ededb7775ec1daa69e65a2d61276f7552de2b5f7b8d34ee9fd4ab7"
-      url: "https://pub.dev"
-=======
       url: "https://pub.dartlang.org"
->>>>>>> origin
     source: hosted
     version: "0.6.5"
   json_annotation:
@@ -618,12 +592,7 @@ packages:
     dependency: transitive
     description:
       name: matcher
-<<<<<<< HEAD
-      sha256: "16db949ceee371e9b99d22f88fa3a73c4e59fd0afed0bd25fc336eb76c198b72"
-      url: "https://pub.dev"
-=======
       url: "https://pub.dartlang.org"
->>>>>>> origin
     source: hosted
     version: "0.12.13"
   material_color_utilities:
@@ -637,12 +606,7 @@ packages:
     dependency: transitive
     description:
       name: meta
-<<<<<<< HEAD
-      sha256: "6c268b42ed578a53088d834796959e4a1814b5e9e164f147f580a386e5decf42"
-      url: "https://pub.dev"
-=======
       url: "https://pub.dartlang.org"
->>>>>>> origin
     source: hosted
     version: "1.8.0"
   mime:
@@ -700,12 +664,7 @@ packages:
     dependency: "direct main"
     description:
       name: path
-<<<<<<< HEAD
-      sha256: db9d4f58c908a4ba5953fcee2ae317c94889433e5024c27ce74a37f94267945b
-      url: "https://pub.dev"
-=======
       url: "https://pub.dartlang.org"
->>>>>>> origin
     source: hosted
     version: "1.8.2"
   path_drawing:
@@ -803,12 +762,7 @@ packages:
     dependency: transitive
     description:
       name: petitparser
-<<<<<<< HEAD
-      sha256: "49392a45ced973e8d94a85fdb21293fbb40ba805fc49f2965101ae748a3683b4"
-      url: "https://pub.dev"
-=======
       url: "https://pub.dartlang.org"
->>>>>>> origin
     source: hosted
     version: "5.1.0"
   platform:
@@ -1030,12 +984,7 @@ packages:
     dependency: transitive
     description:
       name: test_api
-<<<<<<< HEAD
-      sha256: ad540f65f92caa91bf21dfc8ffb8c589d6e4dc0c2267818b4cc2792857706206
-      url: "https://pub.dev"
-=======
       url: "https://pub.dartlang.org"
->>>>>>> origin
     source: hosted
     version: "0.4.16"
   timing:

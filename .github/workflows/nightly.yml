@@ -47,7 +47,7 @@ jobs:
   #         file: Photon-Linux-Bundle
   #         file_glob: true
   #         prerelease: ${{ github.event_name != 'release' }}
-  #         release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+  #         release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build Photon android TV' }}
   #         tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
   #         overwrite: true
 
