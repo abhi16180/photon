@@ -42,7 +42,7 @@ jobs:
           limit-access-to-actor: true
       - uses: svenstaro/upload-release-action@latest
         with:
-          repo_token: ${{ secrets.TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: Photon-Linux-Bundle
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
@@ -51,34 +51,34 @@ jobs:
           overwrite: true
 
 
-#   build_android:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
-#       - uses: subosito/flutter-action@v2
-#         with:
-#           cache: true
-#           token: ${{secrets.TOKEN}} 
-#       - run: |
-#           sudo apt-get update -y
-#           sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse
+  build_android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          token: ${{secrets.TOKEN}} 
+      - run: |
+          sudo apt-get update -y
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev make python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse
 
-#       - run: |
-#           flutter pub get
-#           flutter build apk
+      - run: |
+          flutter pub get
+          flutter build apk
 
-#       - name: rename
-#         if: ${{ github.event_name != 'release' }}
-#         run: mv build/app/outputs/apk/release/app-* build/app/outputs/apk/release/photon-android-nightly.apk
-#       - uses: svenstaro/upload-release-action@latest
-#         with:
-#           repo_token: ${{ secrets.TOKEN }}
-#           file: build/app/outputs/apk/release/photon-*
-#           file_glob: true
-#           prerelease: ${{ github.event_name != 'release' }}
-#           release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
-#           tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
-#           overwrite: true
+      - name: rename
+        if: ${{ github.event_name != 'release' }}
+        run: mv build/app/outputs/apk/release/app-* build/app/outputs/apk/release/photon-android-nightly.apk
+      - uses: svenstaro/upload-release-action@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/app/outputs/apk/release/photon-*
+          file_glob: true
+          prerelease: ${{ github.event_name != 'release' }}
+          release_name: ${{ github.event_name == 'release' && github.event.release.name || 'Development Build' }}
+          tag: ${{ github.event_name == 'release' && github.event.release.tag_name || 'nightly' }}
+          overwrite: true
 
   build_windows:
     name: Windows
@@ -111,7 +111,7 @@ jobs:
 
       - uses: svenstaro/upload-release-action@latest
         with:
-          repo_token: ${{ secrets.TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: photon-windows-*
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
@@ -127,7 +127,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           cache: true
-          token: ${{secrets.TOKEN}} 
+          token: ${{secrets.GITHUB_TOKEN}} 
       - run: flutter config --enable-macos-desktop
       - run: flutter pub get
       - run: flutter build macos
@@ -137,7 +137,7 @@ jobs:
  
       - uses: svenstaro/upload-release-action@latest
         with:
-          repo_token: ${{ secrets.TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/photon-macos-x86_64.dmg
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
