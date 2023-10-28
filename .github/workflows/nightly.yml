@@ -42,7 +42,7 @@ jobs:
           limit-access-to-actor: true
       - uses: svenstaro/upload-release-action@latest
         with:
-          repo_token: ${{ secrets.TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: Photon-Linux-Bundle
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
@@ -111,7 +111,7 @@ jobs:
 
       - uses: svenstaro/upload-release-action@latest
         with:
-          repo_token: ${{ secrets.TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: photon-windows-*
           file_glob: true
           prerelease: ${{ github.event_name != 'release' }}
@@ -127,7 +127,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           cache: true
-          token: ${{secrets.TOKEN}} 
+          token: ${{secrets.GITHUB_TOKEN}} 
       - run: flutter config --enable-macos-desktop
       - run: flutter pub get
       - run: flutter build macos
