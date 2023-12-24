@@ -195,7 +195,7 @@ class _AppState extends State<App> {
                             const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text(
-                                'Photon v 1.2.0',
+                                'Photon v 1.2.1',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),

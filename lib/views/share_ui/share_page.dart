@@ -75,9 +75,10 @@ class _SharePageState extends State<SharePage> {
                               SizedBox(
                                 width: width > 720 ? 200 : 100,
                                 height: width > 720 ? 200 : 100,
-                                child: QrImage(
+                                child: QrImageView(
                                   size: 180,
-                                  foregroundColor: Colors.black,
+                                  eyeStyle:
+                                      const QrEyeStyle(color: Colors.black),
                                   data: PhotonSender.getPhotonLink,
                                   backgroundColor: Colors.white,
                                 ),
@@ -89,9 +90,8 @@ class _SharePageState extends State<SharePage> {
                           SizedBox(
                             width: 160,
                             height: 160,
-                            child: QrImage(
-                              // size: 180,
-                              foregroundColor: Colors.black,
+                            child: QrImageView(
+                              eyeStyle: const QrEyeStyle(color: Colors.black),
                               data: PhotonSender.getPhotonLink,
                               backgroundColor: Colors.white,
                             ),

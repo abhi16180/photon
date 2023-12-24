@@ -37,18 +37,11 @@ class _IntroPageState extends State<IntroPage> {
                   box.put('username', usernameController.text.trim());
                 }
                 if (Platform.isAndroid || Platform.isIOS) {
-                  var status = await Permission.storage.request();
-                  if (status.isGranted) {
-                    SharedPreferences prefInst =
-                        await SharedPreferences.getInstance();
-                    prefInst.setBool('isIntroRead', true);
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pushReplacementNamed('/home');
-                  } else {
-                    // ignore: use_build_context_synchronously
-                    showSnackBar(context,
-                        "Cannot use the app without storage permission");
-                  }
+                  var _ = await Permission.storage.request();
+                  SharedPreferences prefInst =
+                      await SharedPreferences.getInstance();
+                  prefInst.setBool('isIntroRead', true);
+                  Navigator.of(context).pushReplacementNamed('/home');
                 } else {
                   SharedPreferences prefInst =
                       await SharedPreferences.getInstance();

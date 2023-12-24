@@ -2,13 +2,10 @@ import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/services/photon_sender.dart';
 import 'package:photon/views/apps_list.dart';
-import '../../controllers/controllers.dart';
 import '../../methods/handle_share.dart';
 
 class MobileHome extends StatefulWidget {
@@ -49,8 +46,10 @@ class _MobileHomeState extends State<MobileHome> {
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const SizedBox(
+                                  SizedBox(
                                     height: 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.2,
                                   ),
                                   MaterialButton(
                                     shape: RoundedRectangleBorder(
@@ -73,14 +72,14 @@ class _MobileHomeState extends State<MobileHome> {
                                         isLoading = false;
                                       });
                                     },
-                                    child: Row(
+                                    child: const Row(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: const [
+                                      children: [
                                         Icon(
                                           Icons.file_open,
-                                          color: Colors.white,
+                                          color: Colors.black,
                                         ),
                                         SizedBox(
                                           width: 10,
@@ -153,7 +152,7 @@ class _MobileHomeState extends State<MobileHome> {
                                       children: [
                                         SvgPicture.asset(
                                           'assets/icons/android.svg',
-                                          color: Colors.white,
+                                          color: Colors.black,
                                         ),
                                         const SizedBox(
                                           width: 10,
@@ -222,8 +221,10 @@ class _MobileHomeState extends State<MobileHome> {
                               return Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const SizedBox(
+                                  SizedBox(
                                     height: 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.2,
                                   ),
                                   MaterialButton(
                                     onPressed: () async {
