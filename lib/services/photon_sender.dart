@@ -21,13 +21,16 @@ class PhotonSender {
   static late int _randomSecretCode;
   static late String photonLink;
   static late Uint8List avatar;
-  static getFilesPath({List<String> appList = const <String>[]}) async {
+  static getFilesPath({
+    List<String> appList = const <String>[],
+    List<String> fileList = const <String>[],
+  }) async {
     //flutter specific package
     if (appList.isNotEmpty) {
       _fileList = appList;
       return true;
     }
-    _fileList = await FileMethods.pickFiles();
+    _fileList = fileList;
     if (_fileList.isEmpty) {
       return false;
     } else {
@@ -45,15 +48,13 @@ class PhotonSender {
   static handleSharing({
     bool externalIntent = false,
     List<String> appList = const <String>[],
+    List<String> fileList = const <String>[],
   }) async {
-    if (Platform.isAndroid) {
-      // cause in case of android bottom sheet opens up when share is tapped
-      Navigator.pop(nav.currentContext!);
-    }
     Map<String, dynamic> shareRespMap = await PhotonSender.share(
         nav.currentContext,
         externalIntent: externalIntent,
-        appList: appList);
+        appList: appList,
+        fileList: fileList);
     ShareError shareErr = ShareError.fromMap(shareRespMap);
 
     switch (shareErr.hasError) {
@@ -64,7 +65,7 @@ class PhotonSender {
 
       case false:
         // ignore: use_build_context_synchronously
-        Navigator.pushNamed(nav.currentContext!, '/sharepage');
+        // Navigator.pushNamed(nav.currentContext!, '/sharepage');
         break;
     }
   }
@@ -212,6 +213,7 @@ class PhotonSender {
     context, {
     bool externalIntent = false,
     List<String> appList = const <String>[],
+    List<String> fileList = const <String>[],
   }) async {
     if (externalIntent) {
       // When user tries to share files opened / listed on external app
@@ -225,7 +227,7 @@ class PhotonSender {
     } else {
       // User manually opens photon
       // Selects files
-      if (await getFilesPath(appList: appList)) {
+      if (await getFilesPath(appList: appList, fileList: fileList)) {
         await assignIP();
         await storeSentFileHistory(_fileList);
         Map<String, dynamic> res =

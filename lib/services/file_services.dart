@@ -16,13 +16,13 @@ import '../models/sender_model.dart';
 
 class FileMethods {
   //todo implement separate file picker for android to avoid caching
-  static Future<List<String?>> pickFiles() async {
+  static Future<List<String>> pickFiles() async {
     FilePickerResult? files = await FilePicker.platform
         .pickFiles(allowMultiple: true, type: FileType.any, withData: false);
     if (files == null) {
       return [];
     } else {
-      return files.paths;
+      return files.paths.map((e) => e.toString()).toList();
     }
   }
 

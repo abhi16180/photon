@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
+import 'package:photon/services/file_services.dart';
 import 'package:photon/services/photon_sender.dart';
 import 'package:photon/views/apps_list.dart';
+import 'package:photon/views/share_ui/share_page.dart';
 import '../../methods/handle_share.dart';
 
 class MobileHome extends StatefulWidget {
@@ -66,7 +68,7 @@ class _MobileHomeState extends State<MobileHome> {
                                         isLoading = true;
                                       });
 
-                                      await PhotonSender.handleSharing();
+                                      pickFilesAndShare();
 
                                       setState(() {
                                         isLoading = false;
@@ -177,7 +179,8 @@ class _MobileHomeState extends State<MobileHome> {
                           isLoading = true;
                         });
 
-                        await PhotonSender.handleSharing();
+                        await pickFilesAndShare();
+
                         setState(() {
                           isLoading = false;
                         });
@@ -325,5 +328,27 @@ class _MobileHomeState extends State<MobileHome> {
             ],
           );
         });
+  }
+
+  pickFilesAndShare() async {
+    final List<String> fileList = await FileMethods.pickFiles();
+
+    if (fileList.isEmpty) {
+      if (mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("No file chosen")));
+      }
+    } else {
+      if (mounted) {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return SharePage(
+            appList: const [],
+            fileList: fileList,
+          );
+        }));
+      }
+    }
   }
 }
