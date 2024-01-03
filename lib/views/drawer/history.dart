@@ -49,7 +49,16 @@ class _HistoryPageState extends State<HistoryPage>
                   IconButton(
                       onPressed: () async {
                         var resp = await FileMethods.getSaveDirectory();
-                        OpenFilex.open(resp.path);
+                        if (Platform.isAndroid || Platform.isIOS) {
+                          OpenFilex.open(resp.path);
+                        } else {
+                          launchUrl(
+                            Uri.file(
+                              resp.path,
+                              windows: Platform.isWindows,
+                            ),
+                          );
+                        }
                       },
                       icon: const Icon(Icons.outbond))
                 ]),
