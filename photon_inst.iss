@@ -3,7 +3,7 @@
 
 
 #define MyAppName "Photon"
-#define MyAppVersion "1.2.0"
+#define MyAppVersion "2.0.0"
 #define MyAppPublisher "photon.dev"
 #define MyAppURL "https://github.com/abhi16180/photon"
 #define MyAppExeName "photon.exe"
