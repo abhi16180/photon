@@ -33,8 +33,8 @@ Peer to Peer (P2P) data transfer within LAN. Under heavy development 🚧.
   For instance you can transfer files between Android and Windows
 - **Transfer multiple files**<br>
   You can pick any number of files.
-- **Pick files faster**<br>
-  Most of the apps use <a href='https://github.com/miguelpruivo/flutter_file_picker'>file_picker</a> for picking the files. But for android it caches files before retrieving the paths. If the file size is large it will result in considerable amount of delay. So I have tweaked <a href='https://github.com/abhi16180/flutter_file_picker'>file_picker</a> to avoid caching(android) *unless it is required (some files need to be cached)*. No matter how many files are selected ,paths will be retrieved within no time.
+- **Share raw text**<br>
+  You can share raw text between devices. Store raw text as txt file or copy to clipboard.
   (Note:Caching issue is android specific)
 - **Smooth UI**<br>
   Material You design.
