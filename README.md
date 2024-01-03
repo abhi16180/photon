@@ -12,7 +12,7 @@ Peer to Peer (P2P) data transfer within LAN. Under heavy development 🚧.
   </a>
   
   [![Github All Releases](https://img.shields.io/github/downloads/abhi16180/photon/total.svg)]()
-  [![Github Latest Release (all)](https://img.shields.io/github/downloads/abhi16180/photon/v1.2.0/total)]()
+  [![Github Latest Release (all)](https://img.shields.io/github/downloads/abhi16180/photon/v2.0.0/total)]()
   [![Commits/week](  https://img.shields.io/github/commit-activity/w/abhi16180/photon)]()
   [![CodeFactor](https://www.codefactor.io/repository/github/abhi16180/photon/badge)](https://www.codefactor.io/repository/github/abhi16180/photon)
 </p>
