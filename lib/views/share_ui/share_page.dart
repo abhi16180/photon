@@ -13,7 +13,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../components/components.dart';
 
 class SharePage extends StatefulWidget {
-  const SharePage({Key? key}) : super(key: key);
+  final bool? isRawText;
+  const SharePage({Key? key, this.isRawText}) : super(key: key);
 
   @override
   State<SharePage> createState() => _SharePageState();
@@ -100,7 +101,9 @@ class _SharePageState extends State<SharePage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            '${photonSender.hasMultipleFiles ? 'Your files are ready to be shared' : 'Your file is ready to be shared'}\nAsk receiver to tap on receive button',
+                            widget.isRawText == true
+                                ? "Your text is ready to be shared\nReceiver should be using Photon v2.0 or above in order to receive text"
+                                : '${photonSender.hasMultipleFiles ? 'Your files are ready to be shared' : 'Your file is ready to be shared'}\nAsk receiver to tap on receive button',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: width > 720 ? 18 : 14,
@@ -191,9 +194,11 @@ class _SharePageState extends State<SharePage> {
                                               ),
                                               data[keys[item]]['isCompleted'] ==
                                                       'true'
-                                                  ? const Center(
+                                                  ? Center(
                                                       child: Text(
-                                                        "All files sent",
+                                                        widget.isRawText!
+                                                            ? 'Text is received'
+                                                            : 'All files sent',
                                                         textAlign:
                                                             TextAlign.center,
                                                       ),

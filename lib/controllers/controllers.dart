@@ -25,3 +25,7 @@ class ReceiverDataController extends GetxController {
 class St {
   BuildContext? cxt;
 }
+
+class RawTextController extends GetxController {
+  var rawText = "".obs;
+}

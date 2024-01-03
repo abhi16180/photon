@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/methods/handle_share.dart';
-import '../../controllers/controllers.dart';
 import '../../services/photon_sender.dart';
 import '../apps_list.dart';
 
@@ -20,6 +19,7 @@ class WidescreenHome extends StatefulWidget {
 class _WidescreenHomeState extends State<WidescreenHome> {
   bool isLoading = false;
   Box box = Hive.box('appData');
+  TextEditingController rawTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -41,152 +41,236 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                     ),
                     child: InkWell(
                       onTap: () async {
-                        if (Platform.isAndroid) {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    MaterialButton(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 20,
+                                  width: MediaQuery.of(context).size.width,
+                                ),
+                                MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  minWidth:
+                                      MediaQuery.of(context).size.width / 4,
+                                  color: mode.isDark
+                                      ? const Color.fromARGB(205, 117, 255, 122)
+                                      : Colors.blue,
+                                  onPressed: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+
+                                    await PhotonSender.handleSharing();
+
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  },
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Icon(
+                                        Icons.file_open,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'Files',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        minWidth:
-                                            MediaQuery.of(context).size.width /
-                                                2,
-                                        color: mode.isDark
-                                            ? const Color.fromARGB(
-                                                205, 117, 255, 122)
-                                            : Colors.blue,
-                                        onPressed: () async {
-                                          setState(() {
-                                            isLoading = true;
-                                          });
-
-                                          await PhotonSender.handleSharing();
-
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                        },
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: const [
-                                            Icon(
-                                              Icons.file_open,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                              'Files',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        )),
-                                    const SizedBox(
-                                      height: 25,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                if (Platform.isAndroid || Platform.isIOS) ...{
+                                  MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
                                     ),
-                                    MaterialButton(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        minWidth:
-                                            MediaQuery.of(context).size.width /
-                                                2,
-                                        color: mode.isDark
-                                            ? const Color.fromARGB(
-                                                205, 117, 255, 122)
-                                            : Colors.blue,
-                                        onPressed: () async {
-                                          if (box.get('queryPackages')) {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const AppsList()));
-                                          } else {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: const Text(
-                                                      'Query installed packages'),
-                                                  content: const Text(
-                                                      'To get installed apps, you need to allow photon to query all installed packages. Would you like to continue ?'),
-                                                  actions: [
-                                                    ElevatedButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child:
-                                                          const Text('Go back'),
-                                                    ),
-                                                    ElevatedButton(
-                                                      onPressed: () {
-                                                        box.put('queryPackages',
-                                                            true);
+                                    minWidth:
+                                        MediaQuery.of(context).size.width / 4,
+                                    color: mode.isDark
+                                        ? const Color.fromARGB(
+                                            205, 117, 255, 122)
+                                        : Colors.blue,
+                                    onPressed: () async {
+                                      if (box.get('queryPackages')) {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AppsList()));
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  'Query installed packages'),
+                                              content: const Text(
+                                                  'To get installed apps, you need to allow photon to query all installed packages. Would you like to continue ?'),
+                                              actions: [
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('Go back'),
+                                                ),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    box.put(
+                                                        'queryPackages', true);
 
-                                                        Navigator.of(context)
-                                                            .popAndPushNamed(
-                                                                '/apps');
-                                                      },
-                                                      child: const Text(
-                                                          'Continue'),
-                                                    )
-                                                  ],
-                                                );
-                                              },
+                                                    Navigator.of(context)
+                                                        .popAndPushNamed(
+                                                            '/apps');
+                                                  },
+                                                  child: const Text('Continue'),
+                                                )
+                                              ],
                                             );
-                                          }
-                                        },
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            SvgPicture.asset(
-                                              'assets/icons/android.svg',
-                                              color: Colors.white,
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            const Text(
-                                              'Apps',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                          },
+                                        );
+                                      }
+                                    },
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/icons/android.svg',
+                                          color: Colors.black,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        const Text(
+                                          'Apps',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                },
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  minWidth:
+                                      MediaQuery.of(context).size.width / 4,
+                                  color: mode.isDark
+                                      ? const Color.fromARGB(205, 117, 255, 122)
+                                      : Colors.blue,
+                                  onPressed: () async {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text("Share text"),
+                                              IconButton(
+                                                icon: const Icon(Icons.close),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
                                               ),
+                                            ],
+                                          ),
+                                          // icon: const Icon(Icons.text_fields),
+                                          content: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2,
+                                            child: TextField(
+                                              decoration: const InputDecoration(
+                                                  border: InputBorder.none,
+                                                  enabledBorder:
+                                                      InputBorder.none,
+                                                  focusedBorder:
+                                                      InputBorder.none),
+                                              controller: rawTextController,
+                                              maxLines: 8,
+                                            ),
+                                          ),
+                                          actions: [
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                rawTextController.text =
+                                                    (await Clipboard.getData(
+                                                            'text/plain'))!
+                                                        .text
+                                                        .toString();
+                                                setState(() {});
+                                              },
+                                              child: const Text(
+                                                  "Paste from clipboard"),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                PhotonSender.setRawText(
+                                                    rawTextController.text);
+                                                await PhotonSender
+                                                    .handleSharing(
+                                                        isRawText: true);
+                                              },
+                                              child: const Text("Send"),
                                             ),
                                           ],
-                                        )),
-                                    const SizedBox(
-                                      height: 50,
-                                    ),
-                                  ],
-                                );
-                              });
-                        } else {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          await PhotonSender.handleSharing();
-                          setState(() {
-                            isLoading = false;
-                          });
-                        }
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Icon(
+                                        Icons.text_snippet,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'Text',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 50,
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       child: Column(
                         mainAxisSize: MainAxisSize.min,

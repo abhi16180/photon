@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/route_manager.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/models/share_error_model.dart';
+import 'package:photon/views/share_ui/share_page.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:hive/hive.dart';
 import '../components/dialogs.dart';
@@ -19,8 +19,18 @@ class PhotonSender {
   static String _address = '';
   static late List<String?> _fileList;
   static late int _randomSecretCode;
-  static late String photonLink;
+  static late String photonURL;
   static late Uint8List avatar;
+  static String _rawText = "";
+
+  static void setRawText(txt) {
+    _rawText = txt;
+  }
+
+  static String getRawText() {
+    return _rawText;
+  }
+
   static getFilesPath({List<String> appList = const <String>[]}) async {
     //flutter specific package
     if (appList.isNotEmpty) {
@@ -44,15 +54,16 @@ class PhotonSender {
 
   static handleSharing({
     bool externalIntent = false,
+    String extIntentType = "file",
     List<String> appList = const <String>[],
+    bool isRawText = false,
   }) async {
-    if (Platform.isAndroid) {
-      // cause in case of android bottom sheet opens up when share is tapped
-      Navigator.pop(nav.currentContext!);
-    }
+    Navigator.pop(nav.currentContext!);
     Map<String, dynamic> shareRespMap = await PhotonSender.share(
         nav.currentContext,
         externalIntent: externalIntent,
+        extIntentType: extIntentType,
+        isRawText: isRawText,
         appList: appList);
     ShareError shareErr = ShareError.fromMap(shareRespMap);
 
@@ -63,16 +74,17 @@ class PhotonSender {
         break;
 
       case false:
-        // ignore: use_build_context_synchronously
-        Navigator.pushNamed(nav.currentContext!, '/sharepage');
+        Navigator.of(nav.currentContext!)
+            .push(MaterialPageRoute(builder: (ctx) {
+          return SharePage(isRawText: isRawText);
+        }));
         break;
     }
   }
 
   static Future<Map<String, dynamic>> _startServer(
       List<String?> fileList, context,
-      {bool isApk = false}) async {
-    //todo remove print statements
+      {bool isApk = false, bool isRawText = false}) async {
     late Map<String, Object> serverInf;
 
     //check if no proper address is assigned
@@ -99,14 +111,15 @@ class PhotonSender {
         'os': Platform.operatingSystem,
         'version': Platform.operatingSystemVersion,
         'files-count': _fileList.length,
-        'avatar': avatar
+        'avatar': avatar,
+        'type': isRawText ? 'raw_text' : "file",
       };
     } catch (e) {
       return {'hasErr': true, 'type': 'server', 'errMsg': '$e'};
     }
 
     bool? allowRequest;
-    photonLink = 'http://$_address:4040/photon-server';
+    photonURL = 'http://$_address:4040/photon-server';
     _server.listen(
       (HttpRequest request) async {
         if (request.requestedUri.toString() ==
@@ -117,12 +130,14 @@ class PhotonSender {
             'http://$_address:4040/get-code') {
           String os = (request.headers['os']![0]);
           String username = request.headers['receiver-name']![0];
-
           allowRequest = await senderRequestDialog(username, os);
           if (allowRequest == true) {
             //appending receiver data
-            request.response.write(
-                jsonEncode({'code': _randomSecretCode, 'accepted': true}));
+            request.response.write(jsonEncode({
+              'code': _randomSecretCode,
+              'accepted': true,
+              "type": isRawText ? "raw_text" : "file"
+            }));
             request.response.close();
           } else {
             request.response.write(
@@ -134,6 +149,7 @@ class PhotonSender {
             'http://$_address:4040/getpaths') {
           request.response
               .write(jsonEncode({'paths': fileList, 'isApk': isApk}));
+
           request.response.close();
         } else if (request.requestedUri.toString() ==
             'http://$_address:4040/favicon.ico') {
@@ -157,6 +173,15 @@ class PhotonSender {
             "filesCount": fileList.length,
             "isCompleted": request.headers['isCompleted']!.first
           });
+        } else if (request.requestedUri.toString() ==
+            "http://$_address:4040/$_randomSecretCode/data/type") {
+          request.response
+              .write(jsonEncode({"type": isRawText ? "raw_text" : "file"}));
+          request.response.close();
+        } else if (request.requestedUri.toString() ==
+            "http://$_address:4040/$_randomSecretCode/text") {
+          request.response.write(jsonEncode({"raw_text": _rawText}));
+          request.response.close();
         } else {
           //uri should be in format http://ip:port/secretcode/file-index
           List requriToList = request.requestedUri.toString().split('/');
@@ -211,16 +236,31 @@ class PhotonSender {
   static Future<Map<String, dynamic>> share(
     context, {
     bool externalIntent = false,
+    String extIntentType = "file",
     List<String> appList = const <String>[],
+    bool isRawText = false,
   }) async {
     if (externalIntent) {
       // When user tries to share files opened / listed on external app
-      // Photon will be opened along with intended files' paths.
-      List<SharedMediaFile> sharedMediaFiles =
-          await ReceiveSharingIntent.getInitialMedia();
-      _fileList = sharedMediaFiles.map((e) => e.path).toList();
+      // Photon will be opened along with intended files' paths
+      if (extIntentType == "file") {
+        List<SharedMediaFile> sharedMediaFiles =
+            await ReceiveSharingIntent.getInitialMedia();
+        _fileList = sharedMediaFiles.map((e) => e.path).toList();
+      } else {
+        _fileList = [];
+        _rawText = (await ReceiveSharingIntent.getInitialText())!;
+      }
       await assignIP();
-      Future<Map<String, dynamic>> res = _startServer(_fileList, context);
+      Future<Map<String, dynamic>> res = _startServer(_fileList, context,
+          isRawText: extIntentType == "raw_text");
+      return await res;
+    } else if (isRawText) {
+      await assignIP();
+      // assign empty list to late init var _fileList
+      _fileList = [];
+      Future<Map<String, dynamic>> res =
+          _startServer(_fileList, context, isRawText: isRawText);
       return await res;
     } else {
       // User manually opens photon
@@ -258,10 +298,10 @@ class PhotonSender {
       'avatar': avatar
     };
     SenderModel senderData = SenderModel.fromJson(info);
-
     return senderData;
   }
 
   bool get hasMultipleFiles => _fileList.length > 1;
-  static String get getPhotonLink => photonLink;
+
+  static String get getPhotonLink => photonURL;
 }

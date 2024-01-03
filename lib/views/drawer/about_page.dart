@@ -68,6 +68,15 @@ class AboutPage extends StatelessWidget {
                   title: const Text('Twitter'),
                   subtitle: const Text('https://twitter.com/AbhilashHegde9'),
                 ),
+                ListTile(
+                  leading:
+                      const Icon(UniconsLine.github, color: Colors.blueAccent),
+                  onTap: () {
+                    launchUrl(Uri.parse('https://github.com/abhi16180/photon'));
+                  },
+                  title: const Text('Github'),
+                  subtitle: const Text('https://github.com/abhi16180/photon'),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(

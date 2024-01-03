@@ -112,7 +112,15 @@ class PhotonReceiver {
     );
   }
 
-  static receive(SenderModel senderModel, int secretCode) async {
+  static receiveText(SenderModel senderModel, int secretCode) async {
+    RawTextController getInstance = GetIt.instance.get<RawTextController>();
+    var resp =
+        await Dio().get("http://${senderModel.ip}:4040/$secretCode/text");
+    String text = jsonDecode(resp.data)['raw_text'];
+    getInstance.rawText.value = text;
+  }
+
+  static receiveFiles(SenderModel senderModel, int secretCode) async {
     PercentageController getInstance =
         GetIt.instance.get<PercentageController>();
     //getting hiveObj
@@ -155,6 +163,14 @@ class PhotonReceiver {
       getInstance.totalTimeElapsed.value = totalTime;
     } catch (e) {
       debugPrint('$e');
+    }
+  }
+
+  static receive(SenderModel senderModel, int secretCode, String type) async {
+    if (type == "raw_text") {
+      receiveText(senderModel, secretCode);
+    } else {
+      receiveFiles(senderModel, secretCode);
     }
   }
 

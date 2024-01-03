@@ -5,7 +5,9 @@ import 'package:photon/services/photon_sender.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class HandleIntentUI extends StatefulWidget {
-  const HandleIntentUI({super.key});
+  final bool? isRawText;
+  final String? rawText;
+  const HandleIntentUI({super.key, this.isRawText, this.rawText});
 
   @override
   State<HandleIntentUI> createState() => _HandleIntentUIState();
@@ -17,28 +19,38 @@ class _HandleIntentUIState extends State<HandleIntentUI> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Share files"),
+        title: Text("Share ${widget.isRawText! ? 'text' : 'files'}"),
       ),
       body: FutureBuilder(
-        future: ReceiveSharingIntent.getInitialMedia(),
+        future: widget.isRawText!
+            ? ReceiveSharingIntent.getInitialText()
+            : ReceiveSharingIntent.getInitialMedia(),
         builder: (context, AsyncSnapshot snap) {
           isLoading = false;
           if (snap.connectionState == ConnectionState.done) {
-            List data = snap.data.map((e) => e.path).toList();
-
-            return ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, i) {
-                  return ListTile(
-                    leading: getFileIcon(
-                      data[i].toString().split('.').last,
-                    ),
-                    title: Text(
-                      data[i].toString().split(Platform.pathSeparator).last,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  );
-                });
+            if (widget.isRawText!) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(snap.data),
+                ),
+              );
+            } else {
+              List data = snap.data.map((e) => e.path).toList();
+              return ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, i) {
+                    return ListTile(
+                      leading: getFileIcon(
+                        data[i].toString().split('.').last,
+                      ),
+                      title: Text(
+                        data[i].toString().split(Platform.pathSeparator).last,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                  });
+            }
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -56,7 +68,10 @@ class _HandleIntentUIState extends State<HandleIntentUI> {
                     sts(() {
                       isLoading = true;
                     });
-                    await PhotonSender.handleSharing(externalIntent: true);
+                    await PhotonSender.handleSharing(
+                        externalIntent: true,
+                        isRawText: widget.isRawText!,
+                        extIntentType: widget.isRawText! ? "raw_text" : "file");
                     sts(() {
                       isLoading = false;
                     });

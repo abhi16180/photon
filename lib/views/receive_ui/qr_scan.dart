@@ -107,17 +107,19 @@ class _QrReceivePageState extends State<QrReceivePage> {
         senderModel,
       );
       if (resp['accepted']) {
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return ProgressPage(
-                senderModel: senderModel,
-                secretCode: resp['code'],
-              );
-            },
-          ),
-        );
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return ProgressPage(
+                  senderModel: senderModel,
+                  secretCode: resp['code'],
+                  dataType: resp['type'],
+                );
+              },
+            ),
+          );
+        }
       } else {
         // ignore: use_build_context_synchronously
         innerState(() {

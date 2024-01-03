@@ -30,7 +30,8 @@ class FileMethods {
   ///Works only for android and ios
   static clearCache() async {
     if (Platform.isAndroid || Platform.isIOS) {
-      await FilePicker.platform.clearTemporaryFiles();
+      var appDir = (await getTemporaryDirectory()).path;
+      Directory(appDir).delete(recursive: true);
     }
   }
 
@@ -155,5 +156,23 @@ class FileMethods {
     }
 
     return directory;
+  }
+
+  static saveTextFile(String content, fileName) async {
+    Directory dir = await getSaveDirectory();
+    final String filePath = p.join(
+      dir.path,
+      '${fileName.split('.').first}.txt',
+    );
+    try {
+      await File(filePath).writeAsString(content);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<String> getTextFilePath(fileName) async {
+    return '${(await getSaveDirectory()).path}${Platform.pathSeparator}$fileName.txt';
   }
 }

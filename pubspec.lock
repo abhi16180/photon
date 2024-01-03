@@ -520,6 +520,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  graphic:
+    dependency: "direct main"
+    description:
+      name: graphic
+      sha256: "1443f5b89e802c5ae6e6ffdbc0091f3808d74557b4794595b1aa8ffcf944cced"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
   graphs:
     dependency: transitive
     description:
@@ -712,15 +720,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  open_file:
+  open_filex:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "819fb441752ea875c443e5f48fe888076b98b935"
-      url: "https://github.com/abhi16180/open_file.git"
-    source: git
-    version: "3.2.1"
+      name: open_filex
+      sha256: a6c95237767c5647e68b71a476602fcf4f1bfc530c126265e53addae22ef5fc2
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.3.4"
   package_config:
     dependency: transitive
     description:
@@ -745,6 +752,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
+  path_drawing:
+    dependency: transitive
+    description:
+      name: path_drawing
+      sha256: bbb1934c0cbb03091af082a6389ca2080345291ef07a5fa6d6e078ba8682f977
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   path_parsing:
     dependency: transitive
     description:

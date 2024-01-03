@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive/hive.dart';
+import 'package:photon/components/snackbar.dart';
+import 'package:photon/services/file_services.dart';
 import 'package:photon/views/drawer/about_page.dart';
 import 'package:photon/views/drawer/settings.dart';
 import 'package:photon/views/home/widescreen_home.dart';
@@ -144,7 +148,7 @@ class _AppState extends State<App> {
                             showLicensePage(
                                 context: context,
                                 applicationLegalese: 'GPL3 license',
-                                applicationVersion: "1.2.0",
+                                applicationVersion: "2.0.0",
                                 applicationIcon: Image.asset(
                                   'assets/images/splash.png',
                                   width: 60,
@@ -165,6 +169,20 @@ class _AppState extends State<App> {
                           },
                           title: const Text('Privacy policy'),
                         ),
+                        if (Platform.isAndroid || Platform.isIOS) ...{
+                          ListTile(
+                            title: const Text('Clear cache'),
+                            leading: Icon(Icons.delete_forever_rounded,
+                                color: mode.isDark ? null : Colors.black),
+                            onTap: () async {
+                              await FileMethods.clearCache();
+                              if (mounted) {
+                                Navigator.of(context).pop();
+                                showSnackBar(context, "Cache cleared");
+                              }
+                            },
+                          ),
+                        },
                         ListTile(
                           title: const Text('About'),
                           leading: Icon(UniconsLine.info_circle,
@@ -195,7 +213,7 @@ class _AppState extends State<App> {
                             const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text(
-                                'Photon v 1.2.1',
+                                'Photon v 2.0.0',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),

@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
+import 'package:hive/hive.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:photon/components/constants.dart';
 import 'package:photon/components/snackbar.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/share_history_model.dart';
+import 'package:photon/services/file_services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -39,7 +42,17 @@ class _HistoryPageState extends State<HistoryPage>
               : Colors.white,
           appBar: AppBar(
             backgroundColor: mode.isDark ? Colors.blueGrey.shade900 : null,
-            title: const Text('History'),
+            title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('History'),
+                  IconButton(
+                      onPressed: () async {
+                        var resp = await FileMethods.getSaveDirectory();
+                        OpenFilex.open(resp.path, type: 'folder');
+                      },
+                      icon: const Icon(Icons.outbond))
+                ]),
             leading: BackButton(
                 color: Colors.white,
                 onPressed: () {
@@ -90,7 +103,7 @@ class _HistoryPageState extends State<HistoryPage>
                                       data[item].filePath.replaceAll(r"\", "/");
                                   if (Platform.isAndroid || Platform.isIOS) {
                                     try {
-                                      OpenFile.open(path);
+                                      OpenFilex.open(path);
                                     } catch (_) {
                                       // ignore: use_build_context_synchronously
                                       showSnackBar(context,
@@ -156,8 +169,8 @@ class _HistoryPageState extends State<HistoryPage>
                                       data[item].filePath.replaceAll(r"\", "/");
                                   if (Platform.isAndroid || Platform.isIOS) {
                                     try {
-                                      OpenFile.open(path);
-                                    } catch (_) {
+                                      OpenFilex.open(path);
+                                    } catch (e) {
                                       // ignore: use_build_context_synchronously
                                       showSnackBar(context,
                                           'No corresponding app found');

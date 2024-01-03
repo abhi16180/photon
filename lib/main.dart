@@ -36,9 +36,11 @@ void main() async {
   prefInst.get('isDarkTheme') ?? prefInst.setBool('isDarkTheme', true);
   getIt.registerSingleton<PercentageController>(PercentageController());
   getIt.registerSingleton<ReceiverDataController>(ReceiverDataController());
+  getIt.registerSingleton<RawTextController>(RawTextController());
   bool externalIntent = false;
+  String type = "";
   if (Platform.isAndroid) {
-    externalIntent = await handleSharingIntent();
+    (externalIntent, type) = await handleSharingIntent();
     try {
       await FlutterDisplayMode.setHighRefreshRate();
     } catch (_) {}
@@ -83,7 +85,11 @@ void main() async {
             '/': (context) => AnimatedSplashScreen(
                   splash: 'assets/images/splash.png',
                   nextScreen: prefInst.getBool('isIntroRead') == true
-                      ? (externalIntent ? const HandleIntentUI() : const App())
+                      ? (externalIntent
+                          ? HandleIntentUI(
+                              isRawText: type == "raw_text",
+                            )
+                          : const App())
                       : const IntroPage(),
                   duration: 1000,
                   splashTransition: SplashTransition.fadeTransition,

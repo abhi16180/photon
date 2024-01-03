@@ -9,14 +9,17 @@ class SenderModel {
   dynamic os;
   dynamic version;
   Uint8List? avatar;
-  SenderModel(
-      {this.ip,
-      this.port,
-      this.filesCount,
-      this.host,
-      this.os,
-      this.version,
-      this.avatar});
+  String? type;
+  SenderModel({
+    this.ip,
+    this.port,
+    this.filesCount,
+    this.host,
+    this.os,
+    this.version,
+    this.avatar,
+    this.type,
+  });
   factory SenderModel.fromJson(Map<String, dynamic> json) {
     return SenderModel(
       ip: json['ip'],
@@ -30,6 +33,7 @@ class SenderModel {
               List<int>.from(json['avatar']),
             )
           : null,
+      type: json['type'],
     );
   }
 }

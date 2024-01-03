@@ -49,7 +49,7 @@ int getRandomNumber() {
   } catch (_) {
     rnd = Random();
   }
-  return rnd.nextInt(10000);
+  return rnd.nextInt(1000000) + 1000000;
 }
 
 generatePercentageList(len) {
@@ -254,4 +254,19 @@ getEstimatedTime(receivedBits, totalBits, currentSpeed) {
     return 'About $mins m and $seconds s left';
   }
   return 'About $hours h $mins m $seconds s left';
+}
+
+getErrorString() {
+  final List<String> scanErrorLines = [
+    "Lost in the digital wilderness? Ensure your sender and receiver are holding hands through a mobile hotspot or dancing to the same WiFi beat!",
+    "Looks like your devices are playing hide and seek. Connect them through a mobile hotspot or let them share the same WiFi network.",
+    "Devices feeling lonely? Bridge the gap with a mobile hotspot or let them cozy up in the warmth of the same WiFi network.",
+    "No devices in sight? Time to be the matchmaker! Connect them through a mobile hotspot or let them share the sweet harmony of the same WiFi network",
+    "Missing connections? Make sure your devices are connected by a mobile hotspot or same WiFi network.",
+  ];
+
+  final Random random = Random();
+  final int randomIndex = random.nextInt(scanErrorLines.length);
+
+  return scanErrorLines[randomIndex];
 }
