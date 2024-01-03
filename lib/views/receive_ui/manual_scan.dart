@@ -249,7 +249,8 @@ class _ReceivePageState extends State<ReceivePage> {
                                                           secretCode:
                                                               resp['code'],
                                                           dataType:
-                                                              resp['type'],
+                                                              resp['type'] ??
+                                                                  "file",
                                                         );
                                                       },
                                                     ),

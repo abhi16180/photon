@@ -33,7 +33,7 @@ class SenderModel {
               List<int>.from(json['avatar']),
             )
           : null,
-      type: json['type'],
+      type: json['type'] ?? 'file',
     );
   }
 }
