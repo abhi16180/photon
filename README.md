@@ -6,7 +6,7 @@ Peer to Peer (P2P) data transfer within LAN. Under heavy development 🚧.
 <h1 >Welcome to Photon👋</h1><br>
 <p align="center"> <img style="border-radius:20px" src="photon.png" width="400px"></p>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.2.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://twitter.com/AbhilashHegde9" target="_blank">
     <img alt="Twitter: AbhilashHegde9" src="https://img.shields.io/twitter/follow/AbhilashHegde9.svg?style=social" />
   </a>
