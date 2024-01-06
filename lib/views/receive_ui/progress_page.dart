@@ -25,11 +25,13 @@ class ProgressPage extends StatefulWidget {
   final SenderModel? senderModel;
   final int secretCode;
   final String dataType;
+  final String? parentDirectory;
   const ProgressPage({
     Key? key,
     required this.senderModel,
     required this.secretCode,
     required this.dataType,
+    this.parentDirectory,
   }) : super(key: key);
 
   @override
@@ -47,7 +49,11 @@ class _ProgressPageState extends State<ProgressPage> {
     super.initState();
     generatePercentageList(widget.senderModel!.filesCount);
     PhotonReceiver.receive(
-        widget.senderModel!, widget.secretCode, widget.dataType);
+      widget.senderModel!,
+      widget.secretCode,
+      widget.dataType,
+      parentDirectory: widget.parentDirectory,
+    );
     stopWatchTimer.onStartTimer();
   }
 

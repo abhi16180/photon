@@ -120,6 +120,65 @@ class PhotonReceiver {
     getInstance.rawText.value = text;
   }
 
+  static receiveFolder(
+      SenderModel senderModel, int secretCode, String? parentDirectory) async {
+    PercentageController getInstance =
+        GetIt.instance.get<PercentageController>();
+    //getting hiveObj
+
+    String filePath = '';
+    totalTime = 0;
+    try {
+      var resp = await Dio()
+          .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
+      filePathMap = jsonDecode(resp.data);
+      _secretCode = secretCode;
+      for (int fileIndex = 0;
+          fileIndex < filePathMap['paths']!.length;
+          fileIndex++) {
+        //if a file is cancelled once ,it should not be automatically fetched without user action
+        if (getInstance.isCancelled[fileIndex].value == false) {
+          getInstance.fileStatus[fileIndex].value = Status.downloading.name;
+
+          if (filePathMap.containsKey('isApk')) {
+            if (filePathMap['isApk']) {
+              // when sender sends apk files
+              // this case is not true when sender sends apk from generic file selection
+              filePath =
+                  '${filePathMap['paths'][fileIndex].toString().split("/")[4].split("-").first}.apk';
+            } else {
+              filePath = filePathMap['paths'][fileIndex];
+            }
+          } else {
+            filePath = filePathMap['paths'][fileIndex];
+          }
+
+          var temp = parentDirectory!
+              .split(senderModel.os == "windows" ? r'\' : '/')
+              .last;
+
+          final String newDirectory = temp +
+              filePath
+                  .split(filePath
+                      .split(senderModel.os == "windows" ? r'\' : '/')
+                      .last)
+                  .first
+                  .split(parentDirectory)
+                  .last;
+          await getFile(filePath, fileIndex, senderModel,
+              parentDirectory: newDirectory, isDirectory: true);
+        }
+      }
+      // sends after last file is sent
+
+      sendBackReceiverRealtimeData(senderModel);
+      getInstance.isFinished.value = true;
+      getInstance.totalTimeElapsed.value = totalTime;
+    } catch (e) {
+      debugPrint('$e');
+    }
+  }
+
   static receiveFiles(SenderModel senderModel, int secretCode) async {
     PercentageController getInstance =
         GetIt.instance.get<PercentageController>();
@@ -132,7 +191,6 @@ class PhotonReceiver {
           .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
       filePathMap = jsonDecode(resp.data);
       _secretCode = secretCode;
-
       for (int fileIndex = 0;
           fileIndex < filePathMap['paths']!.length;
           fileIndex++) {
@@ -166,24 +224,39 @@ class PhotonReceiver {
     }
   }
 
-  static receive(SenderModel senderModel, int secretCode, String type) async {
-    if (type == "raw_text") {
-      receiveText(senderModel, secretCode);
-    } else {
-      receiveFiles(senderModel, secretCode);
+  static receive(SenderModel senderModel, int secretCode, String type,
+      {String? parentDirectory = ""}) async {
+    switch (type) {
+      case "raw_text":
+        receiveText(senderModel, secretCode);
+        break;
+      case "folder":
+        receiveFolder(senderModel, secretCode, parentDirectory);
+        break;
+      default:
+        receiveFiles(senderModel, secretCode);
+        break;
     }
   }
 
   static getFile(
     String filePath,
     int fileIndex,
-    SenderModel senderModel,
-  ) async {
+    SenderModel senderModel, {
+    String parentDirectory = "",
+    bool isDirectory = false,
+  }) async {
     Dio dio = Dio();
     PercentageController getInstance = GetIt.I<PercentageController>();
     //creates instance of cancelToken and inserts it to list
     getInstance.cancelTokenList.insert(fileIndex, CancelToken());
-    String savePath = await FileMethods.getSavePath(filePath, senderModel);
+    if (parentDirectory.isNotEmpty) {
+      if (!Directory(parentDirectory).existsSync()) {
+        await Directory(parentDirectory).create();
+      }
+    }
+    String savePath = await FileMethods.getSavePath(filePath, senderModel,
+        isDirectory: isDirectory, directoryPath: parentDirectory);
     Stopwatch stopwatch = Stopwatch();
     int? prevBits;
     int? prevDuration;

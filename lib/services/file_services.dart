@@ -51,8 +51,8 @@ class FileMethods {
         {'name': fileName, 'size': size, 'file': file, 'extension': type});
   }
 
-  static Future<String> getSavePath(
-      String filePath, SenderModel senderModel) async {
+  static Future<String> getSavePath(String filePath, SenderModel senderModel,
+      {bool isDirectory = false, String directoryPath = ""}) async {
     // ignore: unused_local_variable
     String? savePath;
     Directory? directory;
@@ -61,7 +61,13 @@ class FileMethods {
     String fileName =
         filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
     directory = await getSaveDirectory();
-    savePath = p.join(directory.path, fileName);
+    if (isDirectory) {
+      directoryPath.replaceAll(
+          senderModel.os == "windows" ? r'\' : r'/', Platform.pathSeparator);
+      savePath = p.join(directory.path, directoryPath, fileName);
+    } else {
+      savePath = p.join(directory.path, fileName);
+    }
 
     //checking if file can be created at savePath
     try {
