@@ -238,6 +238,7 @@ class _ReceivePageState extends State<ReceivePage> {
                                               );
 
                                               if (resp['accepted']) {
+                                                print(resp['parent_folder']);
                                                 if (mounted) {
                                                   Navigator.of(context).push(
                                                     MaterialPageRoute(

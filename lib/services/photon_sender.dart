@@ -23,6 +23,7 @@ class PhotonSender {
   static late String photonURL;
   static late Uint8List avatar;
   static String _rawText = "";
+  static String _parentFolder = "";
 
   static void setRawText(txt) {
     _rawText = txt;
@@ -86,8 +87,12 @@ class PhotonSender {
   }
 
   static Future<Map<String, dynamic>> _startServer(
-      List<String?> fileList, context,
-      {bool isApk = false, bool isRawText = false}) async {
+    List<String?> fileList,
+    context, {
+    bool isApk = false,
+    bool isRawText = false,
+    bool isFolder = false,
+  }) async {
     late Map<String, Object> serverInf;
 
     //check if no proper address is assigned
@@ -139,7 +144,12 @@ class PhotonSender {
             request.response.write(jsonEncode({
               'code': _randomSecretCode,
               'accepted': true,
-              "type": isRawText ? "raw_text" : "file"
+              "type": isRawText
+                  ? "raw_text"
+                  : isFolder
+                      ? "folder"
+                      : "file",
+              "parent_folder": _parentFolder,
             }));
             request.response.close();
           } else {
@@ -269,6 +279,7 @@ class PhotonSender {
     } else if (isFolder) {
       String? dirPath = await FilePicker.platform.getDirectoryPath();
       if (dirPath != null) {
+        _parentFolder = dirPath;
         Directory directory = Directory(dirPath);
         List<String> paths = [];
         (await directory.list(recursive: true).toList())
