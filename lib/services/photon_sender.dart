@@ -289,8 +289,8 @@ class PhotonSender {
         });
         _fileList = paths;
         await assignIP();
-        Future<Map<String, dynamic>> res =
-            _startServer(_fileList, context, isRawText: isRawText);
+        Future<Map<String, dynamic>> res = _startServer(_fileList, context,
+            isRawText: isRawText, isFolder: isFolder);
 
         return res;
       } else {
