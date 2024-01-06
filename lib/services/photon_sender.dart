@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:photon/methods/methods.dart';
@@ -57,6 +58,7 @@ class PhotonSender {
     String extIntentType = "file",
     List<String> appList = const <String>[],
     bool isRawText = false,
+    bool isFolder = false,
   }) async {
     Navigator.pop(nav.currentContext!);
     Map<String, dynamic> shareRespMap = await PhotonSender.share(
@@ -64,6 +66,7 @@ class PhotonSender {
         externalIntent: externalIntent,
         extIntentType: extIntentType,
         isRawText: isRawText,
+        isFolder: isFolder,
         appList: appList);
     ShareError shareErr = ShareError.fromMap(shareRespMap);
 
@@ -239,6 +242,7 @@ class PhotonSender {
     String extIntentType = "file",
     List<String> appList = const <String>[],
     bool isRawText = false,
+    bool isFolder = false,
   }) async {
     if (externalIntent) {
       // When user tries to share files opened / listed on external app
@@ -262,6 +266,26 @@ class PhotonSender {
       Future<Map<String, dynamic>> res =
           _startServer(_fileList, context, isRawText: isRawText);
       return await res;
+    } else if (isFolder) {
+      String? dirPath = await FilePicker.platform.getDirectoryPath();
+      if (dirPath != null) {
+        Directory directory = Directory(dirPath);
+        List<String> paths = [];
+        (await directory.list(recursive: true).toList())
+            .whereType<File>()
+            .forEach((file) {
+          paths.add(file.path);
+        });
+        _fileList = paths;
+        await assignIP();
+        Future<Map<String, dynamic>> res =
+            _startServer(_fileList, context, isRawText: isRawText);
+
+        return res;
+      } else {
+        Navigator.of(context).pop();
+        return {'hasErr': true, 'type': 'file', 'errMsg': "No file chosen"};
+      }
     } else {
       // User manually opens photon
       // Selects files

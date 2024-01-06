@@ -66,6 +66,51 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                                       isLoading = true;
                                     });
 
+                                    await PhotonSender.handleSharing(
+                                        isFolder: true);
+
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  },
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Icon(
+                                        Icons.file_open,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'Folder',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  minWidth:
+                                      MediaQuery.of(context).size.width / 4,
+                                  color: mode.isDark
+                                      ? const Color.fromARGB(205, 117, 255, 122)
+                                      : Colors.blue,
+                                  onPressed: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+
                                     await PhotonSender.handleSharing();
 
                                     setState(() {
