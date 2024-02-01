@@ -73,7 +73,8 @@ class FileMethods {
     try {
       // ignore: unused_local_variable
       var file = await File(savePath).create();
-    } catch (_) {
+    } catch (e) {
+      print("here" + e.toString());
       //renaming the path
 
       var rnd = Random();
@@ -180,5 +181,20 @@ class FileMethods {
 
   static Future<String> getTextFilePath(fileName) async {
     return '${(await getSaveDirectory()).path}${Platform.pathSeparator}$fileName.txt';
+  }
+
+  static Future<String> getDirectorySavePath(
+      SenderModel senderModel, String directoryPath) async {
+    // ignore: unused_local_variable
+    String? savePath;
+    Directory? directory;
+    directory = await getSaveDirectory();
+    savePath = p.join(directory.path, directoryPath);
+    savePath = savePath.replaceAll(
+        senderModel.os == "windows" ? r'\' : r'/', Platform.pathSeparator);
+
+    List temp = savePath.split("");
+    temp.removeLast();
+    return temp.join("");
   }
 }

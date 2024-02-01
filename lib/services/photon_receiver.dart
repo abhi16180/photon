@@ -250,13 +250,15 @@ class PhotonReceiver {
     PercentageController getInstance = GetIt.I<PercentageController>();
     //creates instance of cancelToken and inserts it to list
     getInstance.cancelTokenList.insert(fileIndex, CancelToken());
+    String dirPath =
+        await FileMethods.getDirectorySavePath(senderModel, parentDirectory);
     if (parentDirectory.isNotEmpty) {
-      if (!Directory(parentDirectory).existsSync()) {
-        await Directory(parentDirectory).create();
+      if (!Directory(dirPath).existsSync()) {
+        await Directory(dirPath).create(recursive: true);
       }
     }
     String savePath = await FileMethods.getSavePath(filePath, senderModel,
-        isDirectory: isDirectory, directoryPath: parentDirectory);
+        isDirectory: isDirectory, directoryPath: dirPath);
     Stopwatch stopwatch = Stopwatch();
     int? prevBits;
     int? prevDuration;
