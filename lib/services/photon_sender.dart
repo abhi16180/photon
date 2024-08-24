@@ -97,7 +97,17 @@ class PhotonSender {
       };
     }
     try {
-      _server = await HttpServer.bind(_address, 4040);
+      /* in some devices, especially in windows, the first ip is not valid
+      we need to try to find the correct ip*/
+      List<String> deviceIps = (await getIP()).reversed.toList();
+      for (final deviceIp in deviceIps) {
+        try {
+          final tempServer = await HttpServer.bind(deviceIp, 4040);
+          _server = tempServer;
+          _address = deviceIp;
+          break;
+        } catch (_) {}
+      }
       _randomSecretCode = getRandomNumber();
       Box box = Hive.box('appData');
       String username = box.get('username');
