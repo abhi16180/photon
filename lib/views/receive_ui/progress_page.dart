@@ -261,8 +261,8 @@ class _ProgressPageState extends State<ProgressPage> {
                                               elevation: 2,
                                               clipBehavior: Clip.antiAlias,
                                               child: SizedBox(
+                                                //remove the hieght, unnecessary to specify a hieght.
                                                 width: width + 60,
-                                                height: 100,
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
