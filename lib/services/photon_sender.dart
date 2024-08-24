@@ -198,8 +198,11 @@ class PhotonSender {
           if (int.parse(requriToList[requriToList.length - 2]) ==
               _randomSecretCode) {
             try {
-              FileModel fileModel = await FileMethods.extractFileData(fileList[
-                  int.parse(request.requestedUri.toString().split('/').last)]!);
+              // store index to use it instead of file name
+              final int index =
+                  int.parse(request.requestedUri.toString().split('/').last);
+              FileModel fileModel =
+                  await FileMethods.extractFileData(fileList[index]!);
 
               request.response.headers.contentType = ContentType(
                 'application',
@@ -210,9 +213,12 @@ class PhotonSender {
                 'Content-Transfer-Encoding',
                 'Binary',
               );
+              /* assign file index instead if name 
+              to prevent recieving canceling when the file name 
+              contains unknown characters */
               request.response.headers.add(
                 'Content-disposition',
-                'attachment; filename=${fileModel.name}',
+                'attachment; filename=$index',
               );
 
               //to send file size
