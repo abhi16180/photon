@@ -543,11 +543,7 @@ class _ProgressPageState extends State<ProgressPage> {
       }
     } else {
       try {
-        launchUrl(
-          Uri.parse(
-            path,
-          ),
-        );
+        OpenFilex.open(path);
       } catch (e) {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
