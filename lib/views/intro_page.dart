@@ -86,9 +86,12 @@ class _IntroPageState extends State<IntroPage> {
   List<PageViewModel> getPages() {
     List<PageViewModel> pages = [
       PageViewModel(
-        titleWidget: Image.asset(
-          'assets/images/icon.png',
-          width: 200,
+        titleWidget: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Image.asset(
+            'assets/images/icon.png',
+            width: 136,
+          ),
         ),
         bodyWidget: Center(
           child: Card(
@@ -104,7 +107,7 @@ class _IntroPageState extends State<IntroPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        'Welcome to Photon ,\n Transfer files seamlessly across your devices.\n(No internet connection is required)',
+                        'Welcome to Photon ,\n Transfer files seamlessly across your devices.\n(No internet connection is required)\n',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: MediaQuery.of(context).size.width > 720
@@ -128,7 +131,6 @@ class _IntroPageState extends State<IntroPage> {
         bodyWidget: Center(
           child: Card(
             child: Container(
-              height: 200,
               margin: const EdgeInsets.only(top: 8),
               width: MediaQuery.of(context).size.width / 1.2,
               child: Center(
@@ -137,7 +139,8 @@ class _IntroPageState extends State<IntroPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.only(
+                          top: 60.0, left: 8.0, right: 8.0),
                       child: Text(
                         'Before using make sure that,\nSender and receivers are connected to same wifi router \n OR \n Connected via mobile-hotspot\n',
                         textAlign: TextAlign.center,
