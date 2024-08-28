@@ -11,6 +11,7 @@ import 'package:photon/services/file_services.dart';
 import '../controllers/controllers.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'dart:developer' as dev;
 
 class PhotonReceiver {
   static late int _secretCode;
@@ -21,23 +22,32 @@ class PhotonReceiver {
 
   ///to get network address [assumes class C address]
   static List<String> getNetAddress(List<String> ipList) {
-    List<String> netAdd = [];
+    // use a Set to avoid duplicates
+    Set<String> netAdd = {};
+    dev.log(ipList.toString());
     for (String ip in ipList) {
       var ipToList = ip.split('.');
       ipToList.removeLast();
       netAdd.add(ipToList.join('.'));
     }
-    return netAdd;
+    return netAdd.toList();
   }
 
   ///tries to establish socket connection
   static Future<Map<String, dynamic>> _connect(String host, int port) async {
-    try {
-      var socket = await Socket.connect(host, port)
-          .timeout(const Duration(milliseconds: 2500));
-      socket.destroy();
-      return {"host": host, 'port': port};
-    } catch (_) {
+    if (host != '192.168.1.1') {
+      //debugPrint('connecting $host');
+      try {
+        var socket = await Socket.connect(host, port)
+            .timeout(const Duration(milliseconds: 2500));
+        socket.destroy();
+        //debugPrint('distroid $host');
+        return {"host": host, 'port': port};
+      } catch (_) {
+        //debugPrint('error catched with $host');
+        return {};
+      }
+    } else {
       return {};
     }
   }
@@ -46,7 +56,9 @@ class PhotonReceiver {
   static isPhotonServer(String ip, String port) async {
     var dio = Dio();
     try {
+      //debugPrint('making server with $ip');
       var resp = await dio.get('http://$ip:$port/photon-server');
+      //debugPrint('server made $ip');
       Map<String, dynamic> senderInfo = jsonDecode(resp.data);
       return SenderModel.fromJson(senderInfo);
     } catch (_) {
@@ -59,7 +71,7 @@ class PhotonReceiver {
     List<Future<Map<String, dynamic>>> list = [];
     List<SenderModel> photonServers = [];
     List<String> netAddresses = getNetAddress(await getIP());
-    for (int i = 2; i < 255; i++) {
+    for (int i = 1; i < 255; i++) {
       //scan all of the wireless interfaces available
       for (String netAddress in netAddresses) {
         Future<Map<String, dynamic>> res = _connect('$netAddress.$i', 4040);
@@ -69,12 +81,15 @@ class PhotonReceiver {
 
     for (var ele in list) {
       Map<String, dynamic> item = await ele;
+      //print('item: $item');
       if (item.containsKey('host')) {
         Future<dynamic> resp;
         if ((resp = (isPhotonServer(
                 item['host'].toString(), item['port'].toString()))) !=
             null) {
+          //debugPrint('befor eadding server: $item');
           photonServers.add(await resp);
+          //debugPrint('after eadding server');
         }
       }
     }
