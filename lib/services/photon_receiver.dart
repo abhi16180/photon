@@ -36,15 +36,12 @@ class PhotonReceiver {
   ///tries to establish socket connection
   static Future<Map<String, dynamic>> _connect(String host, int port) async {
     if (host != '192.168.1.1') {
-      //debugPrint('connecting $host');
       try {
         var socket = await Socket.connect(host, port)
             .timeout(const Duration(milliseconds: 2500));
         socket.destroy();
-        //debugPrint('distroid $host');
         return {"host": host, 'port': port};
       } catch (_) {
-        //debugPrint('error catched with $host');
         return {};
       }
     } else {
@@ -56,9 +53,7 @@ class PhotonReceiver {
   static isPhotonServer(String ip, String port) async {
     var dio = Dio();
     try {
-      //debugPrint('making server with $ip');
       var resp = await dio.get('http://$ip:$port/photon-server');
-      //debugPrint('server made $ip');
       Map<String, dynamic> senderInfo = jsonDecode(resp.data);
       return SenderModel.fromJson(senderInfo);
     } catch (_) {
@@ -81,15 +76,12 @@ class PhotonReceiver {
 
     for (var ele in list) {
       Map<String, dynamic> item = await ele;
-      //print('item: $item');
       if (item.containsKey('host')) {
         Future<dynamic> resp;
         if ((resp = (isPhotonServer(
                 item['host'].toString(), item['port'].toString()))) !=
             null) {
-          //debugPrint('befor eadding server: $item');
           photonServers.add(await resp);
-          //debugPrint('after eadding server');
         }
       }
     }
@@ -262,7 +254,6 @@ class PhotonReceiver {
       getInstance.isCancelled[fileIndex].value = true;
 
       if (!CancelToken.isCancel(e as DioError)) {
-        debugPrint("Dio error");
       } else {
         debugPrint(e.toString());
       }
