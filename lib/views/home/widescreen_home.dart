@@ -68,9 +68,11 @@ class _WidescreenHomeState extends State<WidescreenHome> {
 
                                     await PhotonSender.handleSharing();
 
-                                    setState(() {
-                                      isLoading = false;
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                    }
                                   },
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.min,

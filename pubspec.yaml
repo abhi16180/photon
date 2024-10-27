@@ -30,43 +30,44 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  flutter_svg: ^2.0.9
+  cupertino_icons: ^1.0.8
+  win32: ^5.7.1
+  archive: ^3.6.1
+  flutter_svg: ^2.0.10+1
   lottie:
   unicons:
-  dio: ^5.1.1
-  path_provider: ^2.0.11
+  dio: ^5.7.0
+  path_provider: ^2.1.4
   get_it: ^7.2.0
   get:
-  path: ^1.8.1
+  path: ^1.9.0
   animated_splash_screen:
   flex_color_scheme:
-  url_launcher: ^6.1.5
+  url_launcher: ^6.3.1
   page_transition:
-  shared_preferences: ^2.0.15
-  introduction_screen: ^3.0.2
-  mailto: ^2.0.0 
-  receive_sharing_intent: ^1.4.5
-  modal_bottom_sheet: 
+  shared_preferences: ^2.3.2
+  introduction_screen: ^3.1.14
+  mailto: ^2.0.0
+  receive_sharing_intent: ^1.5.4
+  modal_bottom_sheet:
   flutter_displaymode: ^0.6.0
-  adaptive_theme: 
+  adaptive_theme:
   system_settings:
   stop_watch_timer:
   flutter_markdown:
-  device_apps: 
+  device_apps:
   http:
   provider:
   file_picker:
-  open_filex:  
+  open_filex:
   # This is modified version of file_picker it is faster and doesn't cache files unnecessarily
   # file_picker:
   #   git:
   #     url:
   #       https://github.com/abhi16180/flutter_file_picker.git
-  # file_picker: 
+  # file_picker:
   #   path: 'D:/flutter_file_picker'
 
   # This is modified version of open_file (Migrated to null-safety)
@@ -74,15 +75,11 @@ dependencies:
   #   git:
   #     url: https://github.com/abhi16180/open_file.git
   hive: ^2.2.3
-  permission_handler: ^11.1.0
-  
-  qr_flutter: ^4.0.0
+  permission_handler: ^11.3.1
+
+  qr_flutter: ^4.1.0
   qrscan:
-  graphic: ^2.2.1
- 
-
- 
-
+  graphic: ^2.5.0
 
 dev_dependencies:
   flutter_test:
@@ -93,12 +90,11 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
-  flutter_distributor: 
+  flutter_lints: ^5.0.0
+  flutter_distributor:
   build_runner:
-  change_app_package_name: 
-  msix: ^2.8.18
-
+  change_app_package_name:
+  msix: ^3.16.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -110,7 +106,7 @@ msix_config:
   logo_path: assets\images\icon.png
   capabilities: internetClient, internetServer
   certificate_path: thekeystore.pfx
-  certificate_password: 
+  certificate_password:
 # The following section is specific to Flutter packages.
 flutter:
   # The following line ensures that the Material Icons font is
@@ -155,9 +151,7 @@ flutter:
       fonts:
         - asset: assets/fonts/Yftoow-R.ttf
     - family: questrial
-      fonts:  
+      fonts:
         - asset: assets/fonts/Questrial-Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
-

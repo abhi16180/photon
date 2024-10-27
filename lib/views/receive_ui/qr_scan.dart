@@ -127,9 +127,7 @@ class _QrReceivePageState extends State<QrReceivePage> {
         });
       }
     } catch (_) {
-      innerState(() {
-        hasErr = true;
-      });
+      hasErr = true;
     }
   }
 }

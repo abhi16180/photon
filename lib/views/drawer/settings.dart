@@ -65,11 +65,13 @@ class _SettingsPageState extends State<SettingsPage> {
                                   onPressed: () async {
                                     var resp = await FilePicker.platform
                                         .getDirectoryPath();
-                                    setState(() {
-                                      if (resp != null) {
-                                        FileMethods.editDirectoryPath(resp);
-                                      }
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        if (resp != null) {
+                                          FileMethods.editDirectoryPath(resp);
+                                        }
+                                      });
+                                    }
                                   },
                                   icon: Icon(
                                     Icons.edit_rounded,
