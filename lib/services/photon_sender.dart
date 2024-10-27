@@ -13,6 +13,7 @@ import '../components/dialogs.dart';
 import '../components/snackbar.dart';
 import '../main.dart';
 import 'file_services.dart';
+import 'dart:developer';
 
 class PhotonSender {
   static late HttpServer _server;
@@ -105,6 +106,7 @@ class PhotonSender {
           final tempServer = await HttpServer.bind(deviceIp, 4040);
           _server = tempServer;
           _address = deviceIp;
+          log('succeess: $deviceIp');
           break;
         } catch (_) {}
       }

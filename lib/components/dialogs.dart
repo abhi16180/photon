@@ -1,11 +1,6 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:path/path.dart';
 import 'package:photon/main.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
