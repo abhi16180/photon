@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 2.0.0+8
 
 environment:
-  sdk: ">=3.0.0 <=3.18.0-0.2.pre"
+  sdk: ">=3.3.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -46,20 +46,20 @@ dependencies:
   flex_color_scheme:
   url_launcher: ^6.1.5
   page_transition:
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.3.3
   introduction_screen: ^3.0.2
   mailto: ^2.0.0 
-  receive_sharing_intent: ^1.4.5
+  receive_sharing_intent: ^1.8.1
   modal_bottom_sheet: 
   flutter_displaymode: ^0.6.0
   adaptive_theme: 
-  system_settings:
+#  system_settings:
   stop_watch_timer:
   flutter_markdown:
-  device_apps: 
+#  device_apps:
   http:
   provider:
-  file_picker:
+  file_picker: ^8.1.3
   open_filex:  
   # This is modified version of file_picker it is faster and doesn't cache files unnecessarily
   # file_picker:
@@ -77,8 +77,11 @@ dependencies:
   permission_handler: ^11.1.0
   
   qr_flutter: ^4.0.0
-  qrscan:
+  simple_barcode_scanner: ^0.2.4
   graphic: ^2.2.1
+  flutter_plugin_android_lifecycle:
+  open_settings_plus: ^0.4.0
+  installed_apps: ^1.5.2
  
 
  
