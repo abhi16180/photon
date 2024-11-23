@@ -1,16 +1,16 @@
 import "package:receive_sharing_intent/receive_sharing_intent.dart";
 
 handleSharingIntent() async {
-  List<SharedMediaFile> fileList = await ReceiveSharingIntent.getInitialMedia();
-  String? rawText = await ReceiveSharingIntent.getInitialText();
-  if (fileList.isNotEmpty) {
-    return (true, "file");
+  List<SharedMediaFile> initialMediaList =
+      await ReceiveSharingIntent.instance.getInitialMedia();
+  if (initialMediaList.isEmpty) {
+    return (false, "");
   }
-  if (rawText != null) {
-    if (rawText.isNotEmpty) {
-      return (true, "raw_text");
+  SharedMediaType type = SharedMediaType.file;
+  for (var sharedMediaFile in initialMediaList) {
+    if (sharedMediaFile.type != type) {
+      type = sharedMediaFile.type;
     }
   }
-
-  return (false, "");
+  return (true, type == SharedMediaType.file ? "file" : "raw_text");
 }

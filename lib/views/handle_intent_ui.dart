@@ -22,21 +22,19 @@ class _HandleIntentUIState extends State<HandleIntentUI> {
         title: Text("Share ${widget.isRawText! ? 'text' : 'files'}"),
       ),
       body: FutureBuilder(
-        future: widget.isRawText!
-            ? ReceiveSharingIntent.getInitialText()
-            : ReceiveSharingIntent.getInitialMedia(),
-        builder: (context, AsyncSnapshot snap) {
+        future: ReceiveSharingIntent.instance.getInitialMedia(),
+        builder: (context, AsyncSnapshot<List<SharedMediaFile>> snap) {
           isLoading = false;
           if (snap.connectionState == ConnectionState.done) {
             if (widget.isRawText!) {
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(snap.data),
+                  child: Text(snap.data![0].path),
                 ),
               );
             } else {
-              List data = snap.data.map((e) => e.path).toList();
+              List data = snap.data!.map((e) => e.path).toList();
               return ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, i) {
