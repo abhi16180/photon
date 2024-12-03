@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:bonsoir/bonsoir.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/sender_model.dart';
+import 'package:photon/services/device_service.dart';
 import 'package:photon/services/file_services.dart';
 import '../controllers/controllers.dart';
 import 'package:get_it/get_it.dart';
@@ -80,6 +82,52 @@ class PhotonReceiver {
     }
     list.clear();
     return photonServers;
+  }
+
+  static Future<List<SenderModel>> scanWithLegacyFallback() async {
+    var resp = await scanV2();
+    if (resp.isEmpty) {
+      return await scan();
+    }
+    return resp;
+  }
+
+  static Future<List<SenderModel>> scanV2() async {
+    DeviceService deviceService = DeviceService.getDeviceService();
+    List<BonsoirService?> discoveredServices = await deviceService.discover();
+    List<Future<Map<String, dynamic>>> list = [];
+    List<SenderModel> photonServers = [];
+    List<SenderModel> uniquePhotonServers = [];
+    Set set = {};
+    for (var service in discoveredServices) {
+      String? ip = service?.attributes["ip"];
+      if (ip != null) {
+        Future<Map<String, dynamic>> res = _connect(ip, 4040);
+        list.add(res);
+      }
+    }
+    for (var ele in list) {
+      Map<String, dynamic> item = await ele;
+      if (item.containsKey('host')) {
+        Future<dynamic> resp;
+        if ((resp = (isPhotonServer(
+                item['host'].toString(), item['port'].toString()))) !=
+            null) {
+          var val = await resp;
+          if (!photonServers.contains(val)) {
+            photonServers.add(val);
+          }
+        }
+      }
+    }
+    list.clear();
+    for (var item in photonServers) {
+      if (!set.contains(item.ip)) {
+        uniquePhotonServers.add(item);
+        set.add(item.ip);
+      }
+    }
+    return uniquePhotonServers;
   }
 
   static isRequestAccepted(SenderModel senderModel) async {
