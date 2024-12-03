@@ -49,7 +49,7 @@ class DeviceService {
       }
     });
     discovery!.start();
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       discovery!.stop();
       if (!completer.isCompleted) {
         completer.complete(

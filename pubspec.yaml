@@ -80,6 +80,7 @@ dependencies:
   flutter_plugin_android_lifecycle:
   open_settings_plus: ^0.4.0
   installed_apps: ^1.5.2
+  bonsoir: ^5.1.10
  
 
  
