@@ -1,2 +1,4 @@
-appId: com.example.photon
+display_name: photon
+generic_name: A cross platform file transfer application
+appId: dev.abhi.photon
 icon: assets/images/icon.png
