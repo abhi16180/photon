@@ -99,7 +99,7 @@ dev_dependencies:
   flutter_distributor: ^0.4.5
   build_runner:
   change_app_package_name: 
-  msix: ^2.8.18
+  msix: ^3.16.6
 
 
 # For information on the generic Dart part of this file, see the
