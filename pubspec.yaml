@@ -96,7 +96,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  flutter_distributor: 
+  flutter_distributor: ^0.4.5
   build_runner:
   change_app_package_name: 
   msix: ^2.8.18
