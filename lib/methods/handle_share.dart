@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:photon/methods/methods.dart';
-import 'package:system_settings/system_settings.dart';
 import '../components/snackbar.dart';
 import '../views/receive_ui/qr_scan.dart';
+import 'package:open_settings_plus/open_settings_plus.dart';
 
 class HandleShare {
   BuildContext context;
+
   HandleShare({required this.context});
+
   onNormalScanTap() async {
     getIP().then((value) async {
       if (value.isNotEmpty) {
@@ -18,7 +20,7 @@ class HandleShare {
         await Future.delayed(
           const Duration(seconds: 2),
         );
-        SystemSettings.wifi();
+        const OpenSettingsPlusAndroid().wifi();
       }
     });
   }
@@ -38,7 +40,7 @@ class HandleShare {
         await Future.delayed(
           const Duration(seconds: 2),
         );
-        SystemSettings.wifi();
+        const OpenSettingsPlusAndroid().wifi();
       }
     });
   }

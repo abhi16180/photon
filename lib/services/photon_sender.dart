@@ -7,6 +7,7 @@ import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
 import 'package:photon/models/share_error_model.dart';
+import 'package:photon/services/device_service.dart';
 import 'package:photon/views/share_ui/share_page.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:hive/hive.dart';
@@ -24,6 +25,7 @@ class PhotonSender {
   static late Uint8List avatar;
   static String _rawText = "";
   static String _parentFolder = "";
+  static DeviceService? deviceService;
 
   static void setRawText(txt) {
     _rawText = txt;
@@ -107,6 +109,8 @@ class PhotonSender {
     try {
       _server = await HttpServer.bind(_address, 4040);
       _randomSecretCode = getRandomNumber();
+      deviceService = DeviceService.getDeviceService();
+      deviceService!.advertise(_address);
       Box box = Hive.box('appData');
       String username = box.get('username');
       avatar =
@@ -259,11 +263,12 @@ class PhotonSender {
       // Photon will be opened along with intended files' paths
       if (extIntentType == "file") {
         List<SharedMediaFile> sharedMediaFiles =
-            await ReceiveSharingIntent.getInitialMedia();
+            await ReceiveSharingIntent.instance.getInitialMedia();
         _fileList = sharedMediaFiles.map((e) => e.path).toList();
       } else {
         _fileList = [];
-        _rawText = (await ReceiveSharingIntent.getInitialText())!;
+        _rawText =
+            (await ReceiveSharingIntent.instance.getInitialMedia())[0].path;
       }
       await assignIP();
       Future<Map<String, dynamic>> res = _startServer(_fileList, context,
@@ -316,6 +321,9 @@ class PhotonSender {
     try {
       await _server.close();
       await FileMethods.clearCache();
+      if (deviceService != null) {
+        await deviceService!.stopAdvertising();
+      }
     } catch (e) {
       showSnackBar(context, 'Server not started yet');
     }

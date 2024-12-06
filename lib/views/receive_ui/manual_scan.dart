@@ -28,7 +28,7 @@ class _ReceivePageState extends State<ReceivePage> {
   Future<List<SenderModel>> _scan() async {
     dir = await FileMethods.getSaveDirectory();
     try {
-      List<SenderModel> resp = await PhotonReceiver.scan();
+      List<SenderModel> resp = await PhotonReceiver.scanWithLegacyFallback();
       return resp;
     } catch (_) {}
     return [];
@@ -93,8 +93,8 @@ class _ReceivePageState extends State<ReceivePage> {
                               if (snap.data.length == 0) ...{
                                 Lottie.asset(
                                   'assets/lottie/sender_not_found.json',
-                                  width: 200,
-                                  height: 200,
+                                  width: 100,
+                                  height: 100,
                                 ),
                                 Center(
                                   child: Focus(

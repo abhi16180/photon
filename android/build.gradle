@@ -1,23 +1,48 @@
 buildscript {
-    ext.kotlin_version = '1.8.22'
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    ext {
+        agp_version = '8.2.2'
     }
 }
-
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
 }
+subprojects {
+   afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                if (namespace == null) {
+                    namespace project.group
+                }
+            }
 
+            if (project.name == "shared_preferences_android" || project.name == "receive_sharing_intent" || project.name == "open_settings_plus") {
+                tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                    kotlinOptions {
+                        jvmTarget = "1.8" // Specific setting for these libraries
+                    }
+                }
+                if (project.hasProperty("android")) {
+                    project.android {
+                        compileOptions {
+                            sourceCompatibility JavaVersion.VERSION_1_8
+                            targetCompatibility JavaVersion.VERSION_1_8
+                        }
+                    }
+                }
+            }
+        }
+    }
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            jvmTarget = "1.8" // Force all modules to target JVM 1.8
+        }
+    }
+
+
+}
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
