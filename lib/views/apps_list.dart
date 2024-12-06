@@ -138,7 +138,7 @@ class _AppsListState extends State<AppsList> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           if (paths.isNotEmpty) {
-            PhotonSender.handleSharing(appList: paths);
+            PhotonSender.handleSharing(fileList: paths);
           } else {
             Navigator.of(context).pop();
             showSnackBar(context, 'No apk chosen');
