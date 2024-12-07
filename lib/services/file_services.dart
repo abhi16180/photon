@@ -15,6 +15,9 @@ import 'package:photon/models/file_model.dart';
 import '../models/sender_model.dart';
 
 class FileMethods {
+  static int filePathRetries = 0;
+  static const maxFilePathRetries = 10;
+
   //todo implement separate file picker for android to avoid caching
   static Future<List<String?>> pickFiles() async {
     FilePickerResult? files = await FilePicker.platform
@@ -70,17 +73,24 @@ class FileMethods {
     return savePath;
   }
 
-  static Future<String> getSavePathForReceiving(String filePath, SenderModel senderModel,
+  static Future<String> getSavePathForReceiving(
+      String filePath, SenderModel senderModel,
       {bool isDirectory = false, String directoryPath = ""}) async {
+    // reset retries
+    filePathRetries = 0;
     String? savePath = await getSavePath(filePath, senderModel);
     return generateFileNameIfExists(savePath);
   }
 
   static Future<String> generateFileNameIfExists(String path) async {
+    if (filePathRetries >= maxFilePathRetries) {
+      throw Exception("unable to generate file name for saving");
+    }
     bool exists = await File(path).exists();
     if (exists) {
       List<String> parts = path.split('.');
       parts[0] = "${parts[0]}_copy";
+      filePathRetries++;
       return generateFileNameIfExists(parts.join('.'));
     }
     return path;

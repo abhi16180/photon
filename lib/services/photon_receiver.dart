@@ -303,8 +303,16 @@ class PhotonReceiver {
         await Directory(dirPath).create(recursive: true);
       }
     }
-    String savePath = await FileMethods.getSavePathForReceiving(filePath, senderModel,
-        isDirectory: isDirectory, directoryPath: dirPath);
+    late String savePath;
+    try {
+      savePath = await FileMethods.getSavePathForReceiving(
+          filePath, senderModel,
+          isDirectory: isDirectory, directoryPath: dirPath);
+    } catch (e) {
+      getInstance.fileStatus[fileIndex].value = "cancelled";
+      getInstance.isCancelled[fileIndex].value = true;
+      return;
+    }
     Stopwatch stopwatch = Stopwatch();
     int? prevBits;
     int? prevDuration;
