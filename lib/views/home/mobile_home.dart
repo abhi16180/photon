@@ -24,46 +24,56 @@ class _MobileHomeState extends State<MobileHome> {
   Directory? selectedDirectory;
   Box box = Hive.box('appData');
   TextEditingController rawTextController = TextEditingController();
-  List<Map<String, dynamic>> sharingOptions = [
-    {
-      "type": "Folder",
-      "icon": const Icon(
-        Icons.folder,
-        color: Color.fromARGB(205, 117, 255, 122),
-        size: 50,
-      ),
-    },
-    {
-      "type": "Files",
-      "icon": const Icon(
-        Icons.file_copy,
-        color: Color.fromARGB(205, 117, 255, 122),
-        size: 50,
-      ),
-    },
-    {
-      "type": "Text",
-      "icon": const Icon(
-        Icons.text_snippet,
-        color: const Color.fromARGB(205, 117, 255, 122),
-        size: 50,
-      ),
-    },
-    {
-      "type": "Apps",
-      "icon": const Icon(
-        Icons.apps,
-        color: Color.fromARGB(205, 117, 255, 122),
-        size: 50,
-      ),
+
+  getSharingOptions() {
+    List<Map<String, dynamic>> sharingOptions = [
+      {
+        "type": "Folder",
+        "icon": SvgPicture.asset(
+          "assets/icons/folder.svg",
+          colorFilter: ColorFilter.linearToSrgbGamma(),
+          height: 60,
+        ),
+      },
+      {
+        "type": "Files",
+        "icon": SvgPicture.asset(
+          "assets/icons/files.svg",
+          colorFilter: ColorFilter.srgbToLinearGamma(),
+          height: 60,
+        ),
+      },
+      {
+        "type": "Text",
+        "icon": SvgPicture.asset(
+          "assets/icons/texts.svg",
+          colorFilter: ColorFilter.linearToSrgbGamma(),
+          height: 60,
+        ),
+      },
+    ];
+    if (Platform.isAndroid) {
+      sharingOptions.add({
+        "type": "Apps",
+        "icon": SvgPicture.asset(
+          "assets/icons/apps.svg",
+          colorFilter: ColorFilter.mode(Colors.white38, BlendMode.srcATop),
+          height: 60,
+        ),
+      });
     }
-  ];
+    return sharingOptions;
+  }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
     return ValueListenableBuilder(
-        valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
+        valueListenable: AdaptiveTheme
+            .of(context)
+            .modeChangeNotifier,
         builder: (_, AdaptiveThemeMode mode, __) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -79,53 +89,67 @@ class _MobileHomeState extends State<MobileHome> {
                   child: InkWell(
                     onTap: () async {
                       showModalBottomSheet(
+                        backgroundColor:
+                        mode.isDark ? Colors.black : Colors.white,
                         context: context,
                         builder: (context) {
+                          List<Map<String,dynamic>> sharingOptions = getSharingOptions();
                           return GridView.builder(
                             itemCount: sharingOptions.length,
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2),
                             itemBuilder: (context, i) {
                               return Padding(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Card(
+                                  elevation: 6,
+                                  // color: mode.isDark ?Color.fromARGB(205, 10,15,20):Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18),
-                                  ),
-                                  color: Colors.black54,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () async {
-                                          String type =
-                                              sharingOptions[i]["type"];
-                                          switch (type) {
-                                            case "Files":
-                                              setState(() {
-                                                isLoading = true;
-                                              });
-                                              PhotonSender.handleSharing();
-                                              setState(() {
-                                                isLoading = false;
-                                              });
-                                              break;
-                                            case "Folder":
-                                              shareFolder();
-                                              break;
-                                            case "Apps":
-                                              shareApps();
-                                              break;
-                                            case "Text":
-                                              shareText();
-                                              break;
-                                          }
-                                        },
-                                        icon: sharingOptions[i]["icon"],
-                                      ),
-                                      Text(sharingOptions[i]["type"])
-                                    ],
+                                      borderRadius: BorderRadius.circular(25)),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      String type = sharingOptions[i]["type"];
+                                      switch (type) {
+                                        case "Files":
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                          await PhotonSender.handleSharing();
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                          break;
+                                        case "Folder":
+                                          shareFolder();
+                                          break;
+                                        case "Apps":
+                                          shareApps();
+                                          break;
+                                        case "Text":
+                                          shareText();
+                                          break;
+                                      }
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        sharingOptions[i]["icon"],
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          sharingOptions[i]["type"],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: mode.isDark
+                                                  ? Color.fromARGB(
+                                                  205, 117, 255, 122)
+                                                  : Colors.blue),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
@@ -175,7 +199,10 @@ class _MobileHomeState extends State<MobileHome> {
                                   SizedBox(
                                     height: 20,
                                     width:
-                                        MediaQuery.of(context).size.width / 1.2,
+                                    MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 1.2,
                                   ),
                                   MaterialButton(
                                     onPressed: () async {
@@ -186,10 +213,13 @@ class _MobileHomeState extends State<MobileHome> {
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     minWidth:
-                                        MediaQuery.of(context).size.width / 2,
+                                    MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 2,
                                     color: mode.isDark
                                         ? const Color.fromARGB(
-                                            205, 117, 255, 122)
+                                        205, 117, 255, 122)
                                         : Colors.blue,
                                     child: const Text(
                                       'Normal mode',
@@ -209,10 +239,13 @@ class _MobileHomeState extends State<MobileHome> {
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     minWidth:
-                                        MediaQuery.of(context).size.width / 2,
+                                    MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 2,
                                     color: mode.isDark
                                         ? const Color.fromARGB(
-                                            205, 117, 255, 122)
+                                        205, 117, 255, 122)
                                         : Colors.blue,
                                     child: const Text(
                                       'QR code mode',
@@ -251,28 +284,29 @@ class _MobileHomeState extends State<MobileHome> {
                     ),
                   ),
                 ),
-              } else ...{
-                Center(
-                  child: SizedBox(
-                    width: size.width / 4,
-                    height: size.height / 4,
-                    child: Lottie.asset(
-                      'assets/lottie/setting_up.json',
-                      width: 100,
-                      height: 100,
+              } else
+                ...{
+                  Center(
+                    child: SizedBox(
+                      width: size.width / 4,
+                      height: size.height / 4,
+                      child: Lottie.asset(
+                        'assets/lottie/setting_up.json',
+                        width: 100,
+                        height: 100,
+                      ),
                     ),
                   ),
-                ),
-                const Center(
-                  child: Text(
-                    'Please wait, file(s) are being fetched',
-                    style: TextStyle(
-                      fontSize: 18,
+                  const Center(
+                    child: Text(
+                      'Please wait, file(s) are being fetched',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              },
+                  )
+                },
             ],
           );
         });
@@ -297,7 +331,10 @@ class _MobileHomeState extends State<MobileHome> {
           ),
           // icon: const Icon(Icons.text_fields),
           content: SizedBox(
-            width: MediaQuery.of(context).size.width / 1.2,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width / 1.2,
             child: TextField(
               decoration: const InputDecoration(
                   border: InputBorder.none,
@@ -395,14 +432,14 @@ class _MobileHomeState extends State<MobileHome> {
                   Navigator.of(context).pop();
                   return;
                 },
-                child: Text("Go back"),
+                child: const Text("Go back"),
               ),
               MaterialButton(
                 onPressed: () {
                   box.put("manage_ext_storage", true);
                   PhotonSender.handleSharing(isFolder: true);
                 },
-                child: Text("Proceed"),
+                child: const Text("Proceed"),
               )
             ],
           );

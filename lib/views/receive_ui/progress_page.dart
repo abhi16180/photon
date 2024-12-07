@@ -26,6 +26,7 @@ class ProgressPage extends StatefulWidget {
   final int secretCode;
   final String dataType;
   final String? parentDirectory;
+
   const ProgressPage({
     Key? key,
     required this.senderModel,
@@ -44,6 +45,7 @@ class _ProgressPageState extends State<ProgressPage> {
   bool isDownloaded = false;
   bool isLoading = false;
   TextEditingController fileNameController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -87,9 +89,13 @@ class _ProgressPageState extends State<ProgressPage> {
                       ? rawTextController.rawText.value == ""
                           ? "Receiving"
                           : "Received"
-                      : getInstance.isFinished.value
-                          ? "Received"
-                          : ' Receiving',
+                      : widget.dataType == "folder"
+                          ? getInstance.isFinished.value
+                              ? "Received folder"
+                              : ' Receiving folder'
+                          : getInstance.isFinished.value
+                              ? "Received"
+                              : ' Receiving',
                 ),
               ),
               flexibleSpace: mode.isLight
@@ -257,8 +263,11 @@ class _ProgressPageState extends State<ProgressPage> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: GestureDetector(
                                             onTap: () async {
-                                              openFile(snap.data[item],
-                                                  widget.senderModel!);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: const Text(
+                                                "Please check history for viewing received file",
+                                              )));
                                             },
                                             child: Card(
                                               // color: Colors.blue.shade100,
@@ -266,7 +275,7 @@ class _ProgressPageState extends State<ProgressPage> {
                                               clipBehavior: Clip.antiAlias,
                                               child: SizedBox(
                                                 width: width + 60,
-                                                height: 100,
+                                                height: 130,
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
@@ -294,32 +303,47 @@ class _ProgressPageState extends State<ProgressPage> {
                                                                   top: 8.0),
                                                           child: SizedBox(
                                                             width: width / 1.4,
-                                                            child: Text(
-                                                              snap.data![item],
+                                                            height: 40,
+                                                            child:Text(
+                                                              snap.data![
+                                                              item],
                                                               overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                            ),
+                                                              TextOverflow
+                                                                  .ellipsis,
+                                                            )
                                                           ),
                                                         ),
-                                                        SizedBox(
-                                                          width: width - 80,
-                                                          child: CustomPaint(
-                                                            painter:
-                                                                ProgressLine(
-                                                              pos:
-                                                                  progressLineWidth,
-                                                            ),
-                                                            child: Container(),
+                                                        if (getInstance
+                                                                .fileStatus[
+                                                                    item]
+                                                                .value !=
+                                                            "skipped") ...{
+                                                          SizedBox(
+                                                            width: width - 80,
+                                                            child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(0),
+                                                                child:
+                                                                    CustomPaint(
+                                                                  painter:
+                                                                      ProgressLine(
+                                                                    pos:
+                                                                        progressLineWidth,
+                                                                  ),
+                                                                  child:
+                                                                      Container(),
+                                                                )),
                                                           ),
-                                                        ),
+                                                        },
                                                         const SizedBox(
                                                           height: 40,
                                                         ),
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .all(0.0),
+                                                                  .only(
+                                                                  left: 20),
                                                           child: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -352,7 +376,7 @@ class _ProgressPageState extends State<ProgressPage> {
                                                                       SizedBox(
                                                                     width:
                                                                         width /
-                                                                            1.8,
+                                                                            1.5,
                                                                     child: Text(
                                                                       getInstance
                                                                           .estimatedTime
@@ -375,9 +399,6 @@ class _ProgressPageState extends State<ProgressPage> {
                                                           ),
                                                         ),
                                                       ],
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
                                                     ),
                                                     if (getInstance
                                                         .isCancelled[item]

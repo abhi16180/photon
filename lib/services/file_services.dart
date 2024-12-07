@@ -56,7 +56,6 @@ class FileMethods {
     // ignore: unused_local_variable
     String? savePath;
     Directory? directory;
-    //extract filename from filepath send by the sender
 
     String fileName =
         filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
@@ -68,22 +67,23 @@ class FileMethods {
     } else {
       savePath = p.join(directory.path, fileName);
     }
-
-    //checking if file can be created at savePath
-    try {
-      // ignore: unused_local_variable
-      var file = await File(savePath).create();
-    } catch (e) {
-      print("here" + e.toString());
-      //renaming the path
-
-      var rnd = Random();
-
-      List newPath = savePath.split('.');
-      newPath[0] = newPath[0] + "${rnd.nextInt(1000)}";
-      savePath = newPath.join('.');
-    }
     return savePath;
+  }
+
+  static Future<String> getSavePathForReceiving(String filePath, SenderModel senderModel,
+      {bool isDirectory = false, String directoryPath = ""}) async {
+    String? savePath = await getSavePath(filePath, senderModel);
+    return generateFileNameIfExists(savePath);
+  }
+
+  static Future<String> generateFileNameIfExists(String path) async {
+    bool exists = await File(path).exists();
+    if (exists) {
+      List<String> parts = path.split('.');
+      parts[0] = "${parts[0]}_copy";
+      return generateFileNameIfExists(parts.join('.'));
+    }
+    return path;
   }
 
 //for receiver to display filenames

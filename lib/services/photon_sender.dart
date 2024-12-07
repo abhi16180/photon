@@ -193,8 +193,13 @@ class PhotonSender {
           });
         } else if (request.requestedUri.toString() ==
             "http://$_address:4040/$_randomSecretCode/data/type") {
-          request.response
-              .write(jsonEncode({"type": isRawText ? "raw_text" : "file"}));
+          String type = "file";
+          if (isFolder) {
+            type = "folder";
+          } else if (isRawText) {
+            type = "raw_text";
+          }
+          request.response.write(jsonEncode({"type": type}));
           request.response.close();
         } else if (request.requestedUri.toString() ==
             "http://$_address:4040/$_randomSecretCode/text") {
@@ -356,10 +361,8 @@ class PhotonSender {
 
   static pickFolderAndroid(BuildContext context) async {
     try {
-      var isAllowed = await permissionHandling(context);
+      var isAllowed = await externalStoragePermissionHandling(context);
       if (!isAllowed) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Permission denied")));
         return null;
       }
       Directory? newDirectory = await FolderPicker.pick(
@@ -375,7 +378,8 @@ class PhotonSender {
     } catch (_) {}
   }
 
-  static Future<bool> permissionHandling(context) async {
+  static Future<bool> externalStoragePermissionHandling(
+      BuildContext context) async {
     var status = await Permission.manageExternalStorage.status;
     if (status.isGranted) {
       return true;

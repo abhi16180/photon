@@ -172,7 +172,6 @@ class PhotonReceiver {
       SenderModel senderModel, int secretCode, String? parentDirectory) async {
     PercentageController getInstance =
         GetIt.instance.get<PercentageController>();
-    //getting hiveObj
 
     String filePath = '';
     totalTime = 0;
@@ -218,7 +217,6 @@ class PhotonReceiver {
         }
       }
       // sends after last file is sent
-
       sendBackReceiverRealtimeData(senderModel);
       getInstance.isFinished.value = true;
       getInstance.totalTimeElapsed.value = totalTime;
@@ -305,7 +303,7 @@ class PhotonReceiver {
         await Directory(dirPath).create(recursive: true);
       }
     }
-    String savePath = await FileMethods.getSavePath(filePath, senderModel,
+    String savePath = await FileMethods.getSavePathForReceiving(filePath, senderModel,
         isDirectory: isDirectory, directoryPath: dirPath);
     Stopwatch stopwatch = Stopwatch();
     int? prevBits;

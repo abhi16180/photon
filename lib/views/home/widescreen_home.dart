@@ -213,9 +213,6 @@ class _WidescreenHomeState extends State<WidescreenHome> {
                                     ),
                                   ),
                                 },
-                                const SizedBox(
-                                  height: 20,
-                                ),
                                 MaterialButton(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
