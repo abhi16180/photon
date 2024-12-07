@@ -326,7 +326,6 @@ class PhotonReceiver {
       stopwatch.start();
 
       getInstance.fileStatus[fileIndex].value = "downloading";
-      print(savePath);
       await dio.download(
         'http://${senderModel.ip}:4040/$_secretCode/$fileIndex',
         savePath,

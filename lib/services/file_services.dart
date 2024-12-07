@@ -70,7 +70,7 @@ class FileMethods {
     } else {
       savePath = p.join(directory.path, fileName);
     }
-    return getSavePathForReceiving(filePath, senderModel);
+    return savePath;
   }
 
   static Future<String> getSavePathForReceiving(
@@ -78,9 +78,9 @@ class FileMethods {
       {bool isDirectory = false, String directoryPath = ""}) async {
     // reset retries
     filePathRetries = 0;
-    String? savePath = await getSavePath(filePath, senderModel);
-    // return generateFileNameIfExists(savePath);
-    return savePath;
+    String? savePath = await getSavePath(filePath, senderModel,
+        isDirectory: isDirectory, directoryPath: directoryPath);
+    return generateFileNameIfExists(savePath);
   }
 
   static Future<String> generateFileNameIfExists(String path) async {
