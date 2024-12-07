@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:photon/components/snackbar.dart';
 import 'package:photon/services/file_services.dart';
 import 'package:photon/views/drawer/about_page.dart';
+import 'package:photon/views/drawer/release_notes.dart';
 import 'package:photon/views/drawer/settings.dart';
 import 'package:photon/views/home/widescreen_home.dart';
 import 'package:unicons/unicons.dart';
@@ -183,6 +184,20 @@ class _AppState extends State<App> {
                             },
                           ),
                         },
+                        ListTile(
+                          title: const Text('Releases'),
+                          leading: Icon(Icons.new_releases,
+                              color: mode.isDark ? null : Colors.black),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const ReleaseNotesScreen(owner: "abhi16180", repo: "photon");
+                                },
+                              ),
+                            );
+                          },
+                        ),
                         ListTile(
                           title: const Text('About'),
                           leading: Icon(UniconsLine.info_circle,
