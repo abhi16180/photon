@@ -15,6 +15,9 @@ import 'package:photon/models/file_model.dart';
 import '../models/sender_model.dart';
 
 class FileMethods {
+  static int filePathRetries = 0;
+  static const maxFilePathRetries = 10;
+
   //todo implement separate file picker for android to avoid caching
   static Future<List<String?>> pickFiles() async {
     FilePickerResult? files = await FilePicker.platform
@@ -51,32 +54,47 @@ class FileMethods {
         {'name': fileName, 'size': size, 'file': file, 'extension': type});
   }
 
-  static Future<String> getSavePath(
-      String filePath, SenderModel senderModel) async {
-    // ignore: unused_local_variable
+  static Future<String> getSavePath(String filePath, SenderModel senderModel,
+      {bool isDirectory = false, String directoryPath = ""}) async {
     String? savePath;
     Directory? directory;
-    //extract filename from filepath send by the sender
 
     String fileName =
         filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
     directory = await getSaveDirectory();
     savePath = p.join(directory.path, fileName);
-
-    //checking if file can be created at savePath
-    try {
-      // ignore: unused_local_variable
-      var file = await File(savePath).create();
-    } catch (_) {
-      //renaming the path
-
-      var rnd = Random();
-
-      List newPath = savePath.split('.');
-      newPath[0] = newPath[0] + "${rnd.nextInt(1000)}";
-      savePath = newPath.join('.');
+    if (isDirectory) {
+      directoryPath.replaceAll(
+          senderModel.os == "windows" ? r'\' : r'/', Platform.pathSeparator);
+      savePath = p.join(directory.path, directoryPath, fileName);
+    } else {
+      savePath = p.join(directory.path, fileName);
     }
     return savePath;
+  }
+
+  static Future<String> getSavePathForReceiving(
+      String filePath, SenderModel senderModel,
+      {bool isDirectory = false, String directoryPath = ""}) async {
+    // reset retries
+    filePathRetries = 0;
+    String? savePath = await getSavePath(filePath, senderModel,
+        isDirectory: isDirectory, directoryPath: directoryPath);
+    return generateFileNameIfExists(savePath);
+  }
+
+  static Future<String> generateFileNameIfExists(String path) async {
+    if (filePathRetries >= maxFilePathRetries) {
+      throw Exception("unable to generate file name for saving");
+    }
+    bool exists = await File(path).exists();
+    if (exists) {
+      List<String> parts = path.split('.');
+      parts[0] = "${parts[0]}_copy";
+      filePathRetries++;
+      return generateFileNameIfExists(parts.join('.'));
+    }
+    return path;
   }
 
 //for receiver to display filenames
@@ -174,5 +192,20 @@ class FileMethods {
 
   static Future<String> getTextFilePath(fileName) async {
     return '${(await getSaveDirectory()).path}${Platform.pathSeparator}$fileName.txt';
+  }
+
+  static Future<String> getDirectorySavePath(
+      SenderModel senderModel, String directoryPath) async {
+    // ignore: unused_local_variable
+    String? savePath;
+    Directory? directory;
+    directory = await getSaveDirectory();
+    savePath = p.join(directory.path, directoryPath);
+    savePath = savePath.replaceAll(
+        senderModel.os == "windows" ? r'\' : r'/', Platform.pathSeparator);
+
+    List temp = savePath.split("");
+    temp.removeLast();
+    return temp.join("");
   }
 }

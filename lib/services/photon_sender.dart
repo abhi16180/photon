@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:easy_folder_picker/FolderPicker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
@@ -23,6 +26,7 @@ class PhotonSender {
   static late String photonURL;
   static late Uint8List avatar;
   static String _rawText = "";
+  static String _parentFolder = "";
   static DeviceService? deviceService;
 
   static void setRawText(txt) {
@@ -33,10 +37,10 @@ class PhotonSender {
     return _rawText;
   }
 
-  static getFilesPath({List<String> appList = const <String>[]}) async {
+  static setFilesPath({List<String> fileList = const <String>[]}) async {
     //flutter specific package
-    if (appList.isNotEmpty) {
-      _fileList = appList;
+    if (fileList.isNotEmpty) {
+      _fileList = fileList;
       return true;
     }
     _fileList = await FileMethods.pickFiles();
@@ -57,8 +61,9 @@ class PhotonSender {
   static handleSharing({
     bool externalIntent = false,
     String extIntentType = "file",
-    List<String> appList = const <String>[],
+    List<String> fileList = const <String>[],
     bool isRawText = false,
+    bool isFolder = false,
   }) async {
     Navigator.pop(nav.currentContext!);
     Map<String, dynamic> shareRespMap = await PhotonSender.share(
@@ -66,9 +71,9 @@ class PhotonSender {
         externalIntent: externalIntent,
         extIntentType: extIntentType,
         isRawText: isRawText,
-        appList: appList);
+        isFolder: isFolder,
+        fileList: fileList);
     ShareError shareErr = ShareError.fromMap(shareRespMap);
-
     switch (shareErr.hasError) {
       case true:
         // ignore: use_build_context_synchronously
@@ -78,15 +83,22 @@ class PhotonSender {
       case false:
         Navigator.of(nav.currentContext!)
             .push(MaterialPageRoute(builder: (ctx) {
-          return SharePage(isRawText: isRawText);
+          return SharePage(
+            isRawText: isRawText,
+            isFolder: isFolder,
+          );
         }));
         break;
     }
   }
 
   static Future<Map<String, dynamic>> _startServer(
-      List<String?> fileList, context,
-      {bool isApk = false, bool isRawText = false}) async {
+    List<String?> fileList,
+    context, {
+    bool isApk = false,
+    bool isRawText = false,
+    bool isFolder = false,
+  }) async {
     late Map<String, Object> serverInf;
 
     //check if no proper address is assigned
@@ -140,7 +152,12 @@ class PhotonSender {
             request.response.write(jsonEncode({
               'code': _randomSecretCode,
               'accepted': true,
-              "type": isRawText ? "raw_text" : "file"
+              "type": isRawText
+                  ? "raw_text"
+                  : isFolder
+                      ? "folder"
+                      : "file",
+              "parent_folder": _parentFolder,
             }));
             request.response.close();
           } else {
@@ -179,8 +196,13 @@ class PhotonSender {
           });
         } else if (request.requestedUri.toString() ==
             "http://$_address:4040/$_randomSecretCode/data/type") {
-          request.response
-              .write(jsonEncode({"type": isRawText ? "raw_text" : "file"}));
+          String type = "file";
+          if (isFolder) {
+            type = "folder";
+          } else if (isRawText) {
+            type = "raw_text";
+          }
+          request.response.write(jsonEncode({"type": type}));
           request.response.close();
         } else if (request.requestedUri.toString() ==
             "http://$_address:4040/$_randomSecretCode/text") {
@@ -241,8 +263,9 @@ class PhotonSender {
     context, {
     bool externalIntent = false,
     String extIntentType = "file",
-    List<String> appList = const <String>[],
+    List<String> fileList = const <String>[],
     bool isRawText = false,
+    bool isFolder = false,
   }) async {
     if (externalIntent) {
       // When user tries to share files opened / listed on external app
@@ -267,14 +290,40 @@ class PhotonSender {
       Future<Map<String, dynamic>> res =
           _startServer(_fileList, context, isRawText: isRawText);
       return await res;
+    } else if (isFolder) {
+      String? dirPath;
+      if (Platform.isAndroid) {
+        dirPath = await pickFolderAndroid(context);
+      } else {
+        dirPath = await FilePicker.platform.getDirectoryPath();
+      }
+      if (dirPath != null) {
+        _parentFolder = dirPath;
+        Directory directory = Directory(dirPath);
+        List<String> paths = [];
+        (await directory.list(recursive: true).toList())
+            .whereType<File>()
+            .forEach((file) {
+          paths.add(file.path);
+        });
+        _fileList = paths;
+        await assignIP();
+        Future<Map<String, dynamic>> res = _startServer(_fileList, context,
+            isRawText: isRawText, isFolder: isFolder);
+
+        return res;
+      } else {
+        // Navigator.of(context).pop();
+        return {'hasErr': true, 'type': 'file', 'errMsg': "No file chosen"};
+      }
     } else {
       // User manually opens photon
       // Selects files
-      if (await getFilesPath(appList: appList)) {
+      if (await setFilesPath(fileList: fileList)) {
         await assignIP();
         await storeSentFileHistory(_fileList);
         Map<String, dynamic> res =
-            await _startServer(_fileList, context, isApk: appList.isNotEmpty);
+            await _startServer(_fileList, context, isApk: fileList.isNotEmpty);
         return res;
       } else {
         return {'hasErr': true, 'type': 'file', 'errMsg': "No file chosen"};
@@ -312,4 +361,45 @@ class PhotonSender {
   bool get hasMultipleFiles => _fileList.length > 1;
 
   static String get getPhotonLink => photonURL;
+
+  static pickFolderAndroid(BuildContext context) async {
+    try {
+      var isAllowed = await externalStoragePermissionHandling(context);
+      if (!isAllowed) {
+        return null;
+      }
+      Directory? newDirectory = await FolderPicker.pick(
+          allowFolderCreation: true,
+          context: context,
+          rootDirectory: Directory(FolderPicker.rootPath),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))));
+      if (newDirectory != null) {
+        return newDirectory.path;
+      }
+      return null;
+    } catch (_) {}
+  }
+
+  static Future<bool> externalStoragePermissionHandling(
+      BuildContext context) async {
+    var status = await Permission.manageExternalStorage.status;
+    if (status.isGranted) {
+      return true;
+    }
+    if (status.isRestricted) {
+      status = await Permission.manageExternalStorage.request();
+    }
+    if (status!.isDenied) {
+      status = await Permission.manageExternalStorage.request();
+    }
+    if (status.isPermanentlyDenied) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        backgroundColor: Colors.green,
+        content:
+            Text('Please add permission for app to manage external storage'),
+      ));
+    }
+    return false;
+  }
 }

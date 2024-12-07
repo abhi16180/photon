@@ -251,6 +251,8 @@ class _ReceivePageState extends State<ReceivePage> {
                                                           dataType:
                                                               resp['type'] ??
                                                                   "file",
+                                                          parentDirectory: resp[
+                                                              'parent_folder'],
                                                         );
                                                       },
                                                     ),

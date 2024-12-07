@@ -10,6 +10,7 @@ class SenderModel {
   dynamic version;
   Uint8List? avatar;
   String? type;
+  String? parentFolder;
   SenderModel({
     this.ip,
     this.port,
@@ -19,6 +20,7 @@ class SenderModel {
     this.version,
     this.avatar,
     this.type,
+    this.parentFolder,
   });
   factory SenderModel.fromJson(Map<String, dynamic> json) {
     return SenderModel(
@@ -34,6 +36,7 @@ class SenderModel {
             )
           : null,
       type: json['type'] ?? 'file',
+      parentFolder: json['parent_folder'] ?? "",
     );
   }
 }

@@ -22,10 +22,6 @@ class ReceiverDataController extends GetxController {
   var receiverMap = {}.obs;
 }
 
-class St {
-  BuildContext? cxt;
-}
-
 class RawTextController extends GetxController {
   var rawText = "".obs;
 }
