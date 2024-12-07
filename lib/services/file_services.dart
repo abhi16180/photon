@@ -56,13 +56,13 @@ class FileMethods {
 
   static Future<String> getSavePath(String filePath, SenderModel senderModel,
       {bool isDirectory = false, String directoryPath = ""}) async {
-    // ignore: unused_local_variable
     String? savePath;
     Directory? directory;
 
     String fileName =
         filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
     directory = await getSaveDirectory();
+    savePath = p.join(directory.path, fileName);
     if (isDirectory) {
       directoryPath.replaceAll(
           senderModel.os == "windows" ? r'\' : r'/', Platform.pathSeparator);
@@ -70,7 +70,7 @@ class FileMethods {
     } else {
       savePath = p.join(directory.path, fileName);
     }
-    return savePath;
+    return getSavePathForReceiving(filePath, senderModel);
   }
 
   static Future<String> getSavePathForReceiving(
@@ -79,7 +79,8 @@ class FileMethods {
     // reset retries
     filePathRetries = 0;
     String? savePath = await getSavePath(filePath, senderModel);
-    return generateFileNameIfExists(savePath);
+    // return generateFileNameIfExists(savePath);
+    return savePath;
   }
 
   static Future<String> generateFileNameIfExists(String path) async {
