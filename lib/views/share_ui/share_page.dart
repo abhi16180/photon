@@ -14,7 +14,9 @@ import '../../components/components.dart';
 
 class SharePage extends StatefulWidget {
   final bool? isRawText;
-  const SharePage({Key? key, this.isRawText}) : super(key: key);
+  final bool? isFolder;
+
+  const SharePage({Key? key, this.isRawText, this.isFolder}) : super(key: key);
 
   @override
   State<SharePage> createState() => _SharePageState();
@@ -27,6 +29,7 @@ class _SharePageState extends State<SharePage> {
   late double height;
   bool willPop = false;
   var receiverDataInst = GetIt.I.get<ReceiverDataController>();
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -100,16 +103,25 @@ class _SharePageState extends State<SharePage> {
                         },
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            widget.isRawText == true
-                                ? "Your text is ready to be shared\nReceiver should be using Photon v2.0 or above in order to receive text"
-                                : '${photonSender.hasMultipleFiles ? 'Your files are ready to be shared' : 'Your file is ready to be shared'}\nAsk receiver to tap on receive button',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: width > 720 ? 18 : 14,
-                            ),
+                          child: widget.isFolder == true
+                              ? Text(
+                                  "Your folder is ready to be shared. Please make sure receiver has photon v3.0.0 or above to experience true folder share\nAsk receiver to tap on receive button",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: width > 720 ? 18 : 14,
+                                  ),
                             textAlign: TextAlign.center,
-                          ),
+                                )
+                              : Text(
+                                  widget.isRawText == true
+                                      ? "Your text is ready to be shared\nReceiver should be using Photon v2.0 or above in order to receive text"
+                                      : '${photonSender.hasMultipleFiles ? 'Your files are ready to be shared' : 'Your file is ready to be shared'}\nAsk receiver to tap on receive button',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: width > 720 ? 18 : 14,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                         ),
                         const SizedBox(
                           height: 20,

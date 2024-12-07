@@ -83,7 +83,10 @@ class PhotonSender {
       case false:
         Navigator.of(nav.currentContext!)
             .push(MaterialPageRoute(builder: (ctx) {
-          return SharePage(isRawText: isRawText);
+          return SharePage(
+            isRawText: isRawText,
+            isFolder: isFolder,
+          );
         }));
         break;
     }
