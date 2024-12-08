@@ -1,10 +1,7 @@
 import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:open_filex/open_filex.dart';
-import 'package:photon/components/constants.dart';
+import 'package:open_file/open_file.dart';
 import 'package:photon/components/snackbar.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/share_history_model.dart';
@@ -50,7 +47,7 @@ class _HistoryPageState extends State<HistoryPage>
                       onPressed: () async {
                         var resp = await FileMethods.getSaveDirectory();
                         if (Platform.isAndroid || Platform.isIOS) {
-                          OpenFilex.open(resp.path);
+                          OpenFile.open(resp.path);
                         } else {
                           launchUrl(
                             Uri.file(
@@ -112,7 +109,7 @@ class _HistoryPageState extends State<HistoryPage>
                                       data[item].filePath.replaceAll(r"\", "/");
                                   if (Platform.isAndroid || Platform.isIOS) {
                                     try {
-                                      OpenFilex.open(path);
+                                      OpenFile.open(path);
                                     } catch (_) {
                                       // ignore: use_build_context_synchronously
                                       showSnackBar(context,
@@ -178,7 +175,7 @@ class _HistoryPageState extends State<HistoryPage>
                                       data[item].filePath.replaceAll(r"\", "/");
                                   if (Platform.isAndroid || Platform.isIOS) {
                                     try {
-                                      OpenFilex.open(path);
+                                      OpenFile.open(path);
                                     } catch (e) {
                                       // ignore: use_build_context_synchronously
                                       showSnackBar(context,

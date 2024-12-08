@@ -58,7 +58,6 @@ dependencies:
   http: ^1.2.2
   provider: ^6.1.2
   file_picker: ^8.1.3
-  open_filex: ^4.5.0
   easy_folder_picker: ^1.3.3
   # This is modified version of file_picker it is faster and doesn't cache files unnecessarily
   # file_picker:
@@ -82,6 +81,7 @@ dependencies:
   open_settings_plus: ^0.4.0
   installed_apps: ^1.5.2
   bonsoir: ^5.1.10
+  open_file:
  
 
  
