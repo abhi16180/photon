@@ -192,7 +192,8 @@ class _AppState extends State<App> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return const ReleaseNotesScreen(owner: "abhi16180", repo: "photon");
+                                  return const ReleaseNotesScreen(
+                                      owner: "abhi16180", repo: "photon");
                                 },
                               ),
                             );

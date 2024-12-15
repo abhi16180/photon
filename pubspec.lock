@@ -1152,6 +1152,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
+  saf_util:
+    dependency: "direct main"
+    description:
+      name: saf_util
+      sha256: d0a3c7a023a02bc6d10f5eff02ec714b6834393ec39a9c1f7e3662ac30e5f909
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1341,6 +1349,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  uri_to_file:
+    dependency: "direct main"
+    description:
+      name: uri_to_file
+      sha256: cbbb38f975d22311efacc9a53cdcb806708606666d8092314b81c5cb7983b700
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   url_launcher:
     dependency: "direct main"
     description:

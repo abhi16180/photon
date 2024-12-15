@@ -212,6 +212,7 @@ class PhotonReceiver {
                   .first
                   .split(parentDirectory)
                   .last;
+
           await getFile(filePath, fileIndex, senderModel,
               parentDirectory: newDirectory, isDirectory: true);
         }
@@ -277,6 +278,13 @@ class PhotonReceiver {
         receiveText(senderModel, secretCode);
         break;
       case "folder":
+        if (senderModel.os.toString().toLowerCase() == 'android') {
+          // since android is sending cached file paths
+          // real folder structure cannot be reconstructed
+          // receive files without preserving folder structure
+          receiveFiles(senderModel, secretCode);
+          break;
+        }
         receiveFolder(senderModel, secretCode, parentDirectory);
         break;
       default:
