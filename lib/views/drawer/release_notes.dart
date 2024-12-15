@@ -53,7 +53,6 @@ class ReleaseNotesScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final release = releases[index];
                 return ListTile(
-
                   trailing: Icon(Icons.link),
                   title: Text(release.name),
                   subtitle: Text(

@@ -29,6 +29,7 @@ class _QrReceivePageState extends State<QrReceivePage> {
       throw Exception("Not mounted");
     }
   }
+
   bool isDenied = false;
   bool hasErr = false;
   late StateSetter innerState;

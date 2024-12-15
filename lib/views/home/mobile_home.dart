@@ -67,13 +67,9 @@ class _MobileHomeState extends State<MobileHome> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return ValueListenableBuilder(
-        valueListenable: AdaptiveTheme
-            .of(context)
-            .modeChangeNotifier,
+        valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
         builder: (_, AdaptiveThemeMode mode, __) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -90,15 +86,16 @@ class _MobileHomeState extends State<MobileHome> {
                     onTap: () async {
                       showModalBottomSheet(
                         backgroundColor:
-                        mode.isDark ? Colors.black : Colors.white,
+                            mode.isDark ? Colors.black : Colors.white,
                         context: context,
                         builder: (context) {
-                          List<Map<String,dynamic>> sharingOptions = getSharingOptions();
+                          List<Map<String, dynamic>> sharingOptions =
+                              getSharingOptions();
                           return GridView.builder(
                             itemCount: sharingOptions.length,
                             gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2),
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2),
                             itemBuilder: (context, i) {
                               return Padding(
                                 padding: const EdgeInsets.all(10),
@@ -121,7 +118,13 @@ class _MobileHomeState extends State<MobileHome> {
                                           });
                                           break;
                                         case "Folder":
-                                          shareFolder();
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                          await shareFolder();
+                                          setState(() {
+                                            isLoading = false;
+                                          });
                                           break;
                                         case "Apps":
                                           shareApps();
@@ -133,7 +136,7 @@ class _MobileHomeState extends State<MobileHome> {
                                     },
                                     child: Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         sharingOptions[i]["icon"],
                                         SizedBox(
@@ -145,7 +148,7 @@ class _MobileHomeState extends State<MobileHome> {
                                               fontWeight: FontWeight.bold,
                                               color: mode.isDark
                                                   ? Color.fromARGB(
-                                                  205, 117, 255, 122)
+                                                      205, 117, 255, 122)
                                                   : Colors.blue),
                                         )
                                       ],
@@ -199,10 +202,7 @@ class _MobileHomeState extends State<MobileHome> {
                                   SizedBox(
                                     height: 20,
                                     width:
-                                    MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width / 1.2,
+                                        MediaQuery.of(context).size.width / 1.2,
                                   ),
                                   MaterialButton(
                                     onPressed: () async {
@@ -213,13 +213,10 @@ class _MobileHomeState extends State<MobileHome> {
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     minWidth:
-                                    MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width / 2,
+                                        MediaQuery.of(context).size.width / 2,
                                     color: mode.isDark
                                         ? const Color.fromARGB(
-                                        205, 117, 255, 122)
+                                            205, 117, 255, 122)
                                         : Colors.blue,
                                     child: const Text(
                                       'Normal mode',
@@ -239,13 +236,10 @@ class _MobileHomeState extends State<MobileHome> {
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     minWidth:
-                                    MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width / 2,
+                                        MediaQuery.of(context).size.width / 2,
                                     color: mode.isDark
                                         ? const Color.fromARGB(
-                                        205, 117, 255, 122)
+                                            205, 117, 255, 122)
                                         : Colors.blue,
                                     child: const Text(
                                       'QR code mode',
@@ -284,29 +278,28 @@ class _MobileHomeState extends State<MobileHome> {
                     ),
                   ),
                 ),
-              } else
-                ...{
-                  Center(
-                    child: SizedBox(
-                      width: size.width / 4,
-                      height: size.height / 4,
-                      child: Lottie.asset(
-                        'assets/lottie/setting_up.json',
-                        width: 100,
-                        height: 100,
-                      ),
+              } else ...{
+                Center(
+                  child: SizedBox(
+                    width: size.width / 4,
+                    height: size.height / 4,
+                    child: Lottie.asset(
+                      'assets/lottie/setting_up.json',
+                      width: 100,
+                      height: 100,
                     ),
                   ),
-                  const Center(
-                    child: Text(
-                      'Please wait, file(s) are being fetched',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                      textAlign: TextAlign.center,
+                ),
+                const Center(
+                  child: Text(
+                    'Please wait, file(s) are being fetched',
+                    style: TextStyle(
+                      fontSize: 18,
                     ),
-                  )
-                },
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              },
             ],
           );
         });
@@ -331,10 +324,7 @@ class _MobileHomeState extends State<MobileHome> {
           ),
           // icon: const Icon(Icons.text_fields),
           content: SizedBox(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width / 1.2,
+            width: MediaQuery.of(context).size.width / 1.2,
             child: TextField(
               decoration: const InputDecoration(
                   border: InputBorder.none,
@@ -413,11 +403,10 @@ class _MobileHomeState extends State<MobileHome> {
       var extStorage = box.get("manage_ext_storage");
       if (extStorage != null) {
         if (extStorage == true) {
-          PhotonSender.handleSharing(isFolder: true);
+          await PhotonSender.handleSharing(isFolder: true);
           return;
         }
       }
-
       await showDialog(
         context: context,
         builder: (context) {

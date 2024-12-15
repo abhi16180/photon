@@ -45,15 +45,14 @@ class DeviceService {
     await discovery!.ready;
     discovery!.eventStream!.listen((event) {
       if (event.service != null) {
-          discoveredServices.add(event.service);
+        discoveredServices.add(event.service);
       }
     });
     discovery!.start();
     Future.delayed(const Duration(milliseconds: 1000), () {
       discovery!.stop();
       if (!completer.isCompleted) {
-        completer.complete(
-            discoveredServices);
+        completer.complete(discoveredServices);
       }
     });
     return completer.future;

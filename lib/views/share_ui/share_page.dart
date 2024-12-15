@@ -110,7 +110,7 @@ class _SharePageState extends State<SharePage> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: width > 720 ? 18 : 14,
                                   ),
-                            textAlign: TextAlign.center,
+                                  textAlign: TextAlign.center,
                                 )
                               : Text(
                                   widget.isRawText == true
