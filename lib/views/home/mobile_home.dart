@@ -1,14 +1,11 @@
 import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:easy_folder_picker/FolderPicker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/services/photon_sender.dart';
-import 'package:photon/views/apps_list.dart';
 import '../../methods/handle_share.dart';
 
 class MobileHome extends StatefulWidget {
@@ -407,33 +404,33 @@ class _MobileHomeState extends State<MobileHome> {
           return;
         }
       }
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("ManageExternalStorage"),
-            content: const Text(
-                """To list all real file paths, Photon needs ManageExternalStorage permission. If you don't want to give permission, please go back and pick files instead.
-                                                    """),
-            actions: [
-              MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  return;
-                },
-                child: const Text("Go back"),
-              ),
-              MaterialButton(
-                onPressed: () {
-                  box.put("manage_ext_storage", true);
-                  PhotonSender.handleSharing(isFolder: true);
-                },
-                child: const Text("Proceed"),
-              )
-            ],
-          );
-        },
-      );
+      // await showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return AlertDialog(
+      //       title: const Text("ManageExternalStorage"),
+      //       content: const Text(
+      //           """To list all real file paths, Photon needs ManageExternalStorage permission. If you don't want to give permission, please go back and pick files instead.
+      //                                               """),
+      //       actions: [
+      //         MaterialButton(
+      //           onPressed: () {
+      //             Navigator.of(context).pop();
+      //             return;
+      //           },
+      //           child: const Text("Go back"),
+      //         ),
+      //         MaterialButton(
+      //           onPressed: () {
+      //             box.put("manage_ext_storage", true);
+      //             PhotonSender.handleSharing(isFolder: true);
+      //           },
+      //           child: const Text("Proceed"),
+      //         )
+      //       ],
+      //     );
+      //   },
+      // );
     } else {
       PhotonSender.handleSharing(isFolder: true);
     }

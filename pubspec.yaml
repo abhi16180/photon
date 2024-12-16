@@ -58,7 +58,6 @@ dependencies:
   http: ^1.2.2
   provider: ^6.1.2
   file_picker: ^8.1.3
-  easy_folder_picker: ^1.3.3
   # This is modified version of file_picker it is faster and doesn't cache files unnecessarily
   # file_picker:
   #   git:

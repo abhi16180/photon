@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:easy_folder_picker/FolderPicker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/methods/methods.dart';
 import 'package:photon/models/file_model.dart';
 import 'package:photon/models/sender_model.dart';
@@ -376,47 +374,6 @@ class PhotonSender {
   bool get hasMultipleFiles => _fileList.length > 1;
 
   static String get getPhotonLink => photonURL;
-
-  static pickFolderAndroid(BuildContext context) async {
-    try {
-      var isAllowed = await externalStoragePermissionHandling(context);
-      if (!isAllowed) {
-        return null;
-      }
-      Directory? newDirectory = await FolderPicker.pick(
-          allowFolderCreation: true,
-          context: context,
-          rootDirectory: Directory(FolderPicker.rootPath),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))));
-      if (newDirectory != null) {
-        return newDirectory.path;
-      }
-      return null;
-    } catch (_) {}
-  }
-
-  static Future<bool> externalStoragePermissionHandling(
-      BuildContext context) async {
-    var status = await Permission.manageExternalStorage.status;
-    if (status.isGranted) {
-      return true;
-    }
-    if (status.isRestricted) {
-      status = await Permission.manageExternalStorage.request();
-    }
-    if (status!.isDenied) {
-      status = await Permission.manageExternalStorage.request();
-    }
-    if (status.isPermanentlyDenied) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        backgroundColor: Colors.green,
-        content:
-            Text('Please add permission for app to manage external storage'),
-      ));
-    }
-    return false;
-  }
 
   static Future<SafDocumentFile?> pickDirectoryAndroid() async {
     return await safUtils.pickDirectory(persistablePermission: true);
