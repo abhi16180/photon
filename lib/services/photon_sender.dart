@@ -287,9 +287,9 @@ class PhotonSender {
         return await res;
       } else if (isFolder) {
         String? dirPath;
+        List<String> paths = [];
         if (Platform.isAndroid) {
           SafDocumentFile? dir = await pickDirectoryAndroid();
-          List<String> paths = [];
           if (dir != null) {
             paths = await listFilesForPickedDir(dir);
           }
@@ -299,14 +299,13 @@ class PhotonSender {
           if (dirPath != null) {
             _parentFolder = dirPath;
             Directory directory = Directory(dirPath);
-            List<String> paths = [];
             (await directory.list(recursive: true).toList())
                 .whereType<File>()
                 .forEach((file) {
               paths.add(file.path);
             });
-            _fileList = paths;
           }
+          _fileList = paths;
         }
         if (_fileList.isEmpty) {
           return {'hasErr': true, 'type': 'file', 'errMsg': "No folder chosen"};
