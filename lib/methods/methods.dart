@@ -126,6 +126,12 @@ Widget getFileIcon(String extn) {
         size: 30,
         color: Colors.orangeAccent,
       );
+    case "directory":
+      return const Icon(
+        Icons.folder,
+        size: 30,
+        color: Colors.orangeAccent,
+      );
 
     default:
       return SvgPicture.asset(
@@ -169,20 +175,22 @@ storeHistory(Box box, String savePath) {
   box.put('fileInfo', fileInfo);
 }
 
-Future<void> storeSentFileHistory(List<String?> files) async {
+Future<void> storeSentDocumentHistory(List<String?> docs,
+    {String type = "file"}) async {
   Box box = await Hive.openBox('appData');
   if (box.get('sentHistory') == null) {
     box.put('sentHistory', []);
   }
   List sentFiles = box.get('sentHistory');
-
+  print("type is ${type}");
   sentFiles.insertAll(
     0,
-    files
+    docs
         .map((e) => {
               "fileName": e!.split(Platform.pathSeparator).last,
               "date": DateTime.now(),
-              "filePath": e
+              "filePath": e,
+              "type": type
             })
         .toList(),
   );

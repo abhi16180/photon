@@ -18,6 +18,7 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage>
     with TickerProviderStateMixin {
   late TabController tabController;
+
   @override
   void initState() {
     super.initState();
@@ -87,7 +88,7 @@ class _HistoryPageState extends State<HistoryPage>
 
                     snap.data == null
                         ? data = []
-                        : data = HistoryList.formData(snap.data).historyList;
+                        : data = HistoryList.fromData(snap.data).historyList;
 
                     return snap.data == null
                         ? const Center(
@@ -101,9 +102,13 @@ class _HistoryPageState extends State<HistoryPage>
                             },
                             itemCount: data.length,
                             itemBuilder: (context, item) {
+                              var extn = data[item].fileName.split('.').last;
+                              var type = data[item].type;
+                              if (type == "directory") {
+                                extn = type;
+                              }
                               return ListTile(
-                                leading: getFileIcon(
-                                    data[item].fileName.split('.').last),
+                                leading: getFileIcon(extn),
                                 onTap: () async {
                                   String path =
                                       data[item].filePath.replaceAll(r"\", "/");
@@ -152,7 +157,7 @@ class _HistoryPageState extends State<HistoryPage>
 
                     snap.data == null
                         ? data = []
-                        : data = HistoryList.formData(snap.data).historyList;
+                        : data = HistoryList.fromData(snap.data).historyList;
 
                     return snap.data == null
                         ? const Center(

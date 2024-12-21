@@ -32,7 +32,7 @@ class PhotonSender {
   static SafUtil safUtils = SafUtil();
 
   // only for SAF document files
-  static List<String?> _decodedFilePaths = [];
+  static List<String?> _decodedFileNames = [];
 
   static const platform = MethodChannel('dev.abhi.photon');
 
@@ -129,17 +129,19 @@ class PhotonSender {
         return await res;
       } else {
         if (isFolder) {
-          String? dirPath;
+          String selectedDirectory = "";
           List<String> paths = [];
           if (Platform.isAndroid) {
             SafDocumentFile? dir = await FileUtils.pickDirectoryAndroid();
             if (dir != null) {
+              selectedDirectory = dir.name;
               paths = await FileUtils.listFilesForPickedDir(dir);
             }
             _fileList = paths;
           } else {
-            dirPath = await FilePicker.platform.getDirectoryPath();
+            String? dirPath = await FilePicker.platform.getDirectoryPath();
             if (dirPath != null) {
+              selectedDirectory = dirPath;
               _parentFolder = dirPath;
               Directory directory = Directory(dirPath);
               (await directory.list(recursive: true).toList())
@@ -157,8 +159,10 @@ class PhotonSender {
               'errMsg': "No folder chosen"
             };
           }
-          _decodedFilePaths = await FileUtils.getDecodedPaths(_fileList,
+          _decodedFileNames = await FileUtils.getDecodedPaths(_fileList,
               isAPK: fileList.isNotEmpty);
+          await storeSentDocumentHistory([selectedDirectory],
+              type: "directory");
           Future<Map<String, dynamic>> res = _startServer(_fileList, context,
               isRawText: isRawText, isFolder: isFolder);
           return res;
@@ -166,9 +170,9 @@ class PhotonSender {
           // User manually opens photon
           // Selects files
           if (await setFilesPath(fileList: fileList)) {
-            await storeSentFileHistory(_fileList);
-            _decodedFilePaths = await FileUtils.getDecodedPaths(_fileList,
+            _decodedFileNames = await FileUtils.getDecodedPaths(_fileList,
                 isAPK: fileList.isNotEmpty);
+            await storeSentDocumentHistory(_decodedFileNames);
             Map<String, dynamic> res = await _startServer(_fileList, context,
                 isApk: fileList.isNotEmpty);
             return res;
@@ -257,7 +261,7 @@ class PhotonSender {
         } else if (request.requestedUri.toString() ==
             'http://$_address:4040/getpaths') {
           var paths =
-              _decodedFilePaths.isNotEmpty ? _decodedFilePaths : _fileList;
+              _decodedFileNames.isNotEmpty ? _decodedFileNames : _fileList;
           request.response.write(jsonEncode({'paths': paths, 'isApk': isApk}));
 
           request.response.close();
