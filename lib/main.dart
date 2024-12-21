@@ -20,12 +20,14 @@ import 'app.dart';
 import 'views/share_ui/share_page.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
+
 final nav = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Hive.init((await getApplicationDocumentsDirectory()).path);
   await Hive.openBox('appData');
   Box box = Hive.box('appData');
+
   box.get('avatarPath') ?? box.put('avatarPath', 'assets/avatars/1.png');
   box.get('username') ?? box.put('username', '${Platform.localHostname} user');
   box.get('queryPackages') ?? box.put('queryPackages', false);
