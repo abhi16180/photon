@@ -11,12 +11,15 @@ import 'package:path_provider/path_provider.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 import 'package:photon/models/file_model.dart';
+import 'package:saf_util/saf_util.dart';
+import 'package:saf_util/saf_util_platform_interface.dart';
 
 import '../models/sender_model.dart';
 
-class FileMethods {
+class FileUtils {
   static int filePathRetries = 0;
   static const maxFilePathRetries = 10;
+  static SafUtil safUtils = SafUtil();
 
   //todo implement separate file picker for android to avoid caching
   static Future<List<String?>> pickFiles() async {
@@ -39,6 +42,11 @@ class FileMethods {
   }
 
   static Future<FileModel> extractFileData(path, {bool isApk = false}) async {
+    // if platform is android use SAF
+    // for APK fallback to old flow
+    if (Platform.isAndroid && !isApk) {
+      return await extractFileDataWithSAF(path, isApk: isApk);
+    }
     File file = File(path);
     int size = await file.length();
     late String fileName;
@@ -52,6 +60,22 @@ class FileMethods {
     String type = path.toString().split('.').last;
     return FileModel.fromFileData(
         {'name': fileName, 'size': size, 'file': file, 'extension': type});
+  }
+
+  static Future<FileModel> extractFileDataWithSAF(path,
+      {bool isApk = false}) async {
+    SafDocumentFile? safDoc = await safUtils.documentFileFromUri(path, false);
+    int size = safDoc!.length;
+    late String fileName;
+    if (isApk) {
+      fileName = Uri.decodeComponent(safDoc.name).split("/").last;
+    } else {
+      fileName = safDoc.name;
+    }
+
+    String type = path.toString().split('.').last;
+    return FileModel.fromFileData(
+        {'name': fileName, 'size': size, 'file': safDoc, 'extension': type});
   }
 
   static Future<String> getSavePath(String filePath, SenderModel senderModel,
@@ -207,5 +231,45 @@ class FileMethods {
     List temp = savePath.split("");
     temp.removeLast();
     return temp.join("");
+  }
+
+  static Future<List<String?>> getDecodedPaths(List<String?> uris,
+      {bool isAPK = false}) async {
+    if (!Platform.isAndroid || isAPK) {
+      return uris;
+    }
+    List<Future<SafDocumentFile?>> docs = [];
+    List<String> decodedPaths = [];
+    for (var uri in uris) {
+      docs.add(safUtils.documentFileFromUri(uri!, false));
+    }
+    for (var doc in docs) {
+      decodedPaths.add((await doc)!.name);
+    }
+    return decodedPaths;
+  }
+
+  // pick directory using with SAF
+  static Future<SafDocumentFile?> pickDirectoryAndroid() async {
+    return await safUtils.pickDirectory(persistablePermission: true);
+  }
+
+  // recursively list all the uris in directories and subdirectories
+  // within selected folder
+  static Future<List<String>> listFilesForPickedDir(SafDocumentFile dir) async {
+    List<SafDocumentFile> dirs = [dir];
+    List<String> uris = [];
+    while (dirs.isNotEmpty) {
+      SafDocumentFile last = dirs.removeLast();
+      List<SafDocumentFile> entities = await safUtils.list(last.uri);
+      for (var entity in entities) {
+        if (entity.isDir) {
+          dirs.add(entity);
+        } else {
+          uris.add(entity.uri);
+        }
+      }
+    }
+    return uris;
   }
 }

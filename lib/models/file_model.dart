@@ -3,7 +3,7 @@ import 'dart:io';
 class FileModel {
   String name;
   int size;
-  File file;
+  dynamic file;
   String? extn;
   FileModel(
       {required this.name,

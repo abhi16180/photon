@@ -176,7 +176,7 @@ class _AppState extends State<App> {
                             leading: Icon(Icons.delete_forever_rounded,
                                 color: mode.isDark ? null : Colors.black),
                             onTap: () async {
-                              await FileMethods.clearCache();
+                              await FileUtils.clearCache();
                               if (mounted) {
                                 Navigator.of(context).pop();
                                 showSnackBar(context, "Cache cleared");

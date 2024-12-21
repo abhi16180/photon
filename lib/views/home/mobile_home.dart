@@ -1,14 +1,11 @@
 import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:easy_folder_picker/FolderPicker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:photon/services/photon_sender.dart';
-import 'package:photon/views/apps_list.dart';
 import '../../methods/handle_share.dart';
 
 class MobileHome extends StatefulWidget {
@@ -121,7 +118,8 @@ class _MobileHomeState extends State<MobileHome> {
                                           setState(() {
                                             isLoading = true;
                                           });
-                                          await shareFolder();
+                                          await PhotonSender.handleSharing(
+                                              isFolder: true);
                                           setState(() {
                                             isLoading = false;
                                           });
@@ -139,7 +137,7 @@ class _MobileHomeState extends State<MobileHome> {
                                           MainAxisAlignment.center,
                                       children: [
                                         sharingOptions[i]["icon"],
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 5,
                                         ),
                                         Text(
@@ -147,7 +145,7 @@ class _MobileHomeState extends State<MobileHome> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: mode.isDark
-                                                  ? Color.fromARGB(
+                                                  ? const Color.fromARGB(
                                                       205, 117, 255, 122)
                                                   : Colors.blue),
                                         )
@@ -370,72 +368,33 @@ class _MobileHomeState extends State<MobileHome> {
   }
 
   shareApps() async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Query installed packages'),
-          content: const Text(
-              'To get installed apps, you need to allow photon to query all installed packages. Would you like to continue ?'),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Go back'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                box.put('queryPackages', true);
-
-                Navigator.of(context).popAndPushNamed('/apps');
-              },
-              child: const Text('Continue'),
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  shareFolder() async {
-    if (Platform.isAndroid) {
-      var extStorage = box.get("manage_ext_storage");
-      if (extStorage != null) {
-        if (extStorage == true) {
-          await PhotonSender.handleSharing(isFolder: true);
-          return;
-        }
-      }
+    if (mounted) {
       await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text("ManageExternalStorage"),
+            title: const Text('Query installed packages'),
             content: const Text(
-                """To list all real file paths, Photon needs ManageExternalStorage permission. If you don't want to give permission, please go back and pick files instead.
-                                                    """),
+                'To get installed apps, you need to allow photon to query all installed packages. Would you like to continue ?'),
             actions: [
-              MaterialButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  return;
                 },
-                child: const Text("Go back"),
+                child: const Text('Go back'),
               ),
-              MaterialButton(
+              ElevatedButton(
                 onPressed: () {
-                  box.put("manage_ext_storage", true);
-                  PhotonSender.handleSharing(isFolder: true);
+                  box.put('queryPackages', true);
+
+                  Navigator.of(context).popAndPushNamed('/apps');
                 },
-                child: const Text("Proceed"),
+                child: const Text('Continue'),
               )
             ],
           );
         },
       );
-    } else {
-      PhotonSender.handleSharing(isFolder: true);
     }
   }
 }

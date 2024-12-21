@@ -26,7 +26,7 @@ class _ReceivePageState extends State<ReceivePage> {
   late Directory dir;
 
   Future<List<SenderModel>> _scan() async {
-    dir = await FileMethods.getSaveDirectory();
+    dir = await FileUtils.getSaveDirectory();
     try {
       List<SenderModel> resp = await PhotonReceiver.scanWithLegacyFallback();
       return resp;

@@ -337,14 +337,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  easy_folder_picker:
-    dependency: "direct main"
-    description:
-      name: easy_folder_picker
-      sha256: d1ac200e3f8b3de7e739fd6f9cbbd439ef311b4a48972c18c673a15d98c95e41
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.3"
   fake_async:
     dependency: transitive
     description:
@@ -1152,6 +1144,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
+  saf_stream:
+    dependency: "direct main"
+    description:
+      name: saf_stream
+      sha256: d90bcbf0fe9e99065e3bab5d5711551b1911ed2001ad8cf94258081ed6f6b7b2
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.0"
   saf_util:
     dependency: "direct main"
     description:
@@ -1349,14 +1349,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
-  uri_to_file:
-    dependency: "direct main"
-    description:
-      name: uri_to_file
-      sha256: cbbb38f975d22311efacc9a53cdcb806708606666d8092314b81c5cb7983b700
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   url_launcher:
     dependency: "direct main"
     description:

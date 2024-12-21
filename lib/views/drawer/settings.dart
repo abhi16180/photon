@@ -18,7 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
   late SharedPreferences pref;
   _future() async {
     pref = await SharedPreferences.getInstance();
-    return await FileMethods.getSaveDirectory();
+    return await FileUtils.getSaveDirectory();
   }
 
   @override
@@ -67,7 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         .getDirectoryPath();
                                     setState(() {
                                       if (resp != null) {
-                                        FileMethods.editDirectoryPath(resp);
+                                        FileUtils.editDirectoryPath(resp);
                                       }
                                     });
                                   },
