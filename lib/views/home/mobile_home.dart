@@ -118,7 +118,8 @@ class _MobileHomeState extends State<MobileHome> {
                                           setState(() {
                                             isLoading = true;
                                           });
-                                          await shareFolder();
+                                          await PhotonSender.handleSharing(
+                                              isFolder: true);
                                           setState(() {
                                             isLoading = false;
                                           });
@@ -394,47 +395,6 @@ class _MobileHomeState extends State<MobileHome> {
           );
         },
       );
-    }
-  }
-
-  shareFolder() async {
-    if (Platform.isAndroid) {
-      var extStorage = box.get("manage_ext_storage");
-      if (extStorage != null) {
-        if (extStorage == true) {
-          await PhotonSender.handleSharing(isFolder: true);
-          return;
-        }
-      }
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("ManageExternalStorage"),
-            content: const Text(
-                """To list all real file paths, Photon needs ManageExternalStorage permission. If you don't want to give permission, please go back and pick files instead.
-                                                    """),
-            actions: [
-              MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  return;
-                },
-                child: const Text("Go back"),
-              ),
-              MaterialButton(
-                onPressed: () {
-                  box.put("manage_ext_storage", true);
-                  PhotonSender.handleSharing(isFolder: true);
-                },
-                child: const Text("Proceed"),
-              )
-            ],
-          );
-        },
-      );
-    } else {
-      PhotonSender.handleSharing(isFolder: true);
     }
   }
 }
