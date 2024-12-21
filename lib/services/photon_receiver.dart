@@ -305,7 +305,7 @@ class PhotonReceiver {
     //creates instance of cancelToken and inserts it to list
     getInstance.cancelTokenList.insert(fileIndex, CancelToken());
     String dirPath =
-        await FileMethods.getDirectorySavePath(senderModel, parentDirectory);
+        await FileUtils.getDirectorySavePath(senderModel, parentDirectory);
     if (parentDirectory.isNotEmpty) {
       if (!Directory(dirPath).existsSync()) {
         await Directory(dirPath).create(recursive: true);
@@ -313,7 +313,7 @@ class PhotonReceiver {
     }
     late String savePath;
     try {
-      savePath = await FileMethods.getSavePathForReceiving(
+      savePath = await FileUtils.getSavePathForReceiving(
           filePath, senderModel,
           isDirectory: isDirectory, directoryPath: dirPath);
     } catch (e) {

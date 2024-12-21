@@ -229,7 +229,7 @@ class _ProgressPageState extends State<ProgressPage> {
                     ),
                   )
                 : FutureBuilder(
-                    future: FileMethods.getFileNames(widget.senderModel!),
+                    future: FileUtils.getFileNames(widget.senderModel!),
                     builder: (context, AsyncSnapshot snap) {
                       if (snap.connectionState == ConnectionState.done) {
                         return CustomScrollView(
@@ -522,7 +522,7 @@ class _ProgressPageState extends State<ProgressPage> {
                               ),
                               ElevatedButton(
                                 onPressed: () async {
-                                  await FileMethods.saveTextFile(
+                                  await FileUtils.saveTextFile(
                                       rawTextController.rawText.value,
                                       fileNameController.text);
                                   if (mounted) {
@@ -530,7 +530,7 @@ class _ProgressPageState extends State<ProgressPage> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                            "File is saved as ${await FileMethods.getTextFilePath(fileNameController.text)}"),
+                                            "File is saved as ${await FileUtils.getTextFilePath(fileNameController.text)}"),
                                       ),
                                     );
                                   }

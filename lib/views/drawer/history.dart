@@ -45,7 +45,7 @@ class _HistoryPageState extends State<HistoryPage>
                   const Text('History'),
                   IconButton(
                       onPressed: () async {
-                        var resp = await FileMethods.getSaveDirectory();
+                        var resp = await FileUtils.getSaveDirectory();
                         if (Platform.isAndroid || Platform.isIOS) {
                           OpenFile.open(resp.path);
                         } else {

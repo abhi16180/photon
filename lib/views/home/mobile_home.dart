@@ -136,7 +136,7 @@ class _MobileHomeState extends State<MobileHome> {
                                           MainAxisAlignment.center,
                                       children: [
                                         sharingOptions[i]["icon"],
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 5,
                                         ),
                                         Text(
@@ -144,7 +144,7 @@ class _MobileHomeState extends State<MobileHome> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: mode.isDark
-                                                  ? Color.fromARGB(
+                                                  ? const Color.fromARGB(
                                                       205, 117, 255, 122)
                                                   : Colors.blue),
                                         )
@@ -367,32 +367,34 @@ class _MobileHomeState extends State<MobileHome> {
   }
 
   shareApps() async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Query installed packages'),
-          content: const Text(
-              'To get installed apps, you need to allow photon to query all installed packages. Would you like to continue ?'),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Go back'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                box.put('queryPackages', true);
+    if (mounted) {
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Query installed packages'),
+            content: const Text(
+                'To get installed apps, you need to allow photon to query all installed packages. Would you like to continue ?'),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Go back'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  box.put('queryPackages', true);
 
-                Navigator.of(context).popAndPushNamed('/apps');
-              },
-              child: const Text('Continue'),
-            )
-          ],
-        );
-      },
-    );
+                  Navigator.of(context).popAndPushNamed('/apps');
+                },
+                child: const Text('Continue'),
+              )
+            ],
+          );
+        },
+      );
+    }
   }
 
   shareFolder() async {
@@ -404,33 +406,33 @@ class _MobileHomeState extends State<MobileHome> {
           return;
         }
       }
-      // await showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return AlertDialog(
-      //       title: const Text("ManageExternalStorage"),
-      //       content: const Text(
-      //           """To list all real file paths, Photon needs ManageExternalStorage permission. If you don't want to give permission, please go back and pick files instead.
-      //                                               """),
-      //       actions: [
-      //         MaterialButton(
-      //           onPressed: () {
-      //             Navigator.of(context).pop();
-      //             return;
-      //           },
-      //           child: const Text("Go back"),
-      //         ),
-      //         MaterialButton(
-      //           onPressed: () {
-      //             box.put("manage_ext_storage", true);
-      //             PhotonSender.handleSharing(isFolder: true);
-      //           },
-      //           child: const Text("Proceed"),
-      //         )
-      //       ],
-      //     );
-      //   },
-      // );
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("ManageExternalStorage"),
+            content: const Text(
+                """To list all real file paths, Photon needs ManageExternalStorage permission. If you don't want to give permission, please go back and pick files instead.
+                                                    """),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  return;
+                },
+                child: const Text("Go back"),
+              ),
+              MaterialButton(
+                onPressed: () {
+                  box.put("manage_ext_storage", true);
+                  PhotonSender.handleSharing(isFolder: true);
+                },
+                child: const Text("Proceed"),
+              )
+            ],
+          );
+        },
+      );
     } else {
       PhotonSender.handleSharing(isFolder: true);
     }

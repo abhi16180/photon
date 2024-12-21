@@ -11,9 +11,9 @@ import 'package:photon/services/device_service.dart';
 import 'package:photon/views/share_ui/share_page.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:hive/hive.dart';
+import 'package:saf_stream/saf_stream.dart';
 import 'package:saf_util/saf_util.dart';
 import 'package:saf_util/saf_util_platform_interface.dart';
-import 'package:uri_to_file/uri_to_file.dart';
 import '../components/dialogs.dart';
 import '../components/snackbar.dart';
 import '../main.dart';
@@ -31,6 +31,9 @@ class PhotonSender {
   static DeviceService? deviceService;
   static SafUtil safUtils = SafUtil();
 
+  // only for SAF document files
+  static List<String?> _decodedFilePaths = [];
+
   static const platform = MethodChannel('dev.abhi.photon');
 
   static void setRawText(txt) {
@@ -47,7 +50,15 @@ class PhotonSender {
       _fileList = fileList;
       return true;
     }
-    _fileList = await FileMethods.pickFiles();
+    if (Platform.isAndroid) {
+      List<SafDocumentFile>? safDocs = await safUtils.pickFiles();
+      if (safDocs != null) {
+        _fileList = safDocs.map((item) => item.uri).toList();
+        return true;
+      }
+      return false;
+    }
+    _fileList = await FileUtils.pickFiles();
     if (_fileList.isEmpty) {
       return false;
     } else {
@@ -93,6 +104,79 @@ class PhotonSender {
           );
         }));
         break;
+    }
+  }
+
+  static Future<Map<String, dynamic>> share(
+    context, {
+    bool externalIntent = false,
+    String extIntentType = "file",
+    List<String> fileList = const <String>[],
+    bool isRawText = false,
+    bool isFolder = false,
+  }) async {
+    await assignIP();
+    if (externalIntent) {
+      // When user tries to share files opened / listed on external app
+      // Photon will be opened along with intended files' paths
+      return await shareFromExternalIntent(extIntentType, context);
+    } else {
+      if (isRawText) {
+        // assign empty list to late init var _fileList
+        _fileList = [];
+        Future<Map<String, dynamic>> res =
+            _startServer(_fileList, context, isRawText: isRawText);
+        return await res;
+      } else {
+        if (isFolder) {
+          String? dirPath;
+          List<String> paths = [];
+          if (Platform.isAndroid) {
+            SafDocumentFile? dir = await FileUtils.pickDirectoryAndroid();
+            if (dir != null) {
+              paths = await FileUtils.listFilesForPickedDir(dir);
+            }
+            _fileList = paths;
+          } else {
+            dirPath = await FilePicker.platform.getDirectoryPath();
+            if (dirPath != null) {
+              _parentFolder = dirPath;
+              Directory directory = Directory(dirPath);
+              (await directory.list(recursive: true).toList())
+                  .whereType<File>()
+                  .forEach((file) {
+                paths.add(file.path);
+              });
+            }
+            _fileList = paths;
+          }
+          if (_fileList.isEmpty) {
+            return {
+              'hasErr': true,
+              'type': 'file',
+              'errMsg': "No folder chosen"
+            };
+          }
+          _decodedFilePaths = await FileUtils.getDecodedPaths(_fileList,
+              isAPK: fileList.isNotEmpty);
+          Future<Map<String, dynamic>> res = _startServer(_fileList, context,
+              isRawText: isRawText, isFolder: isFolder);
+          return res;
+        } else {
+          // User manually opens photon
+          // Selects files
+          if (await setFilesPath(fileList: fileList)) {
+            await storeSentFileHistory(_fileList);
+            _decodedFilePaths = await FileUtils.getDecodedPaths(_fileList,
+                isAPK: fileList.isNotEmpty);
+            Map<String, dynamic> res = await _startServer(_fileList, context,
+                isApk: fileList.isNotEmpty);
+            return res;
+          } else {
+            return {'hasErr': true, 'type': 'file', 'errMsg': "No file chosen"};
+          }
+        }
+      }
     }
   }
 
@@ -172,8 +256,9 @@ class PhotonSender {
           }
         } else if (request.requestedUri.toString() ==
             'http://$_address:4040/getpaths') {
-          request.response
-              .write(jsonEncode({'paths': fileList, 'isApk': isApk}));
+          var paths =
+              _decodedFilePaths.isNotEmpty ? _decodedFilePaths : _fileList;
+          request.response.write(jsonEncode({'paths': paths, 'isApk': isApk}));
 
           request.response.close();
         } else if (request.requestedUri.toString() ==
@@ -214,13 +299,13 @@ class PhotonSender {
           request.response.close();
         } else {
           //uri should be in format http://ip:port/secretcode/file-index
-          List requriToList = request.requestedUri.toString().split('/');
-          if (int.parse(requriToList[requriToList.length - 2]) ==
-              _randomSecretCode) {
+          List uriParts = request.requestedUri.toString().split('/');
+          if (int.parse(uriParts[uriParts.length - 2]) == _randomSecretCode) {
             try {
-              FileModel fileModel = await FileMethods.extractFileData(fileList[
-                  int.parse(request.requestedUri.toString().split('/').last)]!);
-
+              FileModel fileModel = await FileUtils.extractFileData(
+                  fileList[int.parse(
+                      request.requestedUri.toString().split('/').last)]!,
+                  isApk: isApk);
               request.response.headers.contentType = ContentType(
                 'application',
                 'octet-stream',
@@ -239,9 +324,7 @@ class PhotonSender {
               request.response.headers.add('Content-length', fileModel.size);
 
               try {
-                //to stream the file
-                await fileModel.file.openRead().pipe(request.response);
-                request.response.close();
+                await _streamFileObject(isApk, fileModel, request);
               } catch (_) {}
             } catch (e) {
               request.response.write(e);
@@ -263,67 +346,24 @@ class PhotonSender {
     };
   }
 
-  static Future<Map<String, dynamic>> share(
-    context, {
-    bool externalIntent = false,
-    String extIntentType = "file",
-    List<String> fileList = const <String>[],
-    bool isRawText = false,
-    bool isFolder = false,
-  }) async {
-    await assignIP();
-    if (externalIntent) {
-      // When user tries to share files opened / listed on external app
-      // Photon will be opened along with intended files' paths
-      return await shareFromExternalIntent(extIntentType, context);
-    } else {
-      if (isRawText) {
-        // assign empty list to late init var _fileList
-        _fileList = [];
-        Future<Map<String, dynamic>> res =
-            _startServer(_fileList, context, isRawText: isRawText);
-        return await res;
-      } else if (isFolder) {
-        String? dirPath;
-        List<String> paths = [];
-        if (Platform.isAndroid) {
-          SafDocumentFile? dir = await pickDirectoryAndroid();
-          if (dir != null) {
-            paths = await listFilesForPickedDir(dir);
-          }
-          _fileList = paths;
-        } else {
-          dirPath = await FilePicker.platform.getDirectoryPath();
-          if (dirPath != null) {
-            _parentFolder = dirPath;
-            Directory directory = Directory(dirPath);
-            (await directory.list(recursive: true).toList())
-                .whereType<File>()
-                .forEach((file) {
-              paths.add(file.path);
-            });
-          }
-          _fileList = paths;
-        }
-        if (_fileList.isEmpty) {
-          return {'hasErr': true, 'type': 'file', 'errMsg': "No folder chosen"};
-        }
-        Future<Map<String, dynamic>> res = _startServer(_fileList, context,
-            isRawText: isRawText, isFolder: isFolder);
-        return res;
-      } else {
-        // User manually opens photon
-        // Selects files
-        if (await setFilesPath(fileList: fileList)) {
-          await storeSentFileHistory(_fileList);
-          Map<String, dynamic> res = await _startServer(_fileList, context,
-              isApk: fileList.isNotEmpty);
-          return res;
-        } else {
-          return {'hasErr': true, 'type': 'file', 'errMsg': "No file chosen"};
-        }
-      }
+  static Future<void> _streamFileObject(
+      bool isApk, FileModel fileModel, HttpRequest request) async {
+    // On non android devices [macos,linux,windows
+    // Uses real path to stream file
+    // Uses cached path for apk files
+    if (isApk || !Platform.isAndroid) {
+      await fileModel.file.openRead().pipe(request.response);
+      request.response.close();
+      return;
     }
+    // On android uses SAF to stream from uri path
+    // Does not use caching to speed up the process and prevent
+    // potential memory issues
+    SafDocumentFile f = fileModel.file as SafDocumentFile;
+    var stream = await SafStream().readFileStream(f.uri);
+    await request.response.addStream(stream);
+    request.response.close();
+    return;
   }
 
   static Future<Map<String, dynamic>> shareFromExternalIntent(
@@ -347,7 +387,7 @@ class PhotonSender {
   static closeServer(context) async {
     try {
       await _server.close();
-      await FileMethods.clearCache();
+      await FileUtils.clearCache();
       if (deviceService != null) {
         await deviceService!.stopAdvertising();
       }
@@ -374,36 +414,4 @@ class PhotonSender {
   bool get hasMultipleFiles => _fileList.length > 1;
 
   static String get getPhotonLink => photonURL;
-
-  static Future<SafDocumentFile?> pickDirectoryAndroid() async {
-    return await safUtils.pickDirectory(persistablePermission: true);
-  }
-
-  static Future<List<String>> listFilesForPickedDir(SafDocumentFile dir) async {
-    List<SafDocumentFile> dirs = [dir];
-    List<String> files = [];
-    while (dirs.isNotEmpty) {
-      SafDocumentFile last = dirs.removeLast();
-      List<SafDocumentFile> entities = await safUtils.list(last.uri);
-      for (var entity in entities) {
-        if (entity.isDir) {
-          dirs.add(entity);
-        } else {
-          files.add(entity.uri);
-        }
-      }
-    }
-    return await getCachedPaths(files);
-  }
-
-  static Future<List<String>> getCachedPaths(List<String> fileUriList) async {
-    List<String> fileList = [];
-    List<Future<File>> futureFiles = fileUriList.map((fileURI) {
-      return toFile(fileURI);
-    }).toList();
-    for (var futureFile in futureFiles) {
-      fileList.add((await futureFile).path);
-    }
-    return fileList;
-  }
 }
