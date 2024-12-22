@@ -137,6 +137,7 @@ class PhotonSender {
               selectedDirectory = dir.name;
               paths = await FileUtils.listFilesForPickedDir(dir);
             }
+            _parentFolder = selectedDirectory;
             _fileList = paths;
           } else {
             String? dirPath = await FilePicker.platform.getDirectoryPath();

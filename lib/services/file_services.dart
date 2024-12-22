@@ -82,7 +82,6 @@ class FileUtils {
       {bool isDirectory = false, String directoryPath = ""}) async {
     String? savePath;
     Directory? directory;
-
     String fileName =
         filePath.split(senderModel.os == "windows" ? r'\' : r'/').last;
     directory = await getSaveDirectory();
@@ -238,13 +237,21 @@ class FileUtils {
     if (!Platform.isAndroid || isAPK) {
       return uris;
     }
-    List<Future<SafDocumentFile?>> docs = [];
     List<String> decodedPaths = [];
-    for (var uri in uris) {
-      docs.add(safUtils.documentFileFromUri(uri!, false));
-    }
-    for (var doc in docs) {
-      decodedPaths.add((await doc)!.name);
+    try {
+      for (var item in uris) {
+        decodedPaths.add(decodeRealPathFromURI(item!));
+      }
+    } catch (e) {
+      // fallback to old flow it cannot parse URI
+      List<Future<SafDocumentFile?>> docs = [];
+      List<String> decodedPaths = [];
+      for (var uri in uris) {
+        docs.add(safUtils.documentFileFromUri(uri!, false));
+      }
+      for (var doc in docs) {
+        decodedPaths.add((await doc)!.name);
+      }
     }
     return decodedPaths;
   }
@@ -271,5 +278,12 @@ class FileUtils {
       }
     }
     return uris;
+  }
+
+  static decodeRealPathFromURI(String uriString) {
+    final uri = Uri.parse(uriString);
+    final decodedPath = Uri.decodeComponent(uri.path);
+    final finalPath = decodedPath.split("primary:").last;
+    return finalPath;
   }
 }
