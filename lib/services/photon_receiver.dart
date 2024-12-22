@@ -21,7 +21,7 @@ class PhotonReceiver {
   static late int id;
   static int totalTime = 0;
 
-  ///to get network address [assumes class C address]
+  /// to get network address [assumes class C address]
   static List<String> getNetAddress(List<String> ipList) {
     List<String> netAdd = [];
     for (String ip in ipList) {
@@ -32,7 +32,7 @@ class PhotonReceiver {
     return netAdd;
   }
 
-  ///tries to establish socket connection
+  /// tries to establish socket connection
   static Future<Map<String, dynamic>> _connect(String host, int port) async {
     try {
       var socket = await Socket.connect(host, port)
@@ -44,7 +44,7 @@ class PhotonReceiver {
     }
   }
 
-  ///check if ip & port pair represent photon-server
+  /// check if ip & port pair represent photon-server
   static isPhotonServer(String ip, String port) async {
     var dio = Dio();
     try {
@@ -56,7 +56,7 @@ class PhotonReceiver {
     }
   }
 
-  ///scan presence of photon-server[driver func]
+  /// scan presence of photon-server[driver func]
   static Future<List<SenderModel>> scan() async {
     List<Future<Map<String, dynamic>>> list = [];
     List<SenderModel> photonServers = [];
@@ -172,7 +172,6 @@ class PhotonReceiver {
       SenderModel senderModel, int secretCode, String? parentDirectory) async {
     PercentageController getInstance =
         GetIt.instance.get<PercentageController>();
-
     String filePath = '';
     totalTime = 0;
     try {
@@ -204,15 +203,13 @@ class PhotonReceiver {
               .split(senderModel.os == "windows" ? r'\' : '/')
               .last;
 
-          final String newDirectory = temp +
-              filePath
+          final String newDirectory = "$temp/${filePath
                   .split(filePath
                       .split(senderModel.os == "windows" ? r'\' : '/')
                       .last)
                   .first
-                  .split(parentDirectory)
-                  .last;
-
+                  .split("$parentDirectory/")
+                  .last}";
           await getFile(filePath, fileIndex, senderModel,
               parentDirectory: newDirectory, isDirectory: true);
         }
@@ -278,13 +275,15 @@ class PhotonReceiver {
         receiveText(senderModel, secretCode);
         break;
       case "folder":
-        if (senderModel.os.toString().toLowerCase() == 'android') {
-          // since android is sending cached file paths
-          // real folder structure cannot be reconstructed
-          // receive files without preserving folder structure
-          receiveFiles(senderModel, secretCode);
-          break;
-        }
+        /// logic to handle folder share due to limited file system permission
+        /// falls back to files share
+        // if (senderModel.os.toString().toLowerCase() == 'android') {
+        //   // since android is sending cached file paths
+        //   // real folder structure cannot be reconstructed
+        //   // receive files without preserving folder structure
+        //   receiveFiles(senderModel, secretCode);
+        //   break;
+        // }
         receiveFolder(senderModel, secretCode, parentDirectory);
         break;
       default:
@@ -302,7 +301,7 @@ class PhotonReceiver {
   }) async {
     Dio dio = Dio();
     PercentageController getInstance = GetIt.I<PercentageController>();
-    //creates instance of cancelToken and inserts it to list
+    // creates instance of cancelToken and inserts it to list
     getInstance.cancelTokenList.insert(fileIndex, CancelToken());
     String dirPath =
         await FileUtils.getDirectorySavePath(senderModel, parentDirectory);
@@ -313,8 +312,7 @@ class PhotonReceiver {
     }
     late String savePath;
     try {
-      savePath = await FileUtils.getSavePathForReceiving(
-          filePath, senderModel,
+      savePath = await FileUtils.getSavePathForReceiving(filePath, senderModel,
           isDirectory: isDirectory, directoryPath: dirPath);
     } catch (e) {
       getInstance.fileStatus[fileIndex].value = "cancelled";
@@ -324,11 +322,10 @@ class PhotonReceiver {
     Stopwatch stopwatch = Stopwatch();
     int? prevBits;
     int? prevDuration;
-    //for handling speed update frequency
+    // for handling speed update frequency
     int count = 0;
-
     try {
-      //sends post request every time receiver requests for a file
+      // sends post request every time receiver requests for a file
       sendBackReceiverRealtimeData(senderModel,
           fileIndex: fileIndex, isCompleted: false);
       stopwatch.start();
