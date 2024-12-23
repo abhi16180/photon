@@ -30,7 +30,8 @@ Future<List<String>> getIP() async {
 
   for (NetworkInterface netInt in listOfInterfaces) {
     for (InternetAddress internetAddress in netInt.addresses) {
-      if (internetAddress.address.toString().startsWith('192.168') || internetAddress.address.toString().startsWith('10.')) {
+      if (internetAddress.address.toString().startsWith('192.168') ||
+          internetAddress.address.toString().startsWith('10.')) {
         ipList.add(internetAddress.address);
       }
     }
