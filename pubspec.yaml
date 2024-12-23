@@ -83,7 +83,9 @@ dependencies:
   open_file:
   saf_util:
   saf_stream:
-
+  pointycastle:
+  basic_utils:
+  convert:
 
 dev_dependencies:
   flutter_test:

@@ -27,12 +27,14 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   TextEditingController usernameController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
   }
 
   Box box = Hive.box('appData');
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -139,6 +141,51 @@ class _AppState extends State<App> {
                               return const SettingsPage();
                             }));
                           },
+                        ),
+                        ListTile(
+                          title: const Text('Enable HTTPS'),
+                          trailing: Switch(
+                            value: box.get('enable_https')!,
+                            onChanged: (val) async {
+                              setState(() {
+                                if (box.get('enable_https') == false) {
+                                  box.put('enable_https', true);
+                                } else {
+                                  box.put('enable_https', false);
+                                }
+                              });
+
+                              await showDialog(
+                                context: context,
+                                builder: (builder) {
+                                  return AlertDialog(
+                                    title: const Text("Alert"),
+                                    content: Text(
+                                      box.get('enable_https') == true
+                                          ? "Photon uses self-signed certificates to enable HTTPS. While it provides additional layer of security, make sure to use photon within trusted networks. HTTPS only works with photon v3.0.0 or above. Make sure receiver also has latest photon"
+                                          : " You have disabled HTTPS, now it uses unencrypted HTTP to communicate",
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                    actions: [
+                                      MaterialButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("I understand"),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                              showSnackBar(
+                                  context,
+                                  box.get('enable_https') == true
+                                      ? "HTTPS enabled"
+                                      : "HTTPS disabled");
+                            },
+                          ),
+                          leading: Icon(Icons.security_rounded,
+                              color: mode.isDark ? null : Colors.black),
                         ),
                         ListTile(
                           leading: SvgPicture.asset(

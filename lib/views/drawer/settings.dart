@@ -2,10 +2,14 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:file_picker/file_picker.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hive/hive.dart';
 import 'package:photon/components/constants.dart';
 import 'package:photon/services/file_services.dart';
 import 'package:photon/views/drawer/edit_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unicons/unicons.dart';
+
+import '../../components/snackbar.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -16,6 +20,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late SharedPreferences pref;
+  Box box = Hive.box("appData");
+
   _future() async {
     pref = await SharedPreferences.getInstance();
     return await FileUtils.getSaveDirectory();

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
@@ -15,11 +15,13 @@ import 'package:saf_util/saf_util.dart';
 import 'package:saf_util/saf_util_platform_interface.dart';
 
 import '../models/sender_model.dart';
+import 'device_service.dart';
 
 class FileUtils {
   static int filePathRetries = 0;
   static const maxFilePathRetries = 10;
   static SafUtil safUtils = SafUtil();
+  static final dio = Dio();
 
   //todo implement separate file picker for android to avoid caching
   static Future<List<String?>> pickFiles() async {
@@ -120,10 +122,26 @@ class FileUtils {
     return path;
   }
 
-//for receiver to display filenames
-  static Future<List<String>> getFileNames(SenderModel senderModel) async {
-    var resp = await Dio()
-        .get('http://${senderModel.ip}:${senderModel.port}/getpaths');
+  //for receiver to display filenames
+  static Future<List<String>> getFileNames(
+      SenderModel senderModel, token) async {
+    dio.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        final SecurityContext scontext = SecurityContext();
+        HttpClient client = HttpClient(context: scontext);
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) {
+          return true;
+        };
+        return client;
+      },
+    );
+
+    var resp = await dio.get(
+        '${DeviceService.protocolFromSender}://${senderModel.ip}:${senderModel.port}/getpaths',
+        options: Options(headers: {
+          "Authorization": token,
+        }));
     Map<String, dynamic> filePathMap = jsonDecode(resp.data);
     List<String> fileNames = [];
     if (filePathMap.containsKey('isApk')) {

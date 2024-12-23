@@ -122,6 +122,8 @@ class _QrReceivePageState extends State<QrReceivePage> {
                   senderModel: senderModel,
                   secretCode: resp['code'],
                   dataType: resp['type'],
+                  token: resp['token'],
+                  parentDirectory: resp['parent_folder'],
                 );
               },
             ),
