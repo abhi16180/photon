@@ -30,7 +30,8 @@ Future<List<String>> getIP() async {
 
   for (NetworkInterface netInt in listOfInterfaces) {
     for (InternetAddress internetAddress in netInt.addresses) {
-      if (internetAddress.address.toString().startsWith('192.168')) {
+      if (internetAddress.address.toString().startsWith('192.168') ||
+          internetAddress.address.toString().startsWith('10.')) {
         ipList.add(internetAddress.address);
       }
     }
@@ -182,7 +183,6 @@ Future<void> storeSentDocumentHistory(List<String?> docs,
     box.put('sentHistory', []);
   }
   List sentFiles = box.get('sentHistory');
-  print("type is ${type}");
   sentFiles.insertAll(
     0,
     docs

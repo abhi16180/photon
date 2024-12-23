@@ -2,6 +2,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photon/components/constants.dart';
 import 'package:photon/components/dialogs.dart';
@@ -29,7 +30,7 @@ class _SharePageState extends State<SharePage> {
   late double height;
   bool willPop = false;
   var receiverDataInst = GetIt.I.get<ReceiverDataController>();
-
+  Box box = Hive.box("appData");
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -103,9 +104,9 @@ class _SharePageState extends State<SharePage> {
                         },
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: widget.isFolder == true
+                          child: box.get('enable_https')== true
                               ? Text(
-                                  "Your folder is ready to be shared. Please make sure receiver has photon v3.0.0 or above to experience true folder share\nAsk receiver to tap on receive button",
+                                  "You are using HTTPS. Please make sure receiver also has photon version 3.0.0 or Above\nAsk receiver to tap on receive button",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: width > 720 ? 18 : 14,

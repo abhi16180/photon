@@ -9,6 +9,7 @@ import 'package:photon/models/sender_model.dart';
 import 'package:photon/models/share_error_model.dart';
 import 'package:photon/services/device_service.dart';
 import 'package:photon/views/share_ui/share_page.dart';
+import 'package:pointycastle/asymmetric/api.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:hive/hive.dart';
 import 'package:saf_stream/saf_stream.dart';
@@ -18,6 +19,11 @@ import '../components/dialogs.dart';
 import '../components/snackbar.dart';
 import '../main.dart';
 import 'file_services.dart';
+import 'dart:typed_data';
+import 'dart:math';
+import 'package:basic_utils/basic_utils.dart';
+import 'package:crypto/crypto.dart';
+import 'package:convert/convert.dart';
 
 class PhotonSender {
   static late HttpServer _server;
@@ -30,6 +36,9 @@ class PhotonSender {
   static String _parentFolder = "";
   static DeviceService? deviceService;
   static SafUtil safUtils = SafUtil();
+  static final Box _box = Hive.box('appData');
+  static bool isHTTPS = true;
+  static Map<String, String> tokenMapping = {};
 
   // only for SAF document files
   static List<String?> _decodedFileNames = [];
@@ -203,8 +212,19 @@ class PhotonSender {
         'errMsg': 'Please connect to wifi or turn on your mobile hotspot'
       };
     }
+    var secContext = generateSecurityContext();
+    var certificate = secContext["certificate"];
+    var privateKey = secContext["private_key"];
+    final serverSecurityContext = SecurityContext()
+      ..useCertificateChainBytes(utf8.encode(certificate))
+      ..usePrivateKeyBytes(utf8.encode(privateKey));
     try {
-      _server = await HttpServer.bind(_address, 4040);
+      if (DeviceService.serverProtocol == "https") {
+        _server =
+            await HttpServer.bindSecure(_address, 4040, serverSecurityContext);
+      } else {
+        _server = await HttpServer.bind(_address, 4040);
+      }
       _randomSecretCode = getRandomNumber();
       deviceService = DeviceService.getDeviceService();
       deviceService!.advertise(_address);
@@ -228,22 +248,25 @@ class PhotonSender {
     }
 
     bool? allowRequest;
-    photonURL = 'http://$_address:4040/photon-server';
+    photonURL =
+        '${DeviceService.serverProtocol}://$_address:4040/photon-server';
     _server.listen(
       (HttpRequest request) async {
         if (request.requestedUri.toString() ==
-            'http://$_address:4040/photon-server') {
+            '${DeviceService.serverProtocol}://$_address:4040/photon-server') {
           request.response.write(jsonEncode(serverInf));
           request.response.close();
         } else if (request.requestedUri.toString() ==
-            'http://$_address:4040/get-code') {
+            '${DeviceService.serverProtocol}://$_address:4040/get-code') {
           String os = (request.headers['os']![0]);
           String username = request.headers['receiver-name']![0];
           allowRequest = await senderRequestDialog(username, os);
           if (allowRequest == true) {
             //appending receiver data
+            tokenMapping[username] = generateSecureToken(32);
             request.response.write(jsonEncode({
               'code': _randomSecretCode,
+              'token': tokenMapping[username],
               'accepted': true,
               "type": isRawText
                   ? "raw_text"
@@ -260,17 +283,26 @@ class PhotonSender {
             request.response.close();
           }
         } else if (request.requestedUri.toString() ==
-            'http://$_address:4040/getpaths') {
+            '${DeviceService.serverProtocol}://$_address:4040/getpaths') {
+          if (!validateToken(request)) {
+            request.response.write("Invalid token-1");
+            request.response.close();
+            return;
+          }
           var paths =
               _decodedFileNames.isNotEmpty ? _decodedFileNames : _fileList;
           request.response.write(jsonEncode({'paths': paths, 'isApk': isApk}));
-
           request.response.close();
         } else if (request.requestedUri.toString() ==
-            'http://$_address:4040/favicon.ico') {
+            '${DeviceService.serverProtocol}://$_address:4040/favicon.ico') {
           request.response.close();
         } else if (request.requestedUri.toString() ==
-            "http://$_address:4040/receiver-data") {
+            "${DeviceService.serverProtocol}://$_address:4040/receiver-data") {
+          if (!validateToken(request)) {
+            request.response.write("Invalid token");
+            request.response.close();
+            return;
+          }
           //process receiver data
           processReceiversData({
             "os": request.headers['os']!.first,
@@ -288,8 +320,14 @@ class PhotonSender {
             "filesCount": fileList.length,
             "isCompleted": request.headers['isCompleted']!.first
           });
+          request.response.close();
         } else if (request.requestedUri.toString() ==
-            "http://$_address:4040/$_randomSecretCode/data/type") {
+            "${DeviceService.serverProtocol}://$_address:4040/$_randomSecretCode/data/type") {
+          if (!validateToken(request)) {
+            request.response.write("Invalid token2");
+            request.response.close();
+            return;
+          }
           String type = "file";
           if (isFolder) {
             type = "folder";
@@ -299,13 +337,32 @@ class PhotonSender {
           request.response.write(jsonEncode({"type": type}));
           request.response.close();
         } else if (request.requestedUri.toString() ==
-            "http://$_address:4040/$_randomSecretCode/text") {
+            "${DeviceService.serverProtocol}://$_address:4040/$_randomSecretCode/text") {
+          if (!validateToken(request)) {
+            request.response.write("Invalid token3");
+            request.response.close();
+            return;
+          }
           request.response.write(jsonEncode({"raw_text": _rawText}));
           request.response.close();
         } else {
-          //uri should be in format http://ip:port/secretcode/file-index
+          // uri should be in format $protocol://ip:port/secretcode/file-index
+          if (!validateToken(request)) {
+            request.response.write("Invalid token4");
+            request.response.close();
+            return;
+          }
           List uriParts = request.requestedUri.toString().split('/');
-          if (int.parse(uriParts[uriParts.length - 2]) == _randomSecretCode) {
+          var code = 0;
+          try {
+            code = int.parse(uriParts[uriParts.length - 2].toString().trim());
+          } catch (e) {
+            debugPrint("unable to parse $e");
+            request.response.write("Invalid");
+            request.response.close();
+            return;
+          }
+          if (code == _randomSecretCode) {
             try {
               FileModel fileModel = await FileUtils.extractFileData(
                   fileList[int.parse(
@@ -419,4 +476,56 @@ class PhotonSender {
   bool get hasMultipleFiles => _fileList.length > 1;
 
   static String get getPhotonLink => photonURL;
+
+  /// Generates a random [SecurityContextResult].
+  static generateSecurityContext([AsymmetricKeyPair? keyPair]) {
+    keyPair ??= CryptoUtils.generateRSAKeyPair();
+    final privateKey = keyPair.privateKey as RSAPrivateKey;
+    final publicKey = keyPair.publicKey as RSAPublicKey;
+    Box box = Hive.box('appData');
+    var user = box.get('username');
+    final dn = {
+      'CN': user.toString(),
+      'O': '',
+      'OU': '',
+      'L': '',
+      'S': '',
+      'C': '',
+    };
+    final csr = X509Utils.generateRsaCsrPem(dn, privateKey, publicKey);
+    final certificate = X509Utils.generateSelfSignedCertificate(
+        keyPair.privateKey, csr, 365 * 10);
+    return {
+      "private_key": CryptoUtils.encodeRSAPrivateKeyToPemPkcs1(privateKey),
+      "public_key": CryptoUtils.encodeRSAPublicKeyToPemPkcs1(publicKey),
+      "certificate": certificate,
+    };
+  }
+
+  static String generateSecureToken(int length) {
+    final randomBytes = _generateRandomBytes(length);
+    final hash = sha256.convert(randomBytes);
+    return hex.encode(hash.bytes).substring(0, length);
+  }
+
+  static Uint8List _generateRandomBytes(int length) {
+    final random = Random.secure();
+    final byteList = List<int>.generate(length, (_) => random.nextInt(256));
+    return Uint8List.fromList(byteList);
+  }
+
+  static bool validateToken(HttpRequest request) {
+    // photon versions older than v3.0.0 do not send Authorization header
+    // to have backwards compatibility disable the check
+    // when HTTPS is enabled token is checked
+    if (DeviceService.serverProtocol == "http") {
+      return true;
+    }
+    String? token = request.headers.value('Authorization');
+    bool isValid = tokenMapping.containsValue(token);
+    if (!isValid) {
+      debugPrint("INVALID TOKEN for ${request.requestedUri}");
+    }
+    return isValid;
+  }
 }

@@ -20,8 +20,8 @@ import 'app.dart';
 import 'views/share_ui/share_page.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
-
 final nav = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Hive.init((await getApplicationDocumentsDirectory()).path);
@@ -31,6 +31,8 @@ void main() async {
   box.get('avatarPath') ?? box.put('avatarPath', 'assets/avatars/1.png');
   box.get('username') ?? box.put('username', '${Platform.localHostname} user');
   box.get('queryPackages') ?? box.put('queryPackages', false);
+  box.get('enable_https') ?? box.put("enable_https", false);
+  box.get("protocol_from_sender") ?? box.put("protocol_from_sender", "http");
   GetIt getIt = GetIt.instance;
 
   SharedPreferences prefInst = await SharedPreferences.getInstance();

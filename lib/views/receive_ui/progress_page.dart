@@ -20,6 +20,7 @@ class ProgressPage extends StatefulWidget {
   final int secretCode;
   final String dataType;
   final String? parentDirectory;
+  final String? token;
 
   const ProgressPage({
     Key? key,
@@ -27,6 +28,7 @@ class ProgressPage extends StatefulWidget {
     required this.secretCode,
     required this.dataType,
     this.parentDirectory,
+    this.token,
   }) : super(key: key);
 
   @override
@@ -49,6 +51,7 @@ class _ProgressPageState extends State<ProgressPage> {
       widget.secretCode,
       widget.dataType,
       parentDirectory: widget.parentDirectory,
+      token: widget.token,
     );
     stopWatchTimer.onStartTimer();
   }
@@ -229,7 +232,7 @@ class _ProgressPageState extends State<ProgressPage> {
                     ),
                   )
                 : FutureBuilder(
-                    future: FileUtils.getFileNames(widget.senderModel!),
+                    future: FileUtils.getFileNames(widget.senderModel!,widget.token),
                     builder: (context, AsyncSnapshot snap) {
                       if (snap.connectionState == ConnectionState.done) {
                         return CustomScrollView(
@@ -420,6 +423,7 @@ class _ProgressPageState extends State<ProgressPage> {
                                                               .getFile(
                                                             snap.data[item],
                                                             item,
+                                                            widget.token,
                                                             widget.senderModel!,
                                                           );
                                                         },

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bonsoir/bonsoir.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
 
 class DeviceService {
   static BonsoirService? bonsoirService;
@@ -10,6 +11,7 @@ class DeviceService {
   static String serviceType = "_http._tcp";
   static DeviceService? deviceService;
   List<BonsoirService?> discoveredServices = [];
+  static final Box _box = Hive.box('appData');
 
   static getDeviceService() {
     deviceService ??= DeviceService();
@@ -19,12 +21,14 @@ class DeviceService {
   void advertise(String ip) async {
     try {
       bonsoirService = BonsoirService(
-          name: 'photon',
-          type: '_http._tcp',
-          port: 4040,
-          attributes: {
-            "ip": ip,
-          });
+        name: 'photon_${_box.get("username").toString()}',
+        type: '_http._tcp',
+        port: 4040,
+        attributes: {
+          "ip": ip,
+          "https_enabled": _box.get("enable_https").toString(),
+        },
+      );
       broadcast = BonsoirBroadcast(service: bonsoirService!);
       await broadcast!.ready;
       await broadcast!.start();
@@ -56,6 +60,16 @@ class DeviceService {
       }
     });
     return completer.future;
+  }
+
+  static get protocolFromSender {
+    var protocol = _box.get("protocol_from_sender").toString();
+    return protocol;
+  }
+
+  static get serverProtocol {
+    bool httpsEnabled = _box.get("enable_https") as bool;
+    return httpsEnabled ? "https" : "http";
   }
 
   void stopDiscovery() async {
