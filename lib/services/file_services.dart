@@ -131,7 +131,7 @@ class FileUtils {
         HttpClient client = HttpClient(context: scontext);
         client.badCertificateCallback =
             (X509Certificate cert, String host, int port) {
-          return true;
+          return senderModel.ip == host && port == 4040;
         };
         return client;
       },

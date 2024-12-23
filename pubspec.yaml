@@ -86,6 +86,7 @@ dependencies:
   pointycastle:
   basic_utils:
   convert:
+  uuid:
 
 dev_dependencies:
   flutter_test:

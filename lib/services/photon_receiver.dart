@@ -48,20 +48,21 @@ class PhotonReceiver {
 
   /// check if ip & port pair represent photon-server
   static isPhotonServer(String ip, String port) async {
-      dio.httpClientAdapter = IOHttpClientAdapter(
-        createHttpClient: () {
-          final SecurityContext scontext = SecurityContext();
-          HttpClient client = HttpClient(context: scontext);
-          client.badCertificateCallback =
-              (X509Certificate cert, String host, int port) {
-            return true;
-          };
-          return client;
-        },
-      );
-      var resp = await dio.get('${DeviceService.protocolFromSender}://$ip:$port/photon-server');
-      Map<String, dynamic> senderInfo = jsonDecode(resp.data);
-      return SenderModel.fromJson(senderInfo);
+    dio.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        final SecurityContext scontext = SecurityContext();
+        HttpClient client = HttpClient(context: scontext);
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) {
+          return host == ip && port == 4040;
+        };
+        return client;
+      },
+    );
+    var resp = await dio
+        .get('${DeviceService.protocolFromSender}://$ip:$port/photon-server');
+    Map<String, dynamic> senderInfo = jsonDecode(resp.data);
+    return SenderModel.fromJson(senderInfo);
   }
 
   /// scan presence of photon-server[driver func]
@@ -167,7 +168,8 @@ class PhotonReceiver {
   static sendBackReceiverRealtimeData(SenderModel senderModel, token,
       {fileIndex = -1, isCompleted = true}) {
     try {
-      dio.post('${DeviceService.protocolFromSender}://${senderModel.ip}:4040/receiver-data',
+      dio.post(
+          '${DeviceService.protocolFromSender}://${senderModel.ip}:4040/receiver-data',
           options: Options(
             headers: {
               "receiverID": id.toString(),
@@ -185,11 +187,11 @@ class PhotonReceiver {
 
   static receiveText(SenderModel senderModel, int secretCode, token) async {
     RawTextController getInstance = GetIt.instance.get<RawTextController>();
-    var resp =
-        await dio.get("${DeviceService.protocolFromSender}://${senderModel.ip}:4040/$secretCode/text",
-            options: Options(headers: {
-              "Authorization": token,
-            }));
+    var resp = await dio.get(
+        "${DeviceService.protocolFromSender}://${senderModel.ip}:4040/$secretCode/text",
+        options: Options(headers: {
+          "Authorization": token,
+        }));
     String text = jsonDecode(resp.data)['raw_text'];
     getInstance.rawText.value = text;
   }
