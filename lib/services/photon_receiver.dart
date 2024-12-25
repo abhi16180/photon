@@ -234,8 +234,9 @@ class PhotonReceiver {
               .split(senderModel.os == "windows" ? r'\' : '/')
               .last;
 
+          String senderPathSeparator = senderModel.os == "windows" ? r'\' : '/';
           final String newDirectory =
-              "$temp/${filePath.split(filePath.split(senderModel.os == "windows" ? r'\' : '/').last).first.split("$parentDirectory/").last}";
+              "$temp/${filePath.split(filePath.split(senderModel.os == "windows" ? r'\' : '/').last).first.split(parentDirectory + senderPathSeparator).last}";
           await getFile(filePath, fileIndex, token, senderModel,
               parentDirectory: newDirectory, isDirectory: true);
         }
