@@ -112,3 +112,64 @@ You can support me by,
 <a href="https://commons.wikimedia.org/wiki/File:Finder_Icon_macOS_Big_Sur.png">Apple Icon - Apple Inc., Public domain, via Wikimedia Commons</a>
 <br>
 <a href="http://opensource.org/licenses/mit-license.php">Linux Icon - https://github.com/icons8/flat-color-icons/graphs/contributors, MIT , via Wikimedia Commons</a>
+
+
+### Asset credits
+
+- App Icon
+  App icon is created using of Canva 
+
+- Avatars
+  <a href="https://multiavatar.com/" target="_blank">Multiavatar</a>
+
+- Icons
+  <a href="https://www.svgrepo.com" target="_blank">SVG Repo</a>
+
+- Font
+  https://github.com/googlefonts/questrial
+
+- Animations
+  - <a href="https://lottiefiles.com/">Lottie animations</a>
+    - fire
+      - <a href="https://lottiefiles.com/t3yzvz06rzxlcv6c">Creator</a>
+      - <a href="https://lottiefiles.com/free-animation/fire-animation-ejgvnKSGk7">Link to animation</a>
+
+    - setting-up
+      - <a href="https://lottiefiles.com/r2ykglps6p">Creator</a>
+      - <a href="https://lottiefiles.com/free-animation/rocket-share-kQtY3BH2g7">Link to animation</a>
+
+    - rocket-send
+      - <a href="https://lottiefiles.com/0nxzu9heyo">Creator</a>
+      - <a href="https://lottiefiles.com/free-animation/rocketman-XDUlDEjKIG">Link to animation</a>
+
+    - receive-file
+      - <a href="https://lottiefiles.com/mahendra">Creator</a>
+      - <a href="https://lottiefiles.com/free-animation/download-Ch0PxCW02O">Link to animation</a>
+
+    - searching
+      - <a href="https://lottiefiles.com/954yw8ena9qkjead">Creator</a>
+      - <a href="https://lottiefiles.com/free-animation/searching-mY2Hkc4Ol7">Link to animation</a>
+
+    - wifi
+      - <a href="https://lottiefiles.com/andrea">Creator</a>
+      - <a href="https://lottiefiles.com/free-animation/wifi-blue-animation-MYEsONJAo7">Link to animation</a>
+
+    - sender-not-found
+      - <a href="https://lottiefiles.com/tf8qjm109o5bpuf5">Creator</a>
+      - <a href="https://lottiefiles.com/free-animation/error-404-4Hedwc1tjf">Link to animation</a>
+
+    - share
+      - <a href="https://lottiefiles.com/karungany">Creator</a>
+      - <a href="https://lottiefiles.com/free-animation/space-rocket-35kzN0j8QV">Link to animation</a>
+
+### Licenses for Assets
+This project includes third-party assets, such as animations, icons, and other media. The licenses for these assets are as follows:
+
+- Lottie Animations:
+Licensed under the terms specified by the creators on LottieFiles.
+
+- SVG Icons from SVGRepo:
+Licensed under [creative commons]
+
+- Design:
+As mentioned in credits, app logo is designed using Canva.
