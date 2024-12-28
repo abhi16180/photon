@@ -155,9 +155,6 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   fonts:
-    - family: ytf
-      fonts:
-        - asset: assets/fonts/Yftoow-R.ttf
     - family: questrial
       fonts:  
         - asset: assets/fonts/Questrial-Regular.ttf

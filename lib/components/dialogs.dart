@@ -263,13 +263,13 @@ credits(context) async {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text('Animations'),
+                const Text('Avatars by multiavatar'),
                 GestureDetector(
                   onTap: () {
-                    ulaunch.launchUrl(Uri.parse('https://lottiefiles.com/'));
+                    ulaunch.launchUrl(Uri.parse('https://multiavatar.com/'));
                   },
                   child: const Text(
-                    'https://lottiefiles.com/',
+                    'https://multiavatar.com/',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       decoration: TextDecoration.underline,
@@ -280,14 +280,13 @@ credits(context) async {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text('Fonts\nYftoowhy', textAlign: TextAlign.center),
+                const Text('Animations'),
                 GestureDetector(
                   onTap: () {
-                    ulaunch.launchUrl(Uri.parse(
-                        'https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL'));
+                    ulaunch.launchUrl(Uri.parse('https://lottiefiles.com/'));
                   },
                   child: const Text(
-                    """ Font license""",
+                    'https://lottiefiles.com/',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       decoration: TextDecoration.underline,
@@ -310,6 +309,7 @@ credits(context) async {
                     ),
                   ),
                 ),
+
               ],
             ),
           ),
