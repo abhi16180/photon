@@ -256,20 +256,8 @@ class FileUtils {
       return uris;
     }
     List<String> decodedPaths = [];
-    try {
-      for (var item in uris) {
-        decodedPaths.add(decodeRealPathFromURI(item!));
-      }
-    } catch (e) {
-      // fallback to old flow it cannot parse URI
-      List<Future<SafDocumentFile?>> docs = [];
-      List<String> decodedPaths = [];
-      for (var uri in uris) {
-        docs.add(safUtils.documentFileFromUri(uri!, false));
-      }
-      for (var doc in docs) {
-        decodedPaths.add((await doc)!.name);
-      }
+    for (var item in uris) {
+      decodedPaths.add(decodeRealPathFromURI(item!));
     }
     return decodedPaths;
   }
@@ -300,8 +288,13 @@ class FileUtils {
 
   static decodeRealPathFromURI(String uriString) {
     final uri = Uri.parse(uriString);
+    const String splitKey = "primary:";
     final decodedPath = Uri.decodeComponent(uri.path);
-    final finalPath = decodedPath.split("primary:").last;
-    return finalPath;
+    if (decodedPath.contains(splitKey)) {
+      final finalPath = decodedPath.split(splitKey).last;
+      return finalPath;
+    } else {
+      throw Exception("This folder is not supported for folder share");
+    }
   }
 }
