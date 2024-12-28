@@ -165,17 +165,21 @@ class PhotonSender {
           if (_fileList.isEmpty) {
             return {
               'hasErr': true,
-              'type': 'file',
+              'type': 'folder',
               'errMsg': "No folder chosen"
             };
           }
-          _decodedFileNames = await FileUtils.getDecodedPaths(_fileList,
-              isAPK: fileList.isNotEmpty);
-          await storeSentDocumentHistory([selectedDirectory],
-              type: "directory");
-          Future<Map<String, dynamic>> res = _startServer(_fileList, context,
-              isRawText: isRawText, isFolder: isFolder);
-          return res;
+          try {
+            _decodedFileNames = await FileUtils.getDecodedPaths(_fileList,
+                isAPK: fileList.isNotEmpty);
+            await storeSentDocumentHistory([selectedDirectory],
+                type: "directory");
+            Future<Map<String, dynamic>> res = _startServer(_fileList, context,
+                isRawText: isRawText, isFolder: isFolder);
+            return res;
+          } catch (e) {
+            return {'hasErr': true, 'type': 'folder', 'errMsg': e.toString()};
+          }
         } else {
           // User manually opens photon
           // Selects files
