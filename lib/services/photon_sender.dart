@@ -170,7 +170,8 @@ class PhotonSender {
             };
           }
           try {
-            _decodedFileNames = await FileUtils.getDecodedPathsForFolderShare(_fileList,
+            _decodedFileNames = await FileUtils.getDecodedPathsForFolderShare(
+                _fileList,
                 isAPK: fileList.isNotEmpty);
             await storeSentDocumentHistory([selectedDirectory],
                 type: "directory");
@@ -201,6 +202,7 @@ class PhotonSender {
   static Future<Map<String, dynamic>> _startServer(
     List<String?> fileList,
     context, {
+    bool isExternalIntent = false,
     bool isApk = false,
     bool isRawText = false,
     bool isFolder = false,
@@ -371,7 +373,7 @@ class PhotonSender {
               FileModel fileModel = await FileUtils.extractFileData(
                   fileList[int.parse(
                       request.requestedUri.toString().split('/').last)]!,
-                  isApk: isApk);
+                  isApk: isApk,isExtIntent: isExternalIntent);
               request.response.headers.contentType = ContentType(
                 'application',
                 'octet-stream',
@@ -390,7 +392,7 @@ class PhotonSender {
               request.response.headers.add('Content-length', fileModel.size);
 
               try {
-                await _streamFileObject(isApk, fileModel, request);
+                await _streamFileObject(isApk, fileModel, request,isExtIntent: isExternalIntent);
               } catch (_) {}
             } catch (e) {
               request.response.write(e);
@@ -413,11 +415,11 @@ class PhotonSender {
   }
 
   static Future<void> _streamFileObject(
-      bool isApk, FileModel fileModel, HttpRequest request) async {
+      bool isApk, FileModel fileModel, HttpRequest request,{bool isExtIntent = false}) async {
     // On non android devices [macos,linux,windows
     // Uses real path to stream file
     // Uses cached path for apk files
-    if (isApk || !Platform.isAndroid) {
+    if (isApk || !Platform.isAndroid || isExtIntent) {
       await fileModel.file.openRead().pipe(request.response);
       request.response.close();
       return;
@@ -446,7 +448,7 @@ class PhotonSender {
           (await ReceiveSharingIntent.instance.getInitialMedia())[0].path;
     }
     Future<Map<String, dynamic>> res = _startServer(_fileList, context,
-        isRawText: extIntentType == "raw_text");
+        isRawText: extIntentType == "raw_text",isExternalIntent: true);
     return await res;
   }
 

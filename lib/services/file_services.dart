@@ -43,10 +43,10 @@ class FileUtils {
     }
   }
 
-  static Future<FileModel> extractFileData(path, {bool isApk = false}) async {
+  static Future<FileModel> extractFileData(path, {bool isApk = false,isExtIntent = false}) async {
     // if platform is android use SAF
     // for APK fallback to old flow
-    if (Platform.isAndroid && !isApk) {
+    if (Platform.isAndroid && !isApk && !isExtIntent) {
       return await extractFileDataWithSAF(path, isApk: isApk);
     }
     File file = File(path);
