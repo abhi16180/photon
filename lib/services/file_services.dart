@@ -250,7 +250,7 @@ class FileUtils {
     return temp.join("");
   }
 
-  static Future<List<String?>> getDecodedPaths(List<String?> uris,
+  static Future<List<String?>> getDecodedPathsForFolderShare(List<String?> uris,
       {bool isAPK = false}) async {
     if (!Platform.isAndroid || isAPK) {
       return uris;
@@ -258,6 +258,22 @@ class FileUtils {
     List<String> decodedPaths = [];
     for (var item in uris) {
       decodedPaths.add(decodeRealPathFromURI(item!));
+    }
+    return decodedPaths;
+  }
+
+  static Future<List<String?>> getDecodedPaths(List<String?> uris,
+      {bool isAPK = false}) async {
+    if (!Platform.isAndroid || isAPK) {
+      return uris;
+    }
+    List<String> decodedPaths = [];
+    List<Future<SafDocumentFile?>> docs = [];
+    for (var uri in uris) {
+      docs.add(safUtils.documentFileFromUri(uri!, false));
+    }
+    for (var doc in docs) {
+      decodedPaths.add((await doc)!.name);
     }
     return decodedPaths;
   }
