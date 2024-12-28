@@ -170,7 +170,7 @@ class PhotonSender {
             };
           }
           try {
-            _decodedFileNames = await FileUtils.getDecodedPaths(_fileList,
+            _decodedFileNames = await FileUtils.getDecodedPathsForFolderShare(_fileList,
                 isAPK: fileList.isNotEmpty);
             await storeSentDocumentHistory([selectedDirectory],
                 type: "directory");
