@@ -309,7 +309,23 @@ credits(context) async {
                     ),
                   ),
                 ),
-
+                const SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    ulaunch.launchUrl(
+                        Uri.parse('https://github.com/abhi16180/photon'));
+                  },
+                  child: const Text(
+                    """ For detailed credits checkout readme on github""",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
