@@ -119,7 +119,7 @@ You can support me by,
 ### Asset credits
 
 - App Icon
-  App icon is created using of Canva 
+  App icon is created using <a href="https://www.canva.com/">Canva</a>
 
 - Avatars
   <a href="https://multiavatar.com/" target="_blank">Multiavatar</a>
