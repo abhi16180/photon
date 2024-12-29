@@ -87,8 +87,10 @@ flutter run
 ![image](https://user-images.githubusercontent.com/63426722/191982511-b5d6fab2-7fb9-4588-b014-7957c4b1829d.png)
 - If you run the program with `flutter run` and **if you see a blank application window instead of the UI**, try running `flutter run --enable-software-rendering` instead. 
 
+## Notice of Logo Update
 
-
+The app's logo has been updated to a new design to ensure uniqueness and avoid potential overlaps with other designs. This change is to maintain the app's unique identity and to avoid any confusion.
+Photon v3.0.0 will come with new logo.
 ## Author
 
 👤 **Abhilash Hegde**
