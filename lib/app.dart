@@ -162,8 +162,8 @@ class _AppState extends State<App> {
                                     title: const Text("Alert"),
                                     content: Text(
                                       box.get('enable_https') == true
-                                          ? "Photon uses self-signed certificates to enable HTTPS. While it provides additional layer of security with HTTPS and token based validation, make sure to use photon within trusted networks. It only works with photon v3.0.0 or above on both sender and receiver"
-                                          : " You have disabled HTTPS, now photon uses legacy mode with unencrypted HTTP. Make sure to use photon within trusted networks. You can switch back to HTTPS anytime",
+                                          ? "Photon uses self-signed certificates to enable HTTPS when enabled by the sender. While it provides additional layer of security with HTTPS and token based validation, make sure to use photon within trusted networks."
+                                          : "You have disabled HTTPS, now photon uses legacy mode with unencrypted HTTP while sending. Make sure to use photon within trusted networks. You can switch back to HTTPS anytime",
                                       textAlign: TextAlign.justify,
                                     ),
                                     actions: [
