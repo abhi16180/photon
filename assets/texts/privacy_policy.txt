@@ -1,17 +1,31 @@
-**Privacy Policy**
+---
+title: Privacy policy for Photon application
+---
 
-Photon app is built as  an Open Source application. This SERVICE is provided by the developer at no cost and is intended for use as is. If you choose to use my Service, then you agree to the privacy policy.This SERVICE is provided by the developer at no cost and is intended for use as is. If you choose to use my Service, then you agree to the privacy policy.*Make sure that you have downloaded app from github/"https://apt.izzysoft.de/fdroid/" for security reasons.*
+
+
+**Privacy Policy -Photon**
+
+Photon app is built as  an Open Source application. This SERVICE is provided by the developer at no cost and is intended for use as is. If you choose to use my Service, then you agree to the privacy policy.
+
+*Make sure that you have downloaded app from one of the following sources*
+- <a href="https://play.google.com/store/apps/details?id=dev.abhi.photon">Google PlayStore</a>
+- <a href="https://www.github.com/abhi16180/photon">Github/abhi16180</a>
+- https://apt.izzysoft.de/fdroid/
 
 
 
 **Information Collection and Use**
 
-No user information is collected and stored by the developer. However to provide file-transfer service , information like ip-address, operating system(to identify the sender / receiver),etc will be *temporarily* stored locally in your device. But all these information will be cleared from app every time sharing process is terminated. 
+- No user information is collected and stored by the developer.
+- To provide file-transfer functionality, information like ip-address, operating system(to identify the sender / receiver) etc will be *temporarily* stored locally on your device with your consent i.e when you choose to share or receive files. But all these information will be cleared from app every time sharing process is terminated.
+- User can also clear the locally stored data by deleting cache / app-data
+- Any information displayed inside the app is stored locally on your device. Developer has no access to user data. It is up-to the user to share or receive files.
 *No information is stored by the developer.*
 
 **Log Data**
 
-*I want to inform you that no log data is collected by the app when the app crashes and no usage data is collected by the developer.*
+*I want to inform you that no log data is collected by the developer when the app crashes and no usage data is collected by the developer.* Users should be aware that third parties, including operating systems, device manufacturers, and other apps with access permissions, may still collect data. As I do not control or influence the data practices of these third parties, I cannot take responsibility for their actions. Please review the privacy policies of their operating system and device manufacturer to gain a better understanding of how their data is managed.
 
 **Cookies**
 
@@ -19,11 +33,12 @@ No user information is collected and stored by the developer. However to provide
 
 **Third-party flutter packages**
 
-I want to inform users that all third-party flutter packages used in this application are open-source and available on github.
+I want to inform users that all third-party flutter packages used in this application are open-source, As I do not control or influence the data practices of these third parties, I cannot take responsibility for their actions. Please review the licenses and other details in Licenses section.
+
 
 **Security**
 
-I do not store or posses any kind of information ,so handling data completely depends upon the user. Make sure that you are connected to trusted wifi. Remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
+I do not store or possess any kind of information ,so handling data completely depends upon the user. Make sure that you are connected to trusted wifi. Remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
 
 **Links to Other Sites**
 
@@ -37,9 +52,12 @@ I do not knowingly collect personally identifiable information from any user inc
 
 I may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page.
 
-This policy is effective as of 2022-08-28
+This policy is effective as of 2022-09-17
 
 **Contact Me**
 
 If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at photon19dev@gmail.com
+
+
+- Policy updated on 5/01/2025
 
