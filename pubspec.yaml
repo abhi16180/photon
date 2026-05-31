@@ -21,6 +21,7 @@ version: 3.0.0+18
 
 environment:
   sdk: ">=3.3.0"
+  flutter: ^3.27.1
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
